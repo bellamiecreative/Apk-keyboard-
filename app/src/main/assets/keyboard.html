@@ -58,15 +58,17 @@ function applyCase(){
   b.setAttribute('aria-label',v);
   b.style.fontSize=layout==='emoji'?'21px':(layout==='numbers'||layout==='symbols'?'17px':'');
  });
- shift.style.display=(layout==='letters')?'flex':'none';
- shift.innerHTML=on?shiftOn:shiftOff;shift.className='key '+(on?'white':'gray');shift.setAttribute('aria-pressed',on?'true':'false');
+ shift.style.display='flex';
+ if(layout==='letters'){shift.innerHTML=on?shiftOn:shiftOff;shift.className='key '+(on?'white':'gray');}
+ else{shift.textContent=layout==='numbers'?'=\\<':'123';shift.className='key gray';}
+ shift.setAttribute('aria-pressed',layout==='letters'&&on?'true':'false');
  num.textContent=layout==='letters'?(kurdish?'١٢٣':'123'):layout==='numbers'?'#+=':layout==='symbols'?'ABC':'ABC';
  sp.textContent=kurdish&&layout==='letters'?'بۆشایی':'space';
  bs.firstElementChild.style.transform=kurdish?'scaleX(-1)':'';
 }
 function commit(v){if(window.AndroidKeyboard){AndroidKeyboard.commit(v)}}
 letters.forEach(function(b){b.addEventListener('click',function(){var v=b.getAttribute('data-v');commit(v);if(layout!=='letters')return;if(kurdish){if(kuShift){kuShift=false;applyCase()}}else if(upper){upper=false;applyCase()}})});
-shift.addEventListener('click',function(){if(layout!=='letters')return;if(kurdish)kuShift=!kuShift;else upper=!upper;applyCase()});
+shift.addEventListener('click',function(){if(layout==='numbers')layout='symbols';else if(layout==='symbols')layout='numbers';else if(kurdish)kuShift=!kuShift;else upper=!upper;applyCase()});
 num.addEventListener('click',function(){if(layout==='letters'){layout='numbers'}else if(layout==='numbers'){layout='symbols'}else{layout='letters'}applyCase()});
 em.addEventListener('click',function(){layout=layout==='emoji'?'letters':'emoji';applyCase()});
 sp.addEventListener('click',function(){commit(' ')});
