@@ -1,6 +1,10 @@
 package com.bellamiecreative.keyboard;
 
 import android.inputmethodservice.InputMethodService;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -24,6 +28,39 @@ public class BellamieInputMethodService extends InputMethodService {
     private EditorInfo editorInfo;
     private volatile int cachedCapsMode;
     private boolean pageReady;
+    private boolean voiceReceiverRegistered;
+    private final BroadcastReceiver voiceReceiver = new BroadcastReceiver() {
+        @Override public void onReceive(Context context, Intent intent) {
+            String recognized = intent.getStringExtra("recognized_text");
+            if (recognized == null || recognized.isEmpty()) return;
+            InputConnection connection = getCurrentInputConnection();
+            if (connection != null) connection.commitText(recognized, 1);
+        }
+    };
+
+    @Override public void onCreate() {
+        super.onCreate();
+        IntentFilter filter = new IntentFilter("com.bellamiecreative.keyboard.VOICE_RESULT");
+        if (Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(voiceReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(voiceReceiver, filter);
+        }
+        voiceReceiverRegistered = true;
+    }
+
+    @Override public void onDestroy() {
+        if (voiceReceiverRegistered) {
+            unregisterReceiver(voiceReceiver);
+            voiceReceiverRegistered = false;
+        }
+        if (webView != null) {
+            webView.stopLoading();
+            webView.destroy();
+            webView = null;
+        }
+        super.onDestroy();
+    }
 
     @Override public View onCreateInputView() {
         pageReady = false;
@@ -187,6 +224,14 @@ public class BellamieInputMethodService extends InputMethodService {
         }
         @JavascriptInterface public void feedback() {
             mainHandler.post(BellamieInputMethodService.this::playKeyFeedback);
+        }
+        @JavascriptInterface public void voice(boolean kurdish) {
+            mainHandler.post(() -> {
+                Intent intent = new Intent(BellamieInputMethodService.this, VoiceInputActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("kurdish", kurdish);
+                startActivity(intent);
+            });
         }
         @JavascriptInterface public void space(boolean replacePreviousSpace) {
             mainHandler.post(() -> insertSpace(replacePreviousSpace));
