@@ -39,7 +39,48 @@ var rt=document.createElement('button');rt.textContent='return';add(rt,295.3,164
 function icon(x,y,w,h,html,label){var d=document.createElement('div');d.className='ico';d.setAttribute('role','button');d.setAttribute('aria-label',label);d.setAttribute('tabindex','0');d.style.cssText='left:'+x+'px;top:'+y+'px;width:'+w+'px;height:'+h+'px;pointer-events:auto;cursor:pointer;touch-action:manipulation';d.innerHTML=html;kb.appendChild(d);return d}
 var globe=icon(25.6,229.9,29.2,29.3,'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29.2 29.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="14.6" cy="14.65" r="12.6"/><ellipse cx="14.6" cy="14.65" rx="5.4" ry="12.6"/><path d="M2 14.65h25.2M4.2 7.9h20.8M4.2 21.4h20.8"/></svg>','Language');
 icon(340,229.9,20.4,30.1,'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20.4 30.1" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="5.7" y="1.2" width="9" height="16.5" rx="4.5"/><path d="M1.6 13.2a8.6 8.6 0 0 0 17.2 0M10.2 21.8v6.6M5.6 28.6h9.2"/></svg>','Microphone');
-var upper=true,letters=Array.prototype.slice.call(kb.querySelectorAll('.letter')),kurdish=false,kuShift=false;
+var upper=true,letters=Array.prototype.slice.call(kb.querySelectorAll('.letter')),kurdish=false,kuShift=false,layout='letters';
+var numberKeys=['1','2','3','4','5','6','7','8','9','0','@','#','
+var KU={Q:'ق',W:'و',E:'ە',R:'ر',T:'ت',Y:'ی',U:'ئ',I:'ح',O:'ۆ',P:'پ',A:'ا',S:'س',D:'د',F:'ف',G:'گ',H:'هـ',J:'ژ',K:'ک',L:'ل',Z:'ز',X:'خ',C:'ج',V:'ڤ',B:'ب',N:'ن',M:'م'};
+var KU2={Q:'ء',W:'وو',E:'ە',R:'ڕ',T:'ط',Y:'ێ',U:'ي',I:'ع',O:'ۆ',P:'ث',A:'آ',S:'ش',D:'ذ',F:'ظ',G:'غ',H:'هـ',J:'ژ',K:'ک',L:'ڵ',Z:'ض',X:'ص',C:'چ',V:'ڤ',B:'ب',N:'ن',M:'م'};
+var shiftOn=shift.innerHTML,shiftOff=svgOpen('0 0 24 24',24,24)+'<path d="M12 2.8 2.6 13.2h5.9v6.6c0 .6.4 1 1 1h5c.6 0 1-.4 1-1v-6.6h5.9z" stroke="#000" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+function applyCase(){
+ var on=kurdish?kuShift:upper;
+ letters.forEach(function(b,i){
+  var k=b.getAttribute('aria-label').toUpperCase(),v;
+  if(layout==='numbers')v=numberKeys[i];
+  else if(layout==='symbols')v=symbolKeys[i];
+  else if(layout==='emoji')v=emojiKeys[i];
+  else v=kurdish?(kuShift?KU2[k]:KU[k]):(upper?k:k.toLowerCase());
+  b.textContent=v;b.setAttribute('data-v',v);
+  b.setAttribute('aria-label',v);
+  b.style.fontSize=layout==='emoji'?'21px':(layout==='numbers'||layout==='symbols'?'17px':'');
+ });
+ shift.style.display=(layout==='letters')?'flex':'none';
+ shift.innerHTML=on?shiftOn:shiftOff;shift.className='key '+(on?'white':'gray');shift.setAttribute('aria-pressed',on?'true':'false');
+ num.textContent=layout==='letters'?(kurdish?'١٢٣':'123'):layout==='numbers'?'#+=':layout==='symbols'?'ABC':'ABC';
+ sp.textContent=kurdish&&layout==='letters'?'بۆشایی':'space';
+ bs.firstElementChild.style.transform=kurdish?'scaleX(-1)':'';
+}
+function commit(v){if(window.AndroidKeyboard){AndroidKeyboard.commit(v)}}
+letters.forEach(function(b){b.addEventListener('click',function(){var v=b.getAttribute('data-v');commit(v);if(layout!=='letters')return;if(kurdish){if(kuShift){kuShift=false;applyCase()}}else if(upper){upper=false;applyCase()}})});
+shift.addEventListener('click',function(){if(layout!=='letters')return;if(kurdish)kuShift=!kuShift;else upper=!upper;applyCase()});
+num.addEventListener('click',function(){if(layout==='letters'){layout='numbers'}else if(layout==='numbers'){layout='symbols'}else{layout='letters'}applyCase()});
+em.addEventListener('click',function(){layout=layout==='emoji'?'letters':'emoji';applyCase()});
+sp.addEventListener('click',function(){commit(' ')});
+rt.addEventListener('click',function(){if(window.AndroidKeyboard)AndroidKeyboard.enter()});
+function del(){if(window.AndroidKeyboard)AndroidKeyboard.delete()}
+var t1=null,t2=null;function stop(){clearTimeout(t1);clearInterval(t2);t1=t2=null}
+bs.addEventListener('pointerdown',function(e){e.preventDefault();stop();del();t1=setTimeout(function(){t2=setInterval(del,70)},400)});
+['pointerup','pointerleave','pointercancel'].forEach(function(ev){bs.addEventListener(ev,stop)});bs.addEventListener('contextmenu',function(e){e.preventDefault()});
+function toggleLang(){kurdish=!kurdish;if(kurdish)kuShift=false;applyCase()}
+globe.addEventListener('click',toggleLang);globe.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleLang()}});
+window.resetForInput=function(){};
+applyCase();
+})();
+</script></body></html>,'%','&','-','+','(',')','*','\"',\"'\",':',';','!','?'];
+var symbolKeys=['[',']','{','}','#','%','^','*','+','=','_','\\\\','|','~','<','>','€','£','¥','•','. ', ',', '?','!','\"',\"'\"]; 
+var emojiKeys=['😀','😂','🥹','😍','🥰','😘','😊','😉','😭','😎','🥳','🤔','🙄','😴','😡','👍','👎','👏','🙏','❤️','💔','🔥','✨','🎉','🌹','💯'];
 var KU={Q:'ق',W:'و',E:'ە',R:'ر',T:'ت',Y:'ی',U:'ئ',I:'ح',O:'ۆ',P:'پ',A:'ا',S:'س',D:'د',F:'ف',G:'گ',H:'هـ',J:'ژ',K:'ک',L:'ل',Z:'ز',X:'خ',C:'ج',V:'ڤ',B:'ب',N:'ن',M:'م'};
 var KU2={Q:'ء',W:'وو',E:'ە',R:'ڕ',T:'ط',Y:'ێ',U:'ي',I:'ع',O:'ۆ',P:'ث',A:'آ',S:'ش',D:'ذ',F:'ظ',G:'غ',H:'هـ',J:'ژ',K:'ک',L:'ڵ',Z:'ض',X:'ص',C:'چ',V:'ڤ',B:'ب',N:'ن',M:'م'};
 var shiftOn=shift.innerHTML,shiftOff=svgOpen('0 0 24 24',24,24)+'<path d="M12 2.8 2.6 13.2h5.9v6.6c0 .6.4 1 1 1h5c.6 0 1-.4 1-1v-6.6h5.9z" stroke="#000" stroke-width="1.8" stroke-linejoin="round"/></svg>';
