@@ -76,13 +76,14 @@ function commit(v){if(window.AndroidKeyboard)AndroidKeyboard.commit(v)}
 function refreshCaps(){if(!kurdish&&layout==='letters'&&window.AndroidKeyboard&&AndroidKeyboard.capsMode){var mode=AndroidKeyboard.capsMode();if(mode>=0){upper=mode>0;shiftLocked=false;updateCase()}}}
 letters.forEach(function(b){b.addEventListener('click',function(){var v=b.getAttribute('data-v');if(v==null)return;commit(v);if(layout==='letters'){if(kurdish){if(kuShift){kuShift=false;updateCase()}}else{shiftLocked=false;upper=false;updateCase();setTimeout(refreshCaps,30)}}})});
 shift.addEventListener('click',function(){
+ if(inputMode==='number'||inputMode==='phone'){layout=layout==='numbers'?'symbols':'numbers';updateCase();return}
  if(layout==='numbers'){layout='symbols';updateCase();return}
  if(layout==='symbols'||layout==='emoji'){layout='letters';updateCase();return}
  if(kurdish){kuShift=!kuShift;updateCase();return}
  var now=Date.now();if(now-lastShiftAt<350){shiftLocked=!shiftLocked;upper=shiftLocked||upper}else{upper=!upper;shiftLocked=false}
  lastShiftAt=now;updateCase();
 });
-num.addEventListener('click',function(){if(layout==='letters')layout='numbers';else if(layout==='numbers')layout='symbols';else layout='letters';updateCase()});
+num.addEventListener('click',function(){if(inputMode==='number'||inputMode==='phone'){layout=layout==='numbers'?'symbols':'numbers'}else if(layout==='letters')layout='numbers';else if(layout==='numbers')layout='symbols';else layout='letters';updateCase()});
 em.addEventListener('click',function(){if(layout==='emoji'){emojiPage=(emojiPage+1)%emojiPages.length}else{layout='emoji';emojiPage=0}updateCase()});
 sp.addEventListener('click',function(){if(window.AndroidKeyboard&&AndroidKeyboard.space)AndroidKeyboard.space(!kurdish&&layout==='letters'&&inputMode==='text');else commit(' ')});
 rt.addEventListener('click',function(){if(window.AndroidKeyboard)AndroidKeyboard.enter()});
