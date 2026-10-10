@@ -28,7 +28,7 @@ var rows=[
 {y:112.4,keys:{Z:62.9,X:101.5,C:139.8,V:178.9,B:218.3,N:255.6,M:294.8}}
 ];
 function add(el,x,y,w,cls){el.className='key '+cls;el.style.left=x+'px';el.style.top=(y-TOP)+'px';if(w)el.style.width=w+'px';el.type='button';el.addEventListener('mousedown',function(e){e.preventDefault()});kb.appendChild(el);return el}
-rows.forEach(function(r){Object.keys(r.keys).forEach(function(ch){var b=document.createElement('button');b.textContent=ch;b.setAttribute('aria-label',ch);add(b,r.keys[ch],r.y,0,'white letter')})});
+rows.forEach(function(r){Object.keys(r.keys).forEach(function(ch){var b=document.createElement('button');b.textContent=ch;b.setAttribute('aria-label',ch);b.setAttribute('data-key',ch);add(b,r.keys[ch],r.y,0,'white letter')})});
 var svgOpen=function(vb,w,h){return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="'+vb+'" width="'+w+'" height="'+h+'" fill="none" aria-hidden="true">'};
 var shift=document.createElement('button');shift.setAttribute('aria-label','Shift');shift.innerHTML=svgOpen('0 0 24 24',24,24)+'<path d="M12 2.8 2.6 13.2h5.9v6.6c0 .6.4 1 1 1h5c.6 0 1-.4 1-1v-6.6h5.9z" fill="#000" stroke="#000" stroke-width="1" stroke-linejoin="round"/></svg>';add(shift,3.7,112.4,43,'white');
 var bs=document.createElement('button');bs.setAttribute('aria-label','Delete');bs.innerHTML=svgOpen('0 0 28 22',26,20.4)+'<path d="M9 2.5h14.5a3 3 0 0 1 3 3v11a3 3 0 0 1-3 3H9L1.8 11z" stroke="#000" stroke-width="1.8" stroke-linejoin="round"/><path d="M12.8 7.3l7.4 7.4M20.2 7.3l-7.4 7.4" stroke="#000" stroke-width="1.8" stroke-linecap="round"/></svg>';add(bs,343.3,112.4,43,'gray');
@@ -49,7 +49,7 @@ var shiftOn=shift.innerHTML,shiftOff=svgOpen('0 0 24 24',24,24)+'<path d="M12 2.
 function applyCase(){
  var on=kurdish?kuShift:upper;
  letters.forEach(function(b,i){
-  var k=b.getAttribute('aria-label').toUpperCase(),v;
+  var k=b.getAttribute('data-key').toUpperCase(),v;
   if(layout==='numbers')v=numberKeys[i];
   else if(layout==='symbols')v=symbolKeys[i];
   else if(layout==='emoji')v=emojiKeys[i];
