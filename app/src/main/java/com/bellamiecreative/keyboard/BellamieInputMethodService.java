@@ -8,6 +8,8 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.HapticFeedbackConstants;
+import android.view.SoundEffectConstants;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.webkit.JavascriptInterface;
@@ -113,9 +115,27 @@ public class BellamieInputMethodService extends InputMethodService {
                 + type + "," + options + "," + cachedCapsMode + ");", null);
     }
 
+    private void playKeyFeedback() {
+        if (webView == null) return;
+        android.content.SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+        if (prefs.getBoolean("vibration_enabled", true)) {
+            int feedback = Build.VERSION.SDK_INT >= 27
+                    ? HapticFeedbackConstants.KEYBOARD_TAP : HapticFeedbackConstants.VIRTUAL_KEY;
+            webView.performHapticFeedback(feedback);
+        }
+        if (prefs.getBoolean("sound_enabled", true)) {
+            webView.playSoundEffect(SoundEffectConstants.CLICK);
+        }
+    }
+
     private void deleteBeforeCursor() {
         InputConnection connection = getCurrentInputConnection();
         if (connection == null) return;
+        CharSequence selected = connection.getSelectedText(0);
+        if (selected != null && selected.length() > 0) {
+            connection.commitText("", 1);
+            return;
+        }
         if (Build.VERSION.SDK_INT >= 24) {
             connection.deleteSurroundingTextInCodePoints(1, 0);
         } else {
@@ -138,6 +158,9 @@ public class BellamieInputMethodService extends InputMethodService {
         }
         @JavascriptInterface public void delete() {
             mainHandler.post(BellamieInputMethodService.this::deleteBeforeCursor);
+        }
+        @JavascriptInterface public void feedback() {
+            mainHandler.post(BellamieInputMethodService.this::playKeyFeedback);
         }
         @JavascriptInterface public void space(boolean replacePreviousSpace) {
             mainHandler.post(() -> insertSpace(replacePreviousSpace));
