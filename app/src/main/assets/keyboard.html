@@ -46,7 +46,7 @@ var letters=Array.prototype.slice.call(kb.querySelectorAll('.letter'));
 kb.querySelectorAll('.key').forEach(function(key){key.addEventListener('pointerdown',function(){if(window.AndroidKeyboard&&AndroidKeyboard.feedback)AndroidKeyboard.feedback()})});
 var upper=true,shiftLocked=false,lastShiftAt=0,lastSpaceAt=0,kurdish=false,kuShift=false,layout='letters',inputMode='text',actionLabel='return',emojiPage=0;
 var numberKeys=['1','2','3','4','5','6','7','8','9','0','@','#','$','%','&','-','+','(',')','*','"',"'",':',';','!','?'];
-var symbolKeys=['[',']','{','}','#','%','^','*','+','=','_','\\\\','|','~','<','>','€','£','¥','.',',','?','!','"',"'",':'];
+var symbolKeys=['[',']','{','}','#','%','^','*','+','=','_','\\','|','~','<','>','€','£','¥','.',',','?','!','"', "'",':'];
 var emailKeys=['1','2','3','4','5','6','7','8','9','0','@','.','-','_','&','+','(',')','/','?',':',';','!','"',"'",'#'];
 var urlKeys=['1','2','3','4','5','6','7','8','9','0','/','.',':','-','_','?','#','%','&','+','=','@','~','!','(',')'];
 var emojiPages=[['😀','😂','🥹','😍','🥰','😘','😊','😉','😭','😎','🥳','🤔','🙄','😴','😡','👍','👎','👏','🙏','❤️','💔','🔥','✨','🎉','🌹','💯'],['👋','🤚','🖐️','✋','🫶','🤝','🙏','💪','🦾','👏','🙌','🤲','👌','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','👇','☝️','✍️','💅','🫰'],['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🐔','🐧','🐦','🦋','🐢','🐬','🐳','🌸','🌹','🌈','🌍'],['🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🥑','🍕','🍔','🍟','🌮','🍰','☕','🧋','🚗','✈️'],['⌚','📱','💻','🎧','📷','💡','🔑','🔒','🎁','🎈','⚽','🏀','🎮','🎵','🎶','⭐','🌟','☀️','🌙','☁️','⚡','❄️','☔','✅','❌','💯']];
@@ -76,7 +76,7 @@ function updateCase(){
 function commit(v){if(window.AndroidKeyboard)AndroidKeyboard.commit(v)}
 function refreshCaps(){if(!kurdish&&layout==='letters'&&window.AndroidKeyboard&&AndroidKeyboard.capsMode){var mode=AndroidKeyboard.capsMode();if(mode>=0){upper=mode>0;shiftLocked=false;updateCase()}}}
 letters.forEach(function(b){b.addEventListener('click',function(){lastSpaceAt=0;var v=b.getAttribute('data-v');if(v==null)return;commit(v);if(layout==='letters'){if(kurdish){if(kuShift){kuShift=false;updateCase()}}else{shiftLocked=false;upper=false;updateCase();setTimeout(refreshCaps,30)}}})});
-shift.addEventListener('click',function(){
+shift.addEventListener('click',function(){lastSpaceAt=0;
  if(inputMode==='number'||inputMode==='phone'){layout=layout==='numbers'?'symbols':'numbers';updateCase();return}
  if(layout==='numbers'){layout='symbols';updateCase();return}
  if(layout==='symbols'||layout==='emoji'){layout='letters';updateCase();return}
@@ -84,8 +84,8 @@ shift.addEventListener('click',function(){
  var now=Date.now();if(now-lastShiftAt<350){shiftLocked=!shiftLocked;upper=shiftLocked||upper}else{upper=!upper;shiftLocked=false}
  lastShiftAt=now;updateCase();
 });
-num.addEventListener('click',function(){if(inputMode==='number'||inputMode==='phone'){layout=layout==='numbers'?'symbols':'numbers'}else if(layout==='letters')layout='numbers';else if(layout==='numbers')layout='symbols';else layout='letters';updateCase()});
-em.addEventListener('click',function(){if(layout==='emoji'){emojiPage=(emojiPage+1)%emojiPages.length}else{layout='emoji';emojiPage=0}updateCase()});
+num.addEventListener('click',function(){lastSpaceAt=0;if(inputMode==='number'||inputMode==='phone'){layout=layout==='numbers'?'symbols':'numbers'}else if(layout==='letters')layout='numbers';else if(layout==='numbers')layout='symbols';else layout='letters';updateCase()});
+em.addEventListener('click',function(){lastSpaceAt=0;if(layout==='emoji'){emojiPage=(emojiPage+1)%emojiPages.length}else{layout='emoji';emojiPage=0}updateCase()});
 sp.addEventListener('click',function(){var now=Date.now(),eligible=!kurdish&&layout==='letters'&&inputMode==='text',doubleSpace=eligible&&lastSpaceAt>0&&now-lastSpaceAt<350;lastSpaceAt=doubleSpace?0:(eligible?now:0);if(window.AndroidKeyboard&&AndroidKeyboard.space)AndroidKeyboard.space(doubleSpace);else commit(doubleSpace?'. ':' ')});
 rt.addEventListener('click',function(){if(window.AndroidKeyboard)AndroidKeyboard.enter()});
 function del(){if(window.AndroidKeyboard)AndroidKeyboard.delete()}
@@ -100,7 +100,7 @@ function setInputConfig(type,imeOptions,caps){
  var cls=type&15,variation=type&4080;
  inputMode='text';
  if(cls===2)inputMode='number';else if(cls===3)inputMode='phone';else if(cls===4)inputMode='number';
- else if(cls===1&&(variation===32||variation===208))inputMode='email';else if(cls===1&&variation===16)inputMode='url';else if(cls===1&&(variation===128||variation===224))inputMode='password';
+ else if(cls===1&&(variation===32||variation===208))inputMode='email';else if(cls===1&&variation===16)inputMode='url';else if(cls===1&&(variation===128||variation===144||variation===224))inputMode='password';
  if(inputMode==='number'||inputMode==='phone'){layout='numbers'}else if(layout==='numbers'||layout==='symbols')layout='letters';
  var action=imeOptions&255;
  actionLabel=action===2?'go':action===3?'search':action===4?'send':action===5?'next':action===6?'done':action===7?'previous':'return';
