@@ -2,6 +2,7 @@ package com.bellamiecreative.keyboard;
 
 import android.inputmethodservice.InputMethodService;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -21,6 +22,8 @@ public class BellamieInputMethodService extends InputMethodService {
         webView.setHorizontalScrollBarEnabled(false);
         webView.setWebChromeClient(new WebChromeClient());
         webView.addJavascriptInterface(new KeyboardBridge(), "AndroidKeyboard");
+        int keyboardHeight = (int) (283.2f * getResources().getDisplayMetrics().density + 0.5f);
+        webView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, keyboardHeight));
         webView.loadUrl("file:///android_asset/keyboard.html");
         return webView;
     }
