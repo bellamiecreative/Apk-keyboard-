@@ -13,6 +13,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".VoiceInputActivity"
+            android:exported="false"
+            android:excludeFromRecents="true" />
         <service
             android:name=".BellamieInputMethodService"
             android:label="Bellamie Keyboard"
