@@ -143,9 +143,35 @@ public class BellamieInputMethodService extends InputMethodService {
         }
     }
 
-    private void insertSpace(boolean ignored) {
+    private void insertSpace(boolean replacePreviousSpace) {
         InputConnection connection = getCurrentInputConnection();
-        if (connection != null) connection.commitText(" ", 1);
+        if (connection == null) return;
+        if (replacePreviousSpace && editorInfo != null) {
+            int inputClass = editorInfo.inputType & InputType.TYPE_MASK_CLASS;
+            int variation = editorInfo.inputType & InputType.TYPE_MASK_VARIATION;
+            boolean plainText = inputClass == InputType.TYPE_CLASS_TEXT
+                    && variation != InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+                    && variation != InputType.TYPE_TEXT_VARIATION_URI
+                    && variation != InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS
+                    && variation != InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    && variation != InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD
+                    && variation != InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD;
+            if (plainText) {
+                try {
+                    CharSequence before = connection.getTextBeforeCursor(2, 0);
+                    if (before != null && before.length() >= 2
+                            && before.charAt(before.length() - 1) == ' '
+                            && Character.isLetterOrDigit(before.charAt(before.length() - 2))) {
+                        connection.deleteSurroundingText(1, 0);
+                        connection.commitText(". ", 1);
+                        return;
+                    }
+                } catch (RuntimeException ignored) {
+                    // If surrounding text is unavailable, insert a normal space.
+                }
+            }
+        }
+        connection.commitText(" ", 1);
     }
 
     private final class KeyboardBridge {
