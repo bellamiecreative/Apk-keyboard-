@@ -17,7 +17,7 @@ public class BellamieInputMethodService extends InputMethodService {
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setAllowFileAccess(true);
-        webView.setBackgroundColor(0xFFD0D4D9);
+        webView.setBackgroundColor(0xFFD1D5DB);
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
         webView.setWebChromeClient(new WebChromeClient());
