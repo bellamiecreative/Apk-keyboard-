@@ -123,25 +123,9 @@ public class BellamieInputMethodService extends InputMethodService {
         }
     }
 
-    private void insertSpace(boolean replacePreviousSpace) {
+    private void insertSpace(boolean ignored) {
         InputConnection connection = getCurrentInputConnection();
-        if (connection == null) return;
-        if (replacePreviousSpace && editorInfo != null) {
-            int inputClass = editorInfo.inputType & InputType.TYPE_MASK_CLASS;
-            int variation = editorInfo.inputType & InputType.TYPE_MASK_VARIATION;
-            boolean plainText = inputClass == InputType.TYPE_CLASS_TEXT
-                    && variation != InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
-                    && variation != InputType.TYPE_TEXT_VARIATION_URI
-                    && variation != InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS
-                    && variation != InputType.TYPE_TEXT_VARIATION_PASSWORD
-                    && variation != InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD;
-            if (plainText) {
-                connection.deleteSurroundingText(1, 0);
-                connection.commitText(". ", 1);
-                return;
-            }
-        }
-        connection.commitText(" ", 1);
+        if (connection != null) connection.commitText(" ", 1);
     }
 
     private final class KeyboardBridge {
