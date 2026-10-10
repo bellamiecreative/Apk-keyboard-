@@ -83,7 +83,7 @@ shift.addEventListener('click',function(){
  lastShiftAt=now;updateCase();
 });
 num.addEventListener('click',function(){if(layout==='letters')layout='numbers';else if(layout==='numbers')layout='symbols';else layout='letters';updateCase()});
-em.addEventListener('click',function(){layout=layout==='emoji'?'letters':'emoji';updateCase()});
+em.addEventListener('click',function(){if(layout==='emoji'){emojiPage=(emojiPage+1)%emojiPages.length}else{layout='emoji';emojiPage=0}updateCase()});
 sp.addEventListener('click',function(){if(window.AndroidKeyboard&&AndroidKeyboard.space)AndroidKeyboard.space(!kurdish&&layout==='letters'&&inputMode==='text');else commit(' ')});
 rt.addEventListener('click',function(){if(window.AndroidKeyboard)AndroidKeyboard.enter()});
 function del(){if(window.AndroidKeyboard)AndroidKeyboard.delete()}
