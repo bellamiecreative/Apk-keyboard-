@@ -46,7 +46,7 @@ public class BellamieInputMethodService extends InputMethodService {
             InputConnection ic = getCurrentInputConnection();
             if (ic != null) {
                 int action = getCurrentInputEditorInfo() == null ? 0 : getCurrentInputEditorInfo().imeOptions & android.view.inputmethod.EditorInfo.IME_MASK_ACTION;
-                if (action != android.view.inputmethod.EditorInfo.IME_ACTION_NONE && action != android.view.inputmethod.EditorInfo.IME_ACTION_UNSPECIFIED && action != android.view.inputmethod.EditorInfo.IME_ACTION_NORMAL) {
+                if (action != android.view.inputmethod.EditorInfo.IME_ACTION_NONE && action != android.view.inputmethod.EditorInfo.IME_ACTION_UNSPECIFIED) {
                     ic.performEditorAction(action);
                 } else {
                     ic.commitText("\n", 1);
