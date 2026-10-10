@@ -94,7 +94,8 @@ bs.addEventListener('pointerdown',function(e){e.preventDefault();stopDelete();de
 ['pointerup','pointerleave','pointercancel','blur'].forEach(function(ev){bs.addEventListener(ev,stopDelete)});
 bs.addEventListener('contextmenu',function(e){e.preventDefault()});
 function toggleLang(){kurdish=!kurdish;kuShift=false;shiftLocked=false;upper=true;if(layout==='emoji')layout='letters';updateCase()}
-globe.addEventListener('click',toggleLang);globe.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleLang()}});\nvoice.addEventListener('click',function(){if(window.AndroidKeyboard&&AndroidKeyboard.voice)AndroidKeyboard.voice(kurdish)});voice.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();if(window.AndroidKeyboard&&AndroidKeyboard.voice)AndroidKeyboard.voice(kurdish)}});
+globe.addEventListener('click',toggleLang);globe.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleLang()}});
+voice.addEventListener('click',function(){if(window.AndroidKeyboard&&AndroidKeyboard.voice)AndroidKeyboard.voice(kurdish)});voice.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();if(window.AndroidKeyboard&&AndroidKeyboard.voice)AndroidKeyboard.voice(kurdish)}});
 function setInputConfig(type,imeOptions,caps){
  type=Number(type)||0;imeOptions=Number(imeOptions)||0;caps=Number(caps)||0;
  var cls=type&15,variation=type&4080;
