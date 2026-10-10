@@ -80,8 +80,8 @@ public class BellamieInputMethodService extends InputMethodService {
         webView.setWebViewClient(new WebViewClient() {
             @Override public void onPageFinished(WebView view, String url) {
                 pageReady = true;
-                applyEditorConfiguration();
                 view.evaluateJavascript("if(window.resetForInput)window.resetForInput();", null);
+                applyEditorConfiguration();
             }
         });
         webView.addJavascriptInterface(new KeyboardBridge(), "AndroidKeyboard");
