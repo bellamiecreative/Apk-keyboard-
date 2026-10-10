@@ -12,7 +12,7 @@ body{font-family:"SF Pro","SF Pro Text","SF Pro Display",-apple-system,BlinkMacS
 #screen{position:relative;width:390px;height:283.2px;transform-origin:top left;background:var(--keyboard-bg);overflow:hidden}
 #kb{position:absolute;left:0;top:0;width:390px;height:283.2px;background:var(--keyboard-bg)}
 .key{position:absolute;display:flex;align-items:center;justify-content:center;border:0;border-radius:5.5px;height:43.2px;color:#111;font-family:inherit;font-size:15.6pt;font-weight:400;line-height:1;user-select:none;-webkit-user-select:none;cursor:pointer;touch-action:manipulation;box-shadow:0 1.15px 0 var(--key-shadow);transition:background-color 65ms ease,box-shadow 65ms ease,transform 65ms ease}
-.key:active{transform:translateY(1px);box-shadow:0 .15px 0 var(--key-shadow)}
+.key:active{transform:translateY(1px);box-shadow:0 .15px 0 var(--key-shadow)}.white:active{background:#E4E7EC}.gray:active{background:#929BA8}
 .white{background:#FAFAFC}.gray{background:var(--key-gray)}.letter{width:34.3px}.key svg{display:block}
 .ico{position:absolute;color:#4F555C;pointer-events:none}.ico svg{display:block;width:100%;height:100%}
 .key:focus-visible,.ico:focus-visible{outline:2px solid #2563eb;outline-offset:1px}
@@ -26,9 +26,9 @@ var kb=document.getElementById('kb'),screen=document.getElementById('screen');
 function resizeKeyboard(){var scale=window.innerWidth/390;screen.style.transform='scale('+scale+')';document.documentElement.style.height=(283.2*scale)+'px';document.body.style.height=(283.2*scale)+'px'}
 window.addEventListener('resize',resizeKeyboard);resizeKeyboard();
 var rows=[
-{y:6.8,keys:{Q:3.7,W:43.4,E:81.5,R:119.8,T:158.2,Y:197.7,U:235.9,I:274.2,O:312.5,P:351.9}},
-{y:59.2,keys:{A:23,S:62.9,D:101.5,F:139.8,G:178.9,H:218.3,J:255.6,K:294.8,L:333.1}},
-{y:112.4,keys:{Z:62.9,X:101.5,C:139.8,V:178.9,B:218.3,N:255.6,M:294.8}}
+{y:6.8,keys:{Q:2.25,W:41.05,E:79.85,R:118.65,T:157.45,Y:196.25,U:235.05,I:273.85,O:312.65,P:351.45}},
+{y:59.2,keys:{A:22.65,S:61.45,D:100.25,F:139.05,G:177.85,H:216.65,J:255.45,K:294.25,L:333.05}},
+{y:112.4,keys:{Z:61.95,X:100.75,C:139.55,V:178.35,B:217.15,N:255.95,M:294.75}}
 ];
 function add(el,x,y,w,cls){el.className='key '+cls;el.style.left=x+'px';el.style.top=y+'px';if(w)el.style.width=w+'px';el.type='button';el.addEventListener('mousedown',function(e){e.preventDefault()});kb.appendChild(el);return el}
 rows.forEach(function(r){Object.keys(r.keys).forEach(function(ch){var b=document.createElement('button');b.textContent=ch;b.setAttribute('aria-label',ch);b.setAttribute('data-key',ch);add(b,r.keys[ch],r.y,0,'white letter')})});
