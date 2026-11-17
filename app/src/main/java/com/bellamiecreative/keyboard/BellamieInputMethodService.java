@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.view.HapticFeedbackConstants;
 import android.view.SoundEffectConstants;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.ExtractedText;
+import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputConnection;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
@@ -111,7 +113,24 @@ public class BellamieInputMethodService extends InputMethodService {
         super.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd, candidatesStart, candidatesEnd);
         updateCachedCapsMode();
         if (webView != null && pageReady) {
-            webView.evaluateJavascript("if(window.refreshCaps)window.refreshCaps();", null);
+            if (isCurrentInputEmpty()) {
+                webView.evaluateJavascript("if(window.onInputBecameEmpty)window.onInputBecameEmpty();", null);
+            } else {
+                webView.evaluateJavascript("if(window.refreshCaps)window.refreshCaps();", null);
+            }
+        }
+    }
+
+    private boolean isCurrentInputEmpty() {
+        InputConnection connection = getCurrentInputConnection();
+        if (connection == null) return false;
+        try {
+            ExtractedTextRequest request = new ExtractedTextRequest();
+            request.token = 0;
+            ExtractedText extracted = connection.getExtractedText(request, 0);
+            return extracted != null && extracted.text != null && extracted.text.length() == 0;
+        } catch (RuntimeException ignored) {
+            return false;
         }
     }
 
