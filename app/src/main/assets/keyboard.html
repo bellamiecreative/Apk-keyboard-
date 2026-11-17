@@ -75,7 +75,7 @@ function updateCase(){
 }
 function commit(v){if(window.AndroidKeyboard)AndroidKeyboard.commit(v)}
 function refreshCaps(){if(manualShiftOverride)return;if(!kurdish&&layout==='letters'&&window.AndroidKeyboard&&AndroidKeyboard.capsMode){var mode=AndroidKeyboard.capsMode();if(mode>=0){upper=mode>0;shiftLocked=false;updateCase()}}}
-letters.forEach(function(b){b.addEventListener('click',function(){lastSpaceAt=0;var v=b.getAttribute('data-v');if(v==null)return;commit(v);if(layout==='letters'){if(kurdish){if(kuShift){kuShift=false;updateCase()}}else{shiftLocked=false;upper=false;updateCase();setTimeout(refreshCaps,30)}}})});
+letters.forEach(function(b){b.addEventListener('click',function(){lastSpaceAt=0;var v=b.getAttribute('data-v');if(v==null)return;commit(v);if(layout==='letters'){if(kurdish){if(kuShift){kuShift=false;updateCase()}}else{manualShiftOverride=true;shiftLocked=false;upper=false;updateCase()}}})});
 shift.addEventListener('click',function(){manualShiftOverride=true;lastSpaceAt=0;
  if(inputMode==='number'||inputMode==='phone'){layout=layout==='numbers'?'symbols':'numbers';updateCase();return}
  if(layout==='numbers'){layout='symbols';updateCase();return}
