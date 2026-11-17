@@ -110,6 +110,7 @@ function setInputConfig(type,imeOptions,caps){
 }
 window.configureInput=setInputConfig;
 window.refreshCaps=refreshCaps;
+window.onInputBecameEmpty=function(){manualShiftOverride=false;shiftLocked=false;upper=true;kuShift=false;updateCase();setTimeout(refreshCaps,40)};
 window.resetForInput=function(){if(layout==='emoji')layout='letters';manualShiftOverride=false;shiftLocked=false;upper=true;kuShift=false;updateCase();setTimeout(refreshCaps,40)};
 updateCase();
 })();
