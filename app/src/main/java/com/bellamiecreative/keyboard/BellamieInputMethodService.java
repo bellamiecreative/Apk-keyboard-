@@ -115,9 +115,23 @@ public class BellamieInputMethodService extends InputMethodService {
         if (webView != null && pageReady) {
             if (isCurrentInputEmpty()) {
                 webView.evaluateJavascript("if(window.onInputBecameEmpty)window.onInputBecameEmpty();", null);
+            } else if (isCursorAtNewLineStart()) {
+                webView.evaluateJavascript("if(window.onNewLine)window.onNewLine();", null);
             } else {
                 webView.evaluateJavascript("if(window.refreshCaps)window.refreshCaps();", null);
             }
+        }
+    }
+
+    private boolean isCursorAtNewLineStart() {
+        InputConnection connection = getCurrentInputConnection();
+        if (connection == null) return false;
+        try {
+            CharSequence before = connection.getTextBeforeCursor(1, 0);
+            return before != null && before.length() == 1
+                    && (before.charAt(0) == '\\n' || before.charAt(0) == '\\r');
+        } catch (RuntimeException ignored) {
+            return false;
         }
     }
 
