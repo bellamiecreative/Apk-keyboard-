@@ -114,7 +114,7 @@ function setInputConfig(type,imeOptions,caps){
 window.configureInput=setInputConfig;
 window.refreshCaps=refreshCaps;
 window.onInputBecameEmpty=function(){if(!shiftLocked){manualShiftOverride=false;upper=true}kuShift=false;updateCase();if(!shiftLocked)setTimeout(refreshCaps,40)};
-window.onNewLine=function(){if(shiftLocked)return;manualShiftOverride=false;if(kurdish){kuShift=true}else{upper=true}updateCase();setTimeout(refreshCaps,40)};
+window.onNewLine=function(){if(shiftLocked)return;manualShiftOverride=false;if(kurdish){kuShift=true}else{upper=true}updateCase()};
 window.resetForInput=function(){if(layout==='emoji')layout='letters';manualShiftOverride=false;shiftLocked=false;upper=true;kuShift=false;updateCase();setTimeout(refreshCaps,40)};
 updateCase();
 })();
