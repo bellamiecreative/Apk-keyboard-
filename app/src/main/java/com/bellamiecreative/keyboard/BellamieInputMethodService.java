@@ -115,23 +115,9 @@ public class BellamieInputMethodService extends InputMethodService {
         if (webView != null && pageReady) {
             if (isCurrentInputEmpty()) {
                 webView.evaluateJavascript("if(window.onInputBecameEmpty)window.onInputBecameEmpty();", null);
-            } else if (isCursorAtNewLineStart()) {
-                webView.evaluateJavascript("if(window.onNewLine)window.onNewLine();", null);
             } else {
                 webView.evaluateJavascript("if(window.refreshCaps)window.refreshCaps();", null);
             }
-        }
-    }
-
-    private boolean isCursorAtNewLineStart() {
-        InputConnection connection = getCurrentInputConnection();
-        if (connection == null) return false;
-        try {
-            CharSequence before = connection.getTextBeforeCursor(1, 0);
-            return before != null && before.length() == 1
-                    && (before.charAt(0) == '\\n' || before.charAt(0) == '\\r');
-        } catch (RuntimeException ignored) {
-            return false;
         }
     }
 
@@ -275,10 +261,16 @@ public class BellamieInputMethodService extends InputMethodService {
                 if (connection == null) return;
                 int action = editorInfo == null ? EditorInfo.IME_ACTION_NONE
                         : editorInfo.imeOptions & EditorInfo.IME_MASK_ACTION;
-                if (action != EditorInfo.IME_ACTION_NONE && action != EditorInfo.IME_ACTION_UNSPECIFIED) {
+                boolean multiLine = editorInfo != null
+                        && (editorInfo.inputType & InputType.TYPE_TEXT_FLAG_MULTI_LINE) != 0;
+                if (!multiLine && action != EditorInfo.IME_ACTION_NONE
+                        && action != EditorInfo.IME_ACTION_UNSPECIFIED) {
                     connection.performEditorAction(action);
                 } else {
                     connection.commitText("\n", 1);
+                    if (webView != null && pageReady) {
+                        webView.evaluateJavascript("if(window.onNewLine)window.onNewLine();", null);
+                    }
                 }
             });
         }
