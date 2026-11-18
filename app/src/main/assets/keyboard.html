@@ -44,7 +44,7 @@ var globe=icon(25.6,229.9,29.2,29.3,'<svg xmlns="http://www.w3.org/2000/svg" vie
 var voice=icon(340,229.9,20.4,30.1,'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20.4 30.1" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="5.7" y="1.2" width="9" height="16.5" rx="4.5"/><path d="M1.6 13.2a8.6 8.6 0 0 0 17.2 0M10.2 21.8v6.6M5.6 28.6h9.2"/></svg>','Voice input');
 var letters=Array.prototype.slice.call(kb.querySelectorAll('.letter'));
 kb.querySelectorAll('.key').forEach(function(key){key.addEventListener('pointerdown',function(){if(window.AndroidKeyboard&&AndroidKeyboard.feedback)AndroidKeyboard.feedback()})});
-var upper=true,shiftLocked=false,manualShiftOverride=false,lastShiftAt=0,lastSpaceAt=0,kurdish=false,kuShift=false,layout='letters',inputMode='text',actionLabel='return',emojiPage=0;
+var upper=true,shiftLocked=false,manualShiftOverride=false,lastShiftAt=0,lastSpaceAt=0,doubleSpaceBlocked=false,kurdish=false,kuShift=false,layout='letters',inputMode='text',actionLabel='return',emojiPage=0;
 var numberKeys=['1','2','3','4','5','6','7','8','9','0','−','/',':',';','(',')','$','&','@','”','.',',','?','!',"'"];
 var kurdishDigits={'0':'٠','1':'١','2':'٢','3':'٣','4':'٤','5':'٥','6':'٦','7':'٧','8':'٨','9':'٩'};
 function localizeDigits(value){return String(value).replace(/[0-9]/g,function(d){return kurdishDigits[d]})}
@@ -98,7 +98,7 @@ function updateCase(){
 }
 function commit(v){if(window.AndroidKeyboard)AndroidKeyboard.commit(v)}
 function refreshCaps(){if(manualShiftOverride||shiftLocked)return;if(!kurdish&&layout==='letters'&&window.AndroidKeyboard&&AndroidKeyboard.capsMode){var mode=AndroidKeyboard.capsMode();if(mode>=0){upper=mode>0;shiftLocked=false;updateCase()}}}
-letters.forEach(function(b){b.addEventListener('click',function(){lastSpaceAt=0;var v=b.getAttribute('data-v');if(v==null)return;var returnToEnglish=!kurdish&&(layout==='numbers'||layout==='symbols')&&(v==="'"||v==='’');commit(v);if(returnToEnglish){layout='letters';updateCase();return}if(layout==='letters'){if(kurdish){if(kuShift){kuShift=false;updateCase()}}else if(!shiftLocked){manualShiftOverride=true;upper=false;updateCase()}}})});
+letters.forEach(function(b){b.addEventListener('click',function(){lastSpaceAt=0;var v=b.getAttribute('data-v');if(v==null)return;doubleSpaceBlocked=false;var returnToEnglish=!kurdish&&(layout==='numbers'||layout==='symbols')&&(v==="'"||v==='’');commit(v);if(returnToEnglish){layout='letters';updateCase();return}if(layout==='letters'){if(kurdish){if(kuShift){kuShift=false;updateCase()}}else if(!shiftLocked){manualShiftOverride=true;upper=false;updateCase()}}})});
 shift.addEventListener('click',function(){manualShiftOverride=true;lastSpaceAt=0;
  if(kurdish&&(layout==='numbers'||layout==='symbols')){layout=layout==='numbers'?'symbols':'numbers';updateCase();return}
  if(inputMode==='number'||inputMode==='phone'){layout=layout==='numbers'?'symbols':'numbers';updateCase();return}
@@ -114,9 +114,9 @@ shift.addEventListener('click',function(){manualShiftOverride=true;lastSpaceAt=0
 });
 num.addEventListener('click',function(){lastSpaceAt=0;if(kurdish&&(layout==='numbers'||layout==='symbols')){layout='letters'}else if(layout==='numbers'||layout==='symbols'||layout==='emoji'){layout='letters'}else{layout='numbers'}updateCase()});
 em.addEventListener('click',function(){lastSpaceAt=0;if(layout==='emoji'){emojiPage=(emojiPage+1)%emojiPages.length}else{layout='emoji';emojiPage=0}updateCase()});
-sp.addEventListener('click',function(){var now=Date.now(),fromSymbols=layout==='numbers'||layout==='symbols',eligible=layout==='letters'&&inputMode==='text',doubleSpace=eligible&&lastSpaceAt>0&&now-lastSpaceAt<350;lastSpaceAt=doubleSpace?0:(eligible?now:0);if(window.AndroidKeyboard&&AndroidKeyboard.space)AndroidKeyboard.space(doubleSpace);else commit(doubleSpace?'. ':' ');if(fromSymbols){layout='letters';updateCase();return}if(doubleSpace&&!kurdish&&!shiftLocked){manualShiftOverride=false;upper=true;updateCase()}});
+sp.addEventListener('click',function(){var now=Date.now(),fromSymbols=layout==='numbers'||layout==='symbols',eligible=layout==='letters'&&inputMode==='text',doubleSpace=eligible&&!doubleSpaceBlocked&&lastSpaceAt>0&&now-lastSpaceAt<350;lastSpaceAt=doubleSpace?0:(eligible?now:0);if(window.AndroidKeyboard&&AndroidKeyboard.space)AndroidKeyboard.space(doubleSpace);else commit(doubleSpace?'. ':' ');if(fromSymbols){layout='letters';updateCase();return}if(doubleSpace&&!kurdish&&!shiftLocked){manualShiftOverride=false;upper=true;updateCase()}});
 rt.addEventListener('click',function(){if(window.AndroidKeyboard)AndroidKeyboard.enter()});
-function del(){lastSpaceAt=0;if(window.AndroidKeyboard)AndroidKeyboard.delete()}
+function del(){lastSpaceAt=0;doubleSpaceBlocked=true;if(window.AndroidKeyboard)AndroidKeyboard.delete()}
 var t1=null,t2=null;function stopDelete(){clearTimeout(t1);clearInterval(t2);t1=t2=null}
 bs.addEventListener('pointerdown',function(e){e.preventDefault();stopDelete();del();t1=setTimeout(function(){t2=setInterval(del,70)},400)});
 ['pointerup','pointerleave','pointercancel','blur'].forEach(function(ev){bs.addEventListener(ev,stopDelete)});
