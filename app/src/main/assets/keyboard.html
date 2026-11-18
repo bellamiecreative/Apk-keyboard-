@@ -96,7 +96,7 @@ var t1=null,t2=null;function stopDelete(){clearTimeout(t1);clearInterval(t2);t1=
 bs.addEventListener('pointerdown',function(e){e.preventDefault();stopDelete();del();t1=setTimeout(function(){t2=setInterval(del,70)},400)});
 ['pointerup','pointerleave','pointercancel','blur'].forEach(function(ev){bs.addEventListener(ev,stopDelete)});
 bs.addEventListener('contextmenu',function(e){e.preventDefault()});
-function toggleLang(){kurdish=!kurdish;kuShift=false;shiftLocked=false;upper=true;if(layout==='emoji')layout='letters';updateCase()}
+function toggleLang(){kurdish=!kurdish;kuShift=false;shiftLocked=false;upper=true;if(layout==='emoji'||layout==='numbers'||layout==='symbols')layout='letters';updateCase()}
 globe.addEventListener('click',toggleLang);globe.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleLang()}});
 voice.addEventListener('click',function(){if(window.AndroidKeyboard&&AndroidKeyboard.voice)AndroidKeyboard.voice(kurdish)});voice.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();if(window.AndroidKeyboard&&AndroidKeyboard.voice)AndroidKeyboard.voice(kurdish)}});
 function setInputConfig(type,imeOptions,caps){
