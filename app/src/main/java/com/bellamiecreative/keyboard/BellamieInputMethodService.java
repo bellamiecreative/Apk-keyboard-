@@ -5,6 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ClipDescription;
+import android.net.Uri;
+import android.view.inputmethod.InputContentInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -31,6 +34,16 @@ public class BellamieInputMethodService extends InputMethodService {
     private volatile int cachedCapsMode;
     private boolean pageReady;
     private boolean voiceReceiverRegistered;
+    private boolean imageReceiverRegistered;
+    private final BroadcastReceiver imageReceiver = new BroadcastReceiver() {
+        @Override public void onReceive(Context context, Intent intent) {
+            String uri = intent.getStringExtra("image_uri");
+            if (uri != null && webView != null && pageReady) {
+                String encoded = org.json.JSONObject.quote(uri);
+                webView.evaluateJavascript("if(window.addCustomSticker)window.addCustomSticker(" + encoded + ");", null);
+            }
+        }
+    };
     private final BroadcastReceiver voiceReceiver = new BroadcastReceiver() {
         @Override public void onReceive(Context context, Intent intent) {
             String recognized = intent.getStringExtra("recognized_text");
@@ -49,9 +62,14 @@ public class BellamieInputMethodService extends InputMethodService {
             registerReceiver(voiceReceiver, filter);
         }
         voiceReceiverRegistered = true;
+        IntentFilter imageFilter = new IntentFilter("com.bellamiecreative.keyboard.IMAGE_PICKED");
+        if (Build.VERSION.SDK_INT >= 33) registerReceiver(imageReceiver, imageFilter, Context.RECEIVER_NOT_EXPORTED);
+        else registerReceiver(imageReceiver, imageFilter);
+        imageReceiverRegistered = true;
     }
 
     @Override public void onDestroy() {
+        if (imageReceiverRegistered) { unregisterReceiver(imageReceiver); imageReceiverRegistered = false; }
         if (voiceReceiverRegistered) {
             unregisterReceiver(voiceReceiver);
             voiceReceiverRegistered = false;
@@ -70,7 +88,7 @@ public class BellamieInputMethodService extends InputMethodService {
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setAllowFileAccess(true);
-        settings.setAllowContentAccess(false);
+        settings.setAllowContentAccess(true);
         settings.setDomStorageEnabled(false);
         settings.setSupportZoom(false);
         settings.setBuiltInZoomControls(false);
@@ -243,6 +261,28 @@ public class BellamieInputMethodService extends InputMethodService {
         }
         @JavascriptInterface public void feedback() {
             mainHandler.post(BellamieInputMethodService.this::playKeyFeedback);
+        }
+        @JavascriptInterface public void pickImage() {
+            mainHandler.post(() -> {
+                Intent intent = new Intent(BellamieInputMethodService.this, ImagePickerActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            });
+        }
+        @JavascriptInterface public void insertImage(String value) {
+            if (value == null || Build.VERSION.SDK_INT < 25) return;
+            mainHandler.post(() -> {
+                try {
+                    Uri uri = Uri.parse(value);
+                    String mime = getContentResolver().getType(uri);
+                    if (mime == null || !mime.startsWith("image/")) return;
+                    InputConnection connection = getCurrentInputConnection();
+                    if (connection == null) return;
+                    InputContentInfo content = new InputContentInfo(uri,
+                            new ClipDescription("Bellamie sticker", new String[]{mime}), null);
+                    connection.commitContent(content, InputConnection.INPUT_CONTENT_GRANT_READ_URI_PERMISSION, null);
+                } catch (RuntimeException ignored) { }
+            });
         }
         @JavascriptInterface public void voice(boolean kurdish) {
             mainHandler.post(() -> {
