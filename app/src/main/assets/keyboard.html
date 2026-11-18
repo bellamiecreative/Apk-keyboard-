@@ -74,6 +74,7 @@ function updateCase(){
    else if(i<20){b.style.left=(2.25+(i-10)*38.8)+'px';b.style.top='59.2px';b.style.width='34.3px';b.style.display='flex'}
    else if(i<25){b.style.left=kuThirdX[i-20]+'px';b.style.top='112.4px';b.style.width='48px';b.style.display='flex'}
    else{b.style.display='none'}
+   v=layout==='numbers'?(inputMode==='email'?emailKeys:inputMode==='url'?urlKeys:numberKeys)[i]:symbolKeys[i];
   }else{
    b.style.left=b.dataset.baseLeft+'px';b.style.top=b.dataset.baseTop+'px';b.style.width='34.3px';b.style.display='flex';
    if(layout==='numbers')v=(inputMode==='email'?emailKeys:inputMode==='url'?urlKeys:numberKeys)[i];
