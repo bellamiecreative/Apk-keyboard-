@@ -116,7 +116,7 @@ num.addEventListener('click',function(){lastSpaceAt=0;if(kurdish&&(layout==='num
 em.addEventListener('click',function(){lastSpaceAt=0;if(layout==='emoji'){emojiPage=(emojiPage+1)%emojiPages.length}else{layout='emoji';emojiPage=0}updateCase()});
 sp.addEventListener('click',function(){var now=Date.now(),fromSymbols=layout==='numbers'||layout==='symbols',eligible=layout==='letters'&&inputMode==='text',doubleSpace=eligible&&lastSpaceAt>0&&now-lastSpaceAt<350;lastSpaceAt=doubleSpace?0:(eligible?now:0);if(window.AndroidKeyboard&&AndroidKeyboard.space)AndroidKeyboard.space(doubleSpace);else commit(doubleSpace?'. ':' ');if(fromSymbols){layout='letters';updateCase();return}if(doubleSpace&&!kurdish&&!shiftLocked){manualShiftOverride=false;upper=true;updateCase()}});
 rt.addEventListener('click',function(){if(window.AndroidKeyboard)AndroidKeyboard.enter()});
-function del(){if(window.AndroidKeyboard)AndroidKeyboard.delete()}
+function del(){lastSpaceAt=0;if(window.AndroidKeyboard)AndroidKeyboard.delete()}
 var t1=null,t2=null;function stopDelete(){clearTimeout(t1);clearInterval(t2);t1=t2=null}
 bs.addEventListener('pointerdown',function(e){e.preventDefault();stopDelete();del();t1=setTimeout(function(){t2=setInterval(del,70)},400)});
 ['pointerup','pointerleave','pointercancel','blur'].forEach(function(ev){bs.addEventListener(ev,stopDelete)});
