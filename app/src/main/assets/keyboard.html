@@ -81,7 +81,7 @@ function updateCase(){
   b.style.fontSize=layout==='emoji'?'21px':(layout==='numbers'||layout==='symbols'?'17px':'');
  });
  if(layout==='letters'){shift.innerHTML=shiftLocked?shiftLockedIcon:(on?shiftOn:shiftOff);shift.className='key '+(on?'white':'gray');shift.style.fontSize='';}
- else{shift.textContent=kurdishNumeric?'#+=':(layout==='numbers'?'=\\\\<':'ABC');shift.className='key gray';shift.style.fontSize='12pt';}
+ else{shift.textContent=kurdishNumeric?(layout==='numbers'?'#+=':'١٢٣'):(layout==='numbers'?'=\\\\<':'ABC');shift.className='key gray';shift.style.fontSize='12pt';}
  shift.setAttribute('aria-pressed',layout==='letters'&&on?'true':'false');
  num.textContent=layout==='letters'?(kurdish?'١٢٣':'123'):(kurdish?'اب‌ج':'ABC');
  sp.textContent=kurdish?'بۆشایی':'space';
