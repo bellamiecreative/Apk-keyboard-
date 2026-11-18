@@ -45,7 +45,83 @@ var voice=icon(340,229.9,20.4,30.1,'<svg xmlns="http://www.w3.org/2000/svg" view
 var letters=Array.prototype.slice.call(kb.querySelectorAll('.letter'));
 kb.querySelectorAll('.key').forEach(function(key){key.addEventListener('pointerdown',function(){if(window.AndroidKeyboard&&AndroidKeyboard.feedback)AndroidKeyboard.feedback()})});
 var upper=true,shiftLocked=false,manualShiftOverride=false,lastShiftAt=0,lastSpaceAt=0,kurdish=false,kuShift=false,layout='letters',inputMode='text',actionLabel='return',emojiPage=0;
-var numberKeys=['1','2','3','4','5','6','7','8','9','0','@','#','$','%','&','-','+','(',')','*','"',"'",':',';','!','?'];
+var numberKeys=['1','2','3','4','5','6','7','8','9','0','@','#','
+var symbolKeys=['[',']','{','}','#','%','^','*','+','=','_','\\','|','~','<','>','€','£','¥','.',',','?','!','"', "'",':'];
+var emailKeys=['1','2','3','4','5','6','7','8','9','0','@','.','-','_','&','+','(',')','/','?',':',';','!','"',"'",'#'];
+var urlKeys=['1','2','3','4','5','6','7','8','9','0','/','.',':','-','_','?','#','%','&','+','=','@','~','!','(',')'];
+var emojiPages=[['😀','😂','🥹','😍','🥰','😘','😊','😉','😭','😎','🥳','🤔','🙄','😴','😡','👍','👎','👏','🙏','❤️','💔','🔥','✨','🎉','🌹','💯'],['👋','🤚','🖐️','✋','🫶','🤝','🙏','💪','🦾','👏','🙌','🤲','👌','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','👇','☝️','✍️','💅','🫰'],['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🐔','🐧','🐦','🦋','🐢','🐬','🐳','🌸','🌹','🌈','🌍'],['🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🥑','🍕','🍔','🍟','🌮','🍰','☕','🧋','🚗','✈️'],['⌚','📱','💻','🎧','📷','💡','🔑','🔒','🎁','🎈','⚽','🏀','🎮','🎵','🎶','⭐','🌟','☀️','🌙','☁️','⚡','❄️','☔','✅','❌','💯']];
+var KU={Q:'ق',W:'و',E:'ە',R:'ر',T:'ت',Y:'ی',U:'ئ',I:'ح',O:'ۆ',P:'پ',A:'ا',S:'س',D:'د',F:'ف',G:'گ',H:'هـ',J:'ژ',K:'ک',L:'ل',Z:'ز',X:'خ',C:'ج',V:'ڤ',B:'ب',N:'ن',M:'م'};
+var KU2={Q:'ء',W:'وو',E:'ە',R:'ڕ',T:'ط',Y:'ێ',U:'ي',I:'ع',O:'ۆ',P:'ث',A:'آ',S:'ش',D:'ذ',F:'ظ',G:'غ',H:'هـ',J:'ژ',K:'ک',L:'ڵ',Z:'ض',X:'ص',C:'چ',V:'ڤ',B:'ب',N:'ن',M:'م'};
+var shiftOn=shift.innerHTML,shiftLockedIcon=shift.innerHTML.replace('</svg>','<path d="M7.5 22.2h9" stroke="#000" stroke-width="2.2" stroke-linecap="round"/></svg>'),shiftOff=svgOpen('0 0 24 24',24,24)+'<path d="M12 2.8 2.6 13.2h5.9v6.6c0 .6.4 1 1 1h5c.6 0 1-.4 1-1v-6.6h5.9z" stroke="#000" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+function updateCase(){
+ var on=kurdish?kuShift:(upper||shiftLocked);
+ letters.forEach(function(b,i){
+  var k=b.getAttribute('data-key').toUpperCase(),v;
+  if(layout==='numbers')v=(inputMode==='email'?emailKeys:inputMode==='url'?urlKeys:numberKeys)[i];
+  else if(layout==='symbols')v=symbolKeys[i];
+  else if(layout==='emoji')v=emojiPages[emojiPage][i];
+  else v=kurdish?(kuShift?KU2[k]:KU[k]):(on?k:k.toLowerCase());
+  if(kurdish&&(layout==='numbers'||layout==='symbols'))v=localizeDigits(v);
+  b.textContent=v;b.setAttribute('data-v',v);b.setAttribute('aria-label',v);
+  b.style.fontSize=layout==='emoji'?'21px':(layout==='numbers'||layout==='symbols'?'17px':'');
+ });
+ if(layout==='letters'){shift.innerHTML=shiftLocked?shiftLockedIcon:(on?shiftOn:shiftOff);shift.className='key '+(on?'white':'gray');shift.style.fontSize='';}
+ else{shift.textContent=layout==='numbers'?'=\\<':'ABC';shift.className='key gray';shift.style.fontSize='12pt';}
+ shift.setAttribute('aria-pressed',layout==='letters'&&on?'true':'false');
+ num.textContent=layout==='letters'?(kurdish?'١٢٣':'123'):(layout==='numbers'||layout==='symbols'?(kurdish?'اب‌ج':'ABC'):'ABC');
+ sp.textContent=kurdish&&layout==='letters'?'بۆشایی':'space';
+ bs.firstElementChild.style.transform=kurdish?'scaleX(-1)':'';
+ rt.textContent=actionLabel;
+ rt.setAttribute('aria-label',actionLabel==='return'?'Return':actionLabel);
+}
+function commit(v){if(window.AndroidKeyboard)AndroidKeyboard.commit(v)}
+function refreshCaps(){if(manualShiftOverride||shiftLocked)return;if(!kurdish&&layout==='letters'&&window.AndroidKeyboard&&AndroidKeyboard.capsMode){var mode=AndroidKeyboard.capsMode();if(mode>=0){upper=mode>0;shiftLocked=false;updateCase()}}}
+letters.forEach(function(b){b.addEventListener('click',function(){lastSpaceAt=0;var v=b.getAttribute('data-v');if(v==null)return;commit(v);if(layout==='letters'){if(kurdish){if(kuShift){kuShift=false;updateCase()}}else if(!shiftLocked){manualShiftOverride=true;upper=false;updateCase()}}})});
+shift.addEventListener('click',function(){manualShiftOverride=true;lastSpaceAt=0;
+ if(inputMode==='number'||inputMode==='phone'){layout=layout==='numbers'?'symbols':'numbers';updateCase();return}
+ if(layout==='numbers'){layout='symbols';updateCase();return}
+ if(layout==='symbols'||layout==='emoji'){layout='letters';updateCase();return}
+ if(kurdish){kuShift=!kuShift;updateCase();return}
+ var now=Date.now();
+ if(shiftLocked){shiftLocked=false;upper=false;lastShiftAt=0}
+ else if(lastShiftAt>0&&now-lastShiftAt<350){shiftLocked=true;upper=true;lastShiftAt=0}
+ else{upper=!upper;lastShiftAt=now}
+ updateCase();
+});
+num.addEventListener('click',function(){lastSpaceAt=0;if(layout==='numbers'||layout==='symbols'||layout==='emoji'){layout='letters'}else{layout='numbers'}updateCase()});
+em.addEventListener('click',function(){lastSpaceAt=0;if(layout==='emoji'){emojiPage=(emojiPage+1)%emojiPages.length}else{layout='emoji';emojiPage=0}updateCase()});
+sp.addEventListener('click',function(){var now=Date.now(),eligible=!kurdish&&layout==='letters'&&inputMode==='text',doubleSpace=eligible&&lastSpaceAt>0&&now-lastSpaceAt<350;lastSpaceAt=doubleSpace?0:(eligible?now:0);if(window.AndroidKeyboard&&AndroidKeyboard.space)AndroidKeyboard.space(doubleSpace);else commit(doubleSpace?'. ':' ')});
+rt.addEventListener('click',function(){if(window.AndroidKeyboard)AndroidKeyboard.enter()});
+function del(){if(window.AndroidKeyboard)AndroidKeyboard.delete()}
+var t1=null,t2=null;function stopDelete(){clearTimeout(t1);clearInterval(t2);t1=t2=null}
+bs.addEventListener('pointerdown',function(e){e.preventDefault();stopDelete();del();t1=setTimeout(function(){t2=setInterval(del,70)},400)});
+['pointerup','pointerleave','pointercancel','blur'].forEach(function(ev){bs.addEventListener(ev,stopDelete)});
+bs.addEventListener('contextmenu',function(e){e.preventDefault()});
+function toggleLang(){kurdish=!kurdish;kuShift=false;shiftLocked=false;upper=true;if(layout==='emoji'||layout==='numbers'||layout==='symbols')layout='letters';updateCase()}
+globe.addEventListener('click',toggleLang);globe.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleLang()}});
+voice.addEventListener('click',function(){if(window.AndroidKeyboard&&AndroidKeyboard.voice)AndroidKeyboard.voice(kurdish)});voice.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();if(window.AndroidKeyboard&&AndroidKeyboard.voice)AndroidKeyboard.voice(kurdish)}});
+function setInputConfig(type,imeOptions,caps){
+ type=Number(type)||0;imeOptions=Number(imeOptions)||0;caps=Number(caps)||0;
+ var cls=type&15,variation=type&4080;
+ inputMode='text';
+ if(cls===2)inputMode='number';else if(cls===3)inputMode='phone';else if(cls===4)inputMode='number';
+ else if(cls===1&&(variation===32||variation===208))inputMode='email';else if(cls===1&&variation===16)inputMode='url';else if(cls===1&&(variation===128||variation===144||variation===224))inputMode='password';
+ if(inputMode==='number'||inputMode==='phone'){layout='numbers'}else if(layout==='numbers'||layout==='symbols')layout='letters';
+ var action=imeOptions&255;
+ actionLabel=action===2?'go':action===3?'search':action===4?'send':action===5?'next':action===6?'done':action===7?'previous':'return';
+ if(!kurdish){upper=caps!==0;shiftLocked=false}
+ updateCase();
+}
+window.configureInput=setInputConfig;
+window.refreshCaps=refreshCaps;
+window.onInputBecameEmpty=function(){if(!shiftLocked){manualShiftOverride=false;upper=true}kuShift=false;updateCase();if(!shiftLocked)setTimeout(refreshCaps,40)};
+window.onNewLine=function(){if(shiftLocked)return;manualShiftOverride=true;if(kurdish){kuShift=true}else{upper=true}updateCase()};
+window.resetForInput=function(){if(layout==='emoji')layout='letters';manualShiftOverride=false;shiftLocked=false;upper=true;kuShift=false;updateCase();setTimeout(refreshCaps,40)};
+updateCase();
+})();
+</script></body></html>,'%','&','-','+','(',')','*','"',"'",':',';','!','?'];
+var kurdishDigits={'0':'٠','1':'١','2':'٢','3':'٣','4':'٤','5':'٥','6':'٦','7':'٧','8':'٨','9':'٩'};
+function localizeDigits(value){return String(value).replace(/[0-9]/g,function(d){return kurdishDigits[d]})}
 var symbolKeys=['[',']','{','}','#','%','^','*','+','=','_','\\','|','~','<','>','€','£','¥','.',',','?','!','"', "'",':'];
 var emailKeys=['1','2','3','4','5','6','7','8','9','0','@','.','-','_','&','+','(',')','/','?',':',';','!','"',"'",'#'];
 var urlKeys=['1','2','3','4','5','6','7','8','9','0','/','.',':','-','_','?','#','%','&','+','=','@','~','!','(',')'];
