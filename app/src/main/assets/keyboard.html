@@ -59,7 +59,7 @@ function updateCase(){
  var on=kurdish?kuShift:(upper||shiftLocked);
  var kurdishNumeric=kurdish&&(layout==='numbers'||layout==='symbols');
  var kuNumberValues=['١','٢','٣','٤','٥','٦','٧','٨','٩','٠','−','/',' :','،','(',')','$','@','«','»','.','،','؟','!','ـ'];
- var kuSymbolValues=['١','٢','٣','٤','٥','٦','٧','٨','٩','٠','[',']','{','}','#','%','^','*','+','=','_','\\','|','~','<'];
+ var kuSymbolValues=['[',']','{','}','#','%','^','*','+','=','_','\\','|','~','<','>','&','•',"'",'"','.', '،','؟','!','ـ'];
  var kuThirdX=[65,118,171,224,277];
  letters.forEach(function(b,i){
   var k=b.getAttribute('data-key').toUpperCase(),v;
@@ -137,7 +137,7 @@ window.resetForInput=function(){if(layout==='emoji')layout='letters';manualShift
 updateCase();
 })();
 </script></body></html>,'@','«','»','.','،','؟','!','ـ'];
- var kuSymbolValues=['١','٢','٣','٤','٥','٦','٧','٨','٩','٠','[',']','{','}','#','%','^','*','+','=','_','\\','|','~','<'];
+ var kuSymbolValues=['[',']','{','}','#','%','^','*','+','=','_','\\','|','~','<','>','&','•',"'",'"','.', '،','؟','!','ـ'];
  var kuThirdX=[65,118,171,224,277];
  letters.forEach(function(b,i){
   if(kurdishNumeric){
