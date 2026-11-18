@@ -75,7 +75,7 @@ function updateCase(){
  num.textContent=layout==='letters'?(kurdish?'١٢٣':'123'):(kurdish?'اب‌ج':(layout==='numbers'||layout==='symbols'?'ABC':'ABC'));
  sp.textContent=kurdish&&layout==='letters'?'بۆشایی':'space';
  bs.firstElementChild.style.transform=kurdish?'scaleX(-1)':'';
- rt.textContent=actionLabel;
+ if(kurdish&&(layout==='numbers'||layout==='symbols')){rt.innerHTML=svgOpen('0 0 28 24',28,24)+'<path d="M8 4H4v10h19m-7-7 7 7-7 7" stroke="#000" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>';rt.style.fontSize='';}else{rt.textContent=actionLabel;rt.style.fontSize='12pt';}
  rt.setAttribute('aria-label',actionLabel==='return'?'Return':actionLabel);
 }
 function commit(v){if(window.AndroidKeyboard)AndroidKeyboard.commit(v)}
