@@ -60,13 +60,13 @@ function updateCase(){
  var kurdishNumeric=kurdish&&(layout==='numbers'||layout==='symbols');
  var kuNumberValues=['١','٢','٣','٤','٥','٦','٧','٨','٩','٠','−','/',' :','،','(',')','$','@','«','»','.','،','؟','!','ـ'];
  var kuSymbolValues=['١','٢','٣','٤','٥','٦','٧','٨','٩','٠','[',']','{','}','#','%','^','*','+','=','_','\\','|','~','<'];
- var kuThirdX=[47,103.5,160,216.5,273];
+ var kuThirdX=[65,118,170,222,275];
  letters.forEach(function(b,i){
   var k=b.getAttribute('data-key').toUpperCase(),v;
   if(kurdishNumeric){
    if(i<10){b.style.left=(2.25+i*38.8)+'px';b.style.top='6.8px';b.style.width='34.3px';b.style.display='flex'}
    else if(i<20){b.style.left=(2.25+(i-10)*38.8)+'px';b.style.top='59.2px';b.style.width='34.3px';b.style.display='flex'}
-   else if(i<25){b.style.left=kuThirdX[i-20]+'px';b.style.top='112.4px';b.style.width='50.5px';b.style.display='flex'}
+   else if(i<25){b.style.left=kuThirdX[i-20]+'px';b.style.top='112.4px';b.style.width='43.3px';b.style.display='flex'}
    else{b.style.display='none'}
    v=(layout==='numbers'?kuNumberValues:kuSymbolValues)[i]||'';
   }else{
@@ -84,7 +84,7 @@ function updateCase(){
  else{shift.textContent=kurdishNumeric?'#+=':(layout==='numbers'?'=\\\\<':'ABC');shift.className='key gray';shift.style.fontSize='12pt';}
  shift.setAttribute('aria-pressed',layout==='letters'&&on?'true':'false');
  num.textContent=layout==='letters'?(kurdish?'١٢٣':'123'):(kurdish?'اب‌ج':'ABC');
- sp.textContent=kurdish&&layout==='letters'?'بۆشایی':'space';
+ sp.textContent=kurdish?'بۆشایی':'space';
  bs.firstElementChild.style.transform=kurdish?'scaleX(-1)':'';
  if(kurdishNumeric){rt.innerHTML=svgOpen('0 0 28 24',28,24)+'<path d="M8 4H4v10h19m-7-7 7 7-7 7" stroke="#000" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>';rt.style.fontSize='';}
  else{rt.textContent=actionLabel;rt.style.fontSize='12pt';}
