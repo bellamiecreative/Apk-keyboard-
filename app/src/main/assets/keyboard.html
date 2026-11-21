@@ -135,7 +135,26 @@ var globe=icon(25.6,229.9,29.2,29.3,'<svg xmlns="http://www.w3.org/2000/svg" vie
 var voice=icon(340,229.9,20.4,30.1,'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20.4 30.1" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="5.7" y="1.2" width="9" height="16.5" rx="4.5"/><path d="M1.6 13.2a8.6 8.6 0 0 0 17.2 0M10.2 21.8v6.6M5.6 28.6h9.2"/></svg>','Voice input');
 var emojiPanel=document.createElement('div');emojiPanel.id='emojiPanel';emojiPanel.innerHTML='<input id="emojiSearch" type="search" placeholder="Search Emoji" dir="auto" autocomplete="off" autocapitalize="off" spellcheck="false"><div id="emojiGrid" class="emojiStrip"></div><div id="emojiResults" class="emojiStrip"></div><div id="emojiCategories"></div>';kb.appendChild(emojiPanel);var emojiSearch=emojiPanel.querySelector('#emojiSearch'),emojiGrid=emojiPanel.querySelector('#emojiGrid'),emojiCategories=emojiPanel.querySelector('#emojiCategories');
 var letters=Array.prototype.slice.call(kb.querySelectorAll('.letter'));
-kb.querySelectorAll('.key').forEach(function(key){key.addEventListener('pointerdown',function(){if(window.AndroidKeyboard&&AndroidKeyboard.feedback)AndroidKeyboard.feedback()})});
+/* Key sounds: the page only names the sound; KeySoundEngine (native) plays the recorded WAV, gated by the sound ON/OFF setting.
+   Globe and Voice are .ico elements (not .key) and never call the bridge, so they stay silent. */
+function kSound(kind){var B=window.AndroidKeyboard;if(B&&B.keySound)B.keySound(kind)}
+function shiftSoundKind(){ /* mirrors the Shift click handler's decision, without changing any state */
+ if(kurdish&&(layout==='numbers'||layout==='symbols'))return'fallback';
+ if(inputMode==='number'||inputMode==='phone')return'fallback';
+ if(layout==='numbers'||layout==='symbols'||layout==='emoji')return'fallback';
+ if(kurdish)return kuShift?'shiftOff':'shiftOn';
+ if(shiftLocked)return'shiftOff';
+ if(lastShiftAt>0&&Date.now()-lastShiftAt<350)return'caps';
+ return upper?'shiftOff':'shiftOn'}
+function keyKind(key){
+ if(key===sp)return'silent'; /* Space: haptic now, sound only after a confirmed tap (see sp click handler) */
+ if(key===bs)return'bsTap';
+ if(key===rt)return'return';
+ if(key===num)return'n123';
+ if(key===em)return'emoji';
+ if(key===shift)return shiftSoundKind();
+ return'letter'}
+kb.querySelectorAll('.key').forEach(function(key){key.addEventListener('pointerdown',function(){var B=window.AndroidKeyboard;if(B&&B.keyDown)B.keyDown(keyKind(key));else if(B&&B.feedback)B.feedback()})});
 var upper=true,shiftLocked=false,manualShiftOverride=false,lastShiftAt=0,lastSpaceAt=0,doubleSpaceBlocked=false,kurdish=false,kuShift=false,layout='letters',inputMode='text',actionLabel='return',emojiPage=0;
 var emojiCategory='smile',recentEmojis=[],customStickers=[];try{recentEmojis=JSON.parse(localStorage.getItem('bellamie_recent_emoji')||'[]').slice(0,32);customStickers=JSON.parse(localStorage.getItem('bellamie_custom_stickers')||'[]')}catch(e){}
 
@@ -304,6 +323,7 @@ buildEmojiBar();
 emojiSearch.addEventListener('input',runSearch);
 emojiPanel.addEventListener('click',function(ev){
  var b=ev.target.closest?ev.target.closest('.emojiCell'):null;if(!b)return;
+ if(!(b.dataset.uri&&ed.active))kSound('letter'); /* emoji tap = letter click (file 01) */
  if(b.dataset.uri){if(ed.active)return;if(window.AndroidKeyboard&&AndroidKeyboard.insertImage)AndroidKeyboard.insertImage(b.dataset.uri);return}
  var e=b.textContent;commit(e);
  recentEmojis=[e].concat(recentEmojis.filter(function(x){return x!==e})).slice(0,32);
@@ -379,14 +399,15 @@ shift.addEventListener('click',function(){manualShiftOverride=true;lastSpaceAt=0
 });
 num.addEventListener('click',function(){lastSpaceAt=0;if(kurdish&&(layout==='numbers'||layout==='symbols')){layout='letters'}else if(layout==='numbers'||layout==='symbols'||layout==='emoji'){layout='letters'}else{layout='numbers'}updateCase()});
 em.addEventListener('click',function(){lastSpaceAt=0;layout=layout==='emoji'?'letters':'emoji';emojiCategory='smile';emojiSearch.value='';updateCase()});
-sp.addEventListener('click',function(){if(ed.active){var fs=layout==='numbers'||layout==='symbols';lastSpaceAt=0;edInsert(' ');if(fs){layout='letters';updateCase()}return}var now=Date.now(),fromSymbols=layout==='numbers'||layout==='symbols',eligible=layout==='letters'&&inputMode==='text',doubleSpace=eligible&&!doubleSpaceBlocked&&lastSpaceAt>0&&now-lastSpaceAt<350;lastSpaceAt=doubleSpace?0:(eligible?now:0);if(window.AndroidKeyboard&&AndroidKeyboard.space)AndroidKeyboard.space(doubleSpace);else commit(doubleSpace?'. ':' ');if(fromSymbols){layout='letters';updateCase();return}if(doubleSpace&&!kurdish&&!shiftLocked){manualShiftOverride=false;upper=true;updateCase()}});
+sp.addEventListener('click',function(){kSound('space');if(ed.active){var fs=layout==='numbers'||layout==='symbols';lastSpaceAt=0;edInsert(' ');if(fs){layout='letters';updateCase()}return}var now=Date.now(),fromSymbols=layout==='numbers'||layout==='symbols',eligible=layout==='letters'&&inputMode==='text',doubleSpace=eligible&&!doubleSpaceBlocked&&lastSpaceAt>0&&now-lastSpaceAt<350;lastSpaceAt=doubleSpace?0:(eligible?now:0);if(window.AndroidKeyboard&&AndroidKeyboard.space)AndroidKeyboard.space(doubleSpace);else commit(doubleSpace?'. ':' ');if(fromSymbols){layout='letters';updateCase();return}if(doubleSpace&&!kurdish&&!shiftLocked){manualShiftOverride=false;upper=true;updateCase()}});
 rt.addEventListener('click',function(){if(ed.active){edEnter();return}if(window.AndroidKeyboard)AndroidKeyboard.enter()});
 function del(){lastSpaceAt=0;doubleSpaceBlocked=true;if(ed.active){edBackspace();return}if(window.AndroidKeyboard)AndroidKeyboard.delete()}
 var t1=null,t2=null;function stopDelete(){clearTimeout(t1);clearInterval(t2);t1=t2=null}
-bs.addEventListener('pointerdown',function(e){e.preventDefault();stopDelete();del();t1=setTimeout(function(){t2=setInterval(del,70)},400)});
+function delHold(){del();kSound('bsHold')} /* same 70 ms deletion; the engine thins the hold sound to ~100 ms */
+bs.addEventListener('pointerdown',function(e){e.preventDefault();stopDelete();del();t1=setTimeout(function(){t2=setInterval(delHold,70)},400)});
 ['pointerup','pointerleave','pointercancel','blur'].forEach(function(ev){bs.addEventListener(ev,stopDelete)});
 bs.addEventListener('contextmenu',function(e){e.preventDefault()});
-emojiBS.addEventListener('pointerdown',function(e){e.preventDefault();stopDelete();del();if(window.AndroidKeyboard&&AndroidKeyboard.feedback)AndroidKeyboard.feedback();t1=setTimeout(function(){t2=setInterval(del,70)},400)});
+emojiBS.addEventListener('pointerdown',function(e){e.preventDefault();stopDelete();del();if(window.AndroidKeyboard&&AndroidKeyboard.keyDown)AndroidKeyboard.keyDown('bsTap');else if(window.AndroidKeyboard&&AndroidKeyboard.feedback)AndroidKeyboard.feedback();t1=setTimeout(function(){t2=setInterval(delHold,70)},400)});
 ['pointerup','pointerleave','pointercancel','blur'].forEach(function(ev){emojiBS.addEventListener(ev,stopDelete)});
 emojiBS.addEventListener('contextmenu',function(e){e.preventDefault()});
 function toggleLang(){kurdish=!kurdish;kuShift=false;shiftLocked=false;upper=true;if(layout==='emoji'||layout==='numbers'||layout==='symbols')layout='letters';updateCase()}
