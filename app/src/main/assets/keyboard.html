@@ -111,7 +111,8 @@ body{font-family:"SF Pro","SF Pro Text","SF Pro Display",-apple-system,BlinkMacS
 (function(){
 'use strict';
 var kb=document.getElementById('kb'),screen=document.getElementById('screen'),extraH=0,extraMode=0;
-function resizeKeyboard(){var scale=window.innerWidth/390,H=283.2+extraH;screen.style.transform='scale('+scale+')';screen.style.height=H+'px';document.documentElement.style.height=(H*scale)+'px';document.body.style.height=(H*scale)+'px'}
+var POPUP_TOP_INSET=50;
+function resizeKeyboard(){var scale=window.innerWidth/390,H=283.2+extraH+POPUP_TOP_INSET;screen.style.transform='translateY('+POPUP_TOP_INSET+'px) scale('+scale+')';screen.style.height=H+'px';document.documentElement.style.height=(H*scale)+'px';document.body.style.height=(H*scale)+'px'}
 window.addEventListener('resize',resizeKeyboard);kb.style.top='0px';resizeKeyboard();
 var rows=[
 {y:6.8,keys:{Q:2.25,W:41.05,E:79.85,R:118.65,T:157.45,Y:196.25,U:235.05,I:273.85,O:312.65,P:351.45}},
