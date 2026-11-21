@@ -42,6 +42,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class BellamieInputMethodService extends InputMethodService {
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private WebView webView;
+    private KeyPopupOverlay popupOverlay; // first-row key popup drawn outside the WebView bounds
     private EditorInfo editorInfo;
     private volatile int cachedCapsMode;
     private boolean pageReady;
@@ -85,6 +86,7 @@ public class BellamieInputMethodService extends InputMethodService {
     }
 
     @Override public void onDestroy() {
+        releasePopupOverlay();
         if (imageReceiverRegistered) { unregisterReceiver(imageReceiver); imageReceiverRegistered = false; }
         if (voiceReceiverRegistered) {
             unregisterReceiver(voiceReceiver);
@@ -100,7 +102,9 @@ public class BellamieInputMethodService extends InputMethodService {
 
     @Override public View onCreateInputView() {
         pageReady = false;
+        releasePopupOverlay();
         webView = new WebView(this);
+        popupOverlay = new KeyPopupOverlay(webView);
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setAllowFileAccess(true);
@@ -166,6 +170,27 @@ public class BellamieInputMethodService extends InputMethodService {
         } catch (RuntimeException ignored) {
             return false;
         }
+    }
+
+    @Override public void onFinishInputView(boolean finishingInput) {
+        hidePopupOverlay();
+        super.onFinishInputView(finishingInput);
+    }
+
+    @Override public void onWindowHidden() {
+        hidePopupOverlay();
+        super.onWindowHidden();
+    }
+
+    private void hidePopupOverlay() {
+        KeyPopupOverlay overlay = popupOverlay;
+        if (overlay != null) overlay.hide(-1);
+    }
+
+    private void releasePopupOverlay() {
+        KeyPopupOverlay overlay = popupOverlay;
+        popupOverlay = null;
+        if (overlay != null) overlay.release();
     }
 
     @Override public void onFinishInput() {
@@ -561,5 +586,19 @@ public class BellamieInputMethodService extends InputMethodService {
             });
         }
         @JavascriptInterface public int capsMode() { return cachedCapsMode; }
+        // Key popup that would be clipped by the WebView's top edge (first row): drawn natively.
+        @JavascriptInterface public void showKeyPopup(String json) {
+            if (json == null) return;
+            mainHandler.post(() -> {
+                KeyPopupOverlay overlay = popupOverlay;
+                if (overlay != null && webView != null) overlay.show(json);
+            });
+        }
+        @JavascriptInterface public void hideKeyPopup(int id) {
+            mainHandler.post(() -> {
+                KeyPopupOverlay overlay = popupOverlay;
+                if (overlay != null) overlay.hide(id);
+            });
+        }
     }
 }
