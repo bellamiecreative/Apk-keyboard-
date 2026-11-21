@@ -5,12 +5,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ClipData;
 import android.content.ClipDescription;
+import android.content.ClipboardManager;
 import android.net.Uri;
 import android.view.inputmethod.InputContentInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PersistableBundle;
 import android.os.UserManager;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -38,6 +41,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class BellamieInputMethodService extends InputMethodService {
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
@@ -481,6 +485,72 @@ public class BellamieInputMethodService extends InputMethodService {
         return committed.get() ? okJson() : errorJson("no_input");
     }
 
+    // ---- Clipboard for the Password & Text Manager copy / paste icons --------------
+    // keyboard.html is loaded from file://, where navigator.clipboard does not exist, so the
+    // page calls these through the bridge. No permission is needed: the active input method
+    // is allowed to read the clipboard (Android 10+). Runs on the main thread, like commitToHost().
+    private String clipboardCopy(final String value, final boolean sensitive) {
+        final CountDownLatch latch = new CountDownLatch(1);
+        final AtomicBoolean copied = new AtomicBoolean(false);
+        mainHandler.post(() -> {
+            try {
+                ClipboardManager manager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                if (manager != null) {
+                    ClipData clip = ClipData.newPlainText("Bellamie", value);
+                    if (sensitive && Build.VERSION.SDK_INT >= 33) {
+                        // Asks Android 13+ not to show the copied password in the clipboard preview.
+                        PersistableBundle extras = new PersistableBundle();
+                        extras.putBoolean("android.content.extra.IS_SENSITIVE", true);
+                        clip.getDescription().setExtras(extras);
+                    }
+                    manager.setPrimaryClip(clip);
+                    copied.set(true);
+                }
+            } catch (RuntimeException ignored) {
+            } finally {
+                latch.countDown();
+            }
+        });
+        try {
+            latch.await(1500, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        return copied.get() ? okJson() : errorJson("clip_failed");
+    }
+
+    private String clipboardPaste() {
+        final CountDownLatch latch = new CountDownLatch(1);
+        final AtomicBoolean reached = new AtomicBoolean(false);
+        final AtomicReference<String> text = new AtomicReference<>("");
+        mainHandler.post(() -> {
+            try {
+                ClipboardManager manager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                if (manager != null) {
+                    reached.set(true);
+                    ClipData clip = manager.getPrimaryClip();
+                    if (clip != null && clip.getItemCount() > 0) {
+                        // Plain text only: an image/URI clip must not paste its URI string.
+                        CharSequence value = clip.getItemAt(0).getText();
+                        if (value != null) text.set(value.toString());
+                    }
+                }
+            } catch (RuntimeException ignored) {
+            } finally {
+                latch.countDown();
+            }
+        });
+        try {
+            latch.await(1500, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        if (!reached.get()) return errorJson("clip_failed");
+        String pasted = text.get();
+        if (pasted.isEmpty()) return errorJson("clip_empty");
+        return "{\"ok\":true,\"text\":" + JSONObject.quote(pasted) + "}";
+    }
+
     private final class KeyboardBridge {
         @JavascriptInterface public void commit(String value) {
             if (value == null) return;
@@ -585,6 +655,12 @@ public class BellamieInputMethodService extends InputMethodService {
                 }
             });
         }
+        // Copy / paste icons inside the Password & Text Manager fields (see clipboardCopy/Paste).
+        @JavascriptInterface public String copyText(String value, boolean sensitive) {
+            if (value == null || value.isEmpty()) return errorJson("empty");
+            return clipboardCopy(value, sensitive);
+        }
+        @JavascriptInterface public String pasteText() { return clipboardPaste(); }
         @JavascriptInterface public int capsMode() { return cachedCapsMode; }
         // Key popup that would be clipped by the WebView's top edge (first row): drawn natively.
         @JavascriptInterface public void showKeyPopup(String json) {
