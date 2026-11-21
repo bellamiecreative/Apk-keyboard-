@@ -422,14 +422,20 @@ function placePopup(p,key){
  var bl=Math.max(2,Math.min(390-bw-2,cx-bw/2)),bt=kt-bh+3;
  p.classList.remove('below');
  var stemH=Math.max(0,(kt+kh)-(bt+bh-6)),stemX=cx-effW/2-bl;
+ if(bt<0&&NB&&NB.showKeyPopup){
+  /* popup would leave the WebView's top edge: draw it in the native overlay with identical geometry */
+  try{NB.showKeyPopup(JSON.stringify({id:p._id|0,text:v==='img'?'':v,l:bl*sc,t:bt*sc,w:bw*sc,h:bh*sc,sx:stemX*sc,sw:effW*sc,sh:stemH*sc,s:sc,vw:window.innerWidth,dpr:window.devicePixelRatio||1}));p._nat=true;p.style.display='none';return}catch(x){}
+ }
+ if(p._nat){p._nat=false;nativePopupHide(p)}
  p.style.left=bl+'px';p.style.top=bt+'px';p.style.width=bw+'px';p.style.height=bh+'px';p.style.display='block';
  if(stemH>0){stem.style.display='block';stem.style.left=stemX+'px';stem.style.top=(bh-6)+'px';stem.style.width=effW+'px';stem.style.height=stemH+'px'}else stem.style.display='none'
 }
-function hidePopup(st){st.p.style.display='none'}
-function removePopup(st){var p=st.p;setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);p.style.display='none';popPool.push(p)},80)}
+function nativePopupHide(p){if(NB&&NB.hideKeyPopup){try{NB.hideKeyPopup(p._id|0)}catch(x){}}}
+function hidePopup(st){st.p.style.display='none';if(st.p._nat){st.p._nat=false;nativePopupHide(st.p)}}
+function removePopup(st){var p=st.p;if(p._nat){p._nat=false;nativePopupHide(p)}setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);p.style.display='none';popPool.push(p)},80)}
 kb.addEventListener('touchstart',function(e){
  for(var i=0;i<e.changedTouches.length;i++){var t=e.changedTouches[i],key=supportedKey(t.target);if(!key)continue;
-  var p=makePopup();screen.appendChild(p);touchState[t.identifier]={start:key,cur:key,x:t.clientX,y:t.clientY,p:p,scroll:false};placePopup(p,key)}
+  var p=makePopup();p._id=t.identifier;screen.appendChild(p);touchState[t.identifier]={start:key,cur:key,x:t.clientX,y:t.clientY,p:p,scroll:false};placePopup(p,key)}
 },{passive:true});
 kb.addEventListener('touchmove',function(e){
  var prevent=false;
@@ -459,6 +465,8 @@ kb.addEventListener('touchcancel',function(e){
 },{passive:true});
 kb.addEventListener('click',function(e){if(e.isTrusted&&Date.now()<suppressClickUntil&&supportedKey(e.target)){e.stopPropagation();e.preventDefault()}},true);
 kb.addEventListener('contextmenu',function(e){if(supportedKey(e.target))e.preventDefault()});
+document.addEventListener('visibilitychange',function(){if(document.hidden&&NB&&NB.hideKeyPopup){try{NB.hideKeyPopup(-1)}catch(x){}}});
+window.addEventListener('pagehide',function(){if(NB&&NB.hideKeyPopup){try{NB.hideKeyPopup(-1)}catch(x){}}});
 /* ===== end key popup ===== */
 /* ===== Password & Text Manager ===== */
 var NB=window.AndroidKeyboard||null,EXTRA=134,GAP=6,TX_MAX=20000;
