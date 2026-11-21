@@ -1,6 +1,8 @@
 package com.bellamiecreative.keyboard;
 
 import android.content.Context;
+import android.os.Build;
+import android.util.Log;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -25,6 +27,7 @@ import org.json.JSONObject;
  */
 public class KeyPopupOverlay {
 
+    private static final String TAG = "KeyPopupOverlay";
     private final View anchor;                 // the keyboard WebView
     private final SparseArray<Popup> popups = new SparseArray<>();
 
@@ -63,8 +66,15 @@ public class KeyPopupOverlay {
             }
             p.view.set(text, w, h, sx, sw, sh, s * px);
 
+            // Match the coordinate space used by PopupWindow. On API 29+ the
+            // popup is explicitly laid out in screen coordinates; older Android
+            // versions use coordinates relative to the IME window.
             int[] loc = new int[2];
-            anchor.getLocationOnScreen(loc);
+            if (Build.VERSION.SDK_INT >= 29) {
+                anchor.getLocationOnScreen(loc);
+            } else {
+                anchor.getLocationInWindow(loc);
+            }
             int pad = p.view.pad;
             int x = Math.round(loc[0] + l) - pad;
             int y = Math.round(loc[1] + t) - pad;
@@ -78,8 +88,9 @@ public class KeyPopupOverlay {
                 p.window.setHeight(totalH);
                 p.window.showAtLocation(anchor, Gravity.NO_GRAVITY, x, y);
             }
-        } catch (Throwable ignored) {
-            // never let the overlay break typing
+        } catch (Throwable error) {
+            // Keep typing safe, but make native popup failures diagnosable in Logcat.
+            Log.e(TAG, "Unable to show first-row key popup", error);
         }
     }
 
@@ -92,7 +103,9 @@ public class KeyPopupOverlay {
             }
             Popup p = popups.get(id);
             if (p != null) dismiss(p);
-        } catch (Throwable ignored) { }
+        } catch (Throwable error) {
+            Log.e(TAG, "Unable to hide key popup", error);
+        }
     }
 
     public void release() {
@@ -119,6 +132,12 @@ public class KeyPopupOverlay {
             window.setBackgroundDrawable(null);
             window.setAnimationStyle(0);
             window.setInputMethodMode(PopupWindow.INPUT_METHOD_NOT_NEEDED);
+            // Critical: getLocationOnScreen() coordinates must be interpreted as
+            // absolute screen coordinates, not relative to the IME window frame.
+            if (Build.VERSION.SDK_INT >= 29) {
+                window.setIsLaidOutInScreen(true);
+                window.setIsClippedToScreen(false);
+            }
         }
     }
 
