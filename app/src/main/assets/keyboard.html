@@ -24,6 +24,8 @@ body{font-family:"SF Pro","SF Pro Text","SF Pro Display",-apple-system,BlinkMacS
 .keyPopBubble,.keyPopStem{position:absolute;background:#FAFAFC}
 .keyPopBubble{left:0;top:0;width:100%;height:50px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#111;font-size:34px;line-height:1;font-weight:400;white-space:nowrap}
 .keyPopStem{border-radius:0 0 5.5px 5.5px}
+.keyPop.below .keyPopBubble{top:6px}
+.keyPop.below .keyPopStem{border-radius:5.5px 5.5px 0 0}
 .keyPopBubble img{width:38px;height:38px;object-fit:cover;border-radius:6px;display:block}
 .emojiCell{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 
@@ -419,10 +421,12 @@ function placePopup(p,key){
  var sr=screen.getBoundingClientRect(),sc=(sr.width/390)||1,r=key.getBoundingClientRect();
  var kx=(r.left-sr.left)/sc,kt=(r.top-sr.top)/sc,kw=r.width/sc,kh=r.height/sc;
  var effW=Math.min(kw,38.8),cx=kx+kw/2,bw=effW+16,bh=50;
- var bl=Math.max(2,Math.min(390-bw-2,cx-bw/2)),bt=Math.max(0,kt-bh+3);
- var stemH=Math.max(0,(kt+kh)-(bt+bh-6));
- p.style.left=bl+'px';p.style.top=bt+'px';p.style.width=bw+'px';p.style.height=bh+'px';p.style.display='block';
- if(stemH>0){stem.style.display='block';stem.style.left=(cx-effW/2-bl)+'px';stem.style.top=(bh-6)+'px';stem.style.width=effW+'px';stem.style.height=stemH+'px'}else stem.style.display='none';
+ var bl=Math.max(2,Math.min(390-bw-2,cx-bw/2)),below=kt<bh-3;
+ p.classList.toggle('below',below);
+ var bt=below?kt+kh-3:kt-bh+3;
+ p.style.left=bl+'px';p.style.top=bt+'px';p.style.width=bw+'px';p.style.height=(below?bh+6:bh)+'px';p.style.display='block';
+ if(below){stem.style.display='block';stem.style.left=(cx-effW/2-bl)+'px';stem.style.top='0px';stem.style.width=effW+'px';stem.style.height='6px'}
+ else{var stemH=Math.max(0,(kt+kh)-(bt+bh-6));if(stemH>0){stem.style.display='block';stem.style.left=(cx-effW/2-bl)+'px';stem.style.top=(bh-6)+'px';stem.style.width=effW+'px';stem.style.height=stemH+'px'}else stem.style.display='none'}
 }
 function hidePopup(st){st.p.style.display='none'}
 function removePopup(st){var p=st.p;setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);p.style.display='none';popPool.push(p)},80)}
