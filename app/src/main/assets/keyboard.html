@@ -24,8 +24,6 @@ body{font-family:"SF Pro","SF Pro Text","SF Pro Display",-apple-system,BlinkMacS
 .keyPopBubble,.keyPopStem{position:absolute;background:#FAFAFC}
 .keyPopBubble{left:0;top:0;width:100%;height:50px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#111;font-size:34px;line-height:1;font-weight:400;white-space:nowrap}
 .keyPopStem{border-radius:0 0 5.5px 5.5px}
-.keyPop.below .keyPopBubble{top:6px}
-.keyPop.below .keyPopStem{border-radius:5.5px 5.5px 0 0}
 .keyPopBubble img{width:38px;height:38px;object-fit:cover;border-radius:6px;display:block}
 .emojiCell{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 
@@ -112,9 +110,9 @@ body{font-family:"SF Pro","SF Pro Text","SF Pro Display",-apple-system,BlinkMacS
 <script>
 (function(){
 'use strict';
-var kb=document.getElementById('kb'),screen=document.getElementById('screen'),extraH=0;
+var kb=document.getElementById('kb'),screen=document.getElementById('screen'),extraH=50,extraMode=0;
 function resizeKeyboard(){var scale=window.innerWidth/390,H=283.2+extraH;screen.style.transform='scale('+scale+')';screen.style.height=H+'px';document.documentElement.style.height=(H*scale)+'px';document.body.style.height=(H*scale)+'px'}
-window.addEventListener('resize',resizeKeyboard);resizeKeyboard();
+window.addEventListener('resize',resizeKeyboard);kb.style.top='50px';resizeKeyboard();
 var rows=[
 {y:6.8,keys:{Q:2.25,W:41.05,E:79.85,R:118.65,T:157.45,Y:196.25,U:235.05,I:273.85,O:312.65,P:351.45}},
 {y:59.2,keys:{A:22.65,S:61.45,D:100.25,F:139.05,G:177.85,H:216.65,J:255.45,K:294.25,L:333.05}},
@@ -421,12 +419,11 @@ function placePopup(p,key){
  var sr=screen.getBoundingClientRect(),sc=(sr.width/390)||1,r=key.getBoundingClientRect();
  var kx=(r.left-sr.left)/sc,kt=(r.top-sr.top)/sc,kw=r.width/sc,kh=r.height/sc;
  var effW=Math.min(kw,38.8),cx=kx+kw/2,bw=effW+16,bh=50;
- var bl=Math.max(2,Math.min(390-bw-2,cx-bw/2)),below=kt<bh-3;
- p.classList.toggle('below',below);
- var bt=below?kt+kh-3:kt-bh+3;
- p.style.left=bl+'px';p.style.top=bt+'px';p.style.width=bw+'px';p.style.height=(below?bh+6:bh)+'px';p.style.display='block';
- if(below){stem.style.display='block';stem.style.left=(cx-effW/2-bl)+'px';stem.style.top='0px';stem.style.width=effW+'px';stem.style.height='6px'}
- else{var stemH=Math.max(0,(kt+kh)-(bt+bh-6));if(stemH>0){stem.style.display='block';stem.style.left=(cx-effW/2-bl)+'px';stem.style.top=(bh-6)+'px';stem.style.width=effW+'px';stem.style.height=stemH+'px'}else stem.style.display='none'}
+ var bl=Math.max(2,Math.min(390-bw-2,cx-bw/2)),bt=kt-bh+3;
+ p.classList.remove('below');
+ var stemH=Math.max(0,(kt+kh)-(bt+bh-6));
+ p.style.left=bl+'px';p.style.top=bt+'px';p.style.width=bw+'px';p.style.height=bh+'px';p.style.display='block';
+ if(stemH>0){stem.style.display='block';stem.style.left=(cx-effW/2-bl)+'px';stem.style.top=(bh-6)+'px';stem.style.width=effW+'px';stem.style.height=stemH+'px'}else stem.style.display='none'
 }
 function hidePopup(st){st.p.style.display='none'}
 function removePopup(st){var p=st.p;setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);p.style.display='none';popPool.push(p)},80)}
@@ -465,6 +462,7 @@ kb.addEventListener('contextmenu',function(e){if(supportedKey(e.target))e.preven
 /* ===== end key popup ===== */
 /* ===== Password & Text Manager ===== */
 var NB=window.AndroidKeyboard||null,EXTRA=134,GAP=6,TX_MAX=20000;
+if(NB&&NB.setExtraHeight){try{NB.setExtraHeight(50)}catch(x){}}
 var PM={kind:null,mode:'list',data:[],query:'',rev:null,err:null,edit:null,openedAt:0};
 var hostMode='text',hostAction='return',savedLayout='letters';
 var ed={active:false,cur:null,fields:[],onEnter:null};
@@ -487,7 +485,7 @@ search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/>'};
 function ic(n){return '<svg viewBox="0 0 24 24" aria-hidden="true">'+PI[n]+'</svg>'}
 function pe(tag,cls){var e=document.createElement(tag);if(cls)e.className=cls;return e}
 function fb(){if(NB&&NB.feedback)NB.feedback()}
-function setExtra(h){if(h===extraH)return;extraH=h;resizeKeyboard();kb.style.top=h+'px';if(NB&&NB.setExtraHeight){try{NB.setExtraHeight(h)}catch(x){}}}
+function setExtra(h){if(h===extraMode)return;extraMode=h;extraH=50+h;resizeKeyboard();kb.style.top=extraH+'px';if(NB&&NB.setExtraHeight){try{NB.setExtraHeight(extraH)}catch(x){}}}
 var EM={no_input:'No text field is focused',empty:'Nothing to insert',id_required:'Enter an ID first',locked:'Unlock the device first',unavailable:'Update the keyboard app first',missing:'Record not found'};
 function errMsg(c){return EM[c]||'Something went wrong'}
 function toast(m){pmToast.textContent=m;pmToast.style.display='block';clearTimeout(toastT);toastT=setTimeout(function(){pmToast.style.display='none'},2200)}
