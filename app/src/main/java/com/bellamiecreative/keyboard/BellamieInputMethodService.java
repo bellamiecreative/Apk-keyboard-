@@ -266,7 +266,7 @@ public class BellamieInputMethodService extends InputMethodService {
 
     /** Keyboard height in pixels. extraCssPx is extra height (in 390-wide CSS px) used while a manager form is open. */
     private int keyboardHeightPx(int extraCssPx) {
-        return (int) ((283.2f + extraCssPx) * getResources().getDisplayMetrics().widthPixels / 390f + 0.5f);
+        return (int) ((333.2f + extraCssPx) * getResources().getDisplayMetrics().widthPixels / 390f + 0.5f);
     }
 
     // ------------------------------------------------------------------
