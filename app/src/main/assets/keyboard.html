@@ -471,6 +471,54 @@ kb.addEventListener('contextmenu',function(e){if(supportedKey(e.target))e.preven
 document.addEventListener('visibilitychange',function(){if(document.hidden&&NB&&NB.hideKeyPopup){try{NB.hideKeyPopup(-1)}catch(x){}}});
 window.addEventListener('pagehide',function(){if(NB&&NB.hideKeyPopup){try{NB.hideKeyPopup(-1)}catch(x){}}});
 /* ===== end key popup ===== */
+/* ===== Space-bar trackpad: iPhone-style cursor control (drag on Space) ===== */
+/* A tap (movement < SP_THRESH) is untouched: the native click still reaches the existing space handler.
+   A drag past SP_THRESH enters cursor-control mode: pixel deltas go to the host via AndroidKeyboard.cursor*,
+   the touchend is cancelled and the one synthetic click that could follow is swallowed (no stray space). */
+var spT={id:null,x:0,y:0,lx:0,ly:0,on:false},spSwallow=0,SP_THRESH=9;
+function spBr(){var b=window.AndroidKeyboard;return b&&b.cursorBegin&&b.cursorMove&&b.cursorEnd?b:null}
+function spHas(list,id){for(var i=0;i<list.length;i++)if(list[i].identifier===id)return true;return false}
+function spFinish(){var was=spT.on;spT.id=null;spT.on=false;if(was){spSwallow=Date.now()+500;var b=window.AndroidKeyboard;if(b&&b.cursorEnd){try{b.cursorEnd()}catch(x){}}}return was}
+sp.style.touchAction='none';
+sp.addEventListener('touchstart',function(e){
+ if(spT.id!==null){if(spHas(e.touches,spT.id))return;spT.id=null;spT.on=false}
+ spSwallow=0;
+ if(ed.active||!spBr())return; /* internal Password & Text Manager editing keeps plain Space behaviour */
+ var t=e.changedTouches[0];spT.id=t.identifier;spT.x=spT.lx=t.clientX;spT.y=spT.ly=t.clientY;spT.on=false
+},{passive:true});
+sp.addEventListener('touchmove',function(e){
+ if(spT.id===null)return;
+ var t=null,i;for(i=0;i<e.changedTouches.length;i++)if(e.changedTouches[i].identifier===spT.id){t=e.changedTouches[i];break}
+ if(!t)return;
+ var sc=(window.innerWidth/390)||1,b=spBr();
+ if(!b){spT.id=null;spT.on=false;return}
+ if(!spT.on){
+  var ox=(t.clientX-spT.x)/sc,oy=(t.clientY-spT.y)/sc;
+  if(ox*ox+oy*oy<SP_THRESH*SP_THRESH)return;
+  if(ed.active){spT.id=null;return}
+  spT.on=true;lastSpaceAt=0;
+  try{b.cursorBegin()}catch(x){spT.on=false;spT.id=null;return}
+  spT.lx=t.clientX;spT.ly=t.clientY; /* track from the activation point: no jump by the threshold distance */
+  if(e.cancelable)e.preventDefault();return
+ }
+ var dx=(t.clientX-spT.lx)/sc,dy=(t.clientY-spT.ly)/sc,ax=Math.abs(dx),ay=Math.abs(dy);
+ spT.lx=t.clientX;spT.ly=t.clientY;
+ if(ay<ax*.4)dy*=.25;else if(ax<ay*.4)dx*=.25; /* soft axis bias: a horizontal swipe does not drift between lines */
+ if(dx||dy){try{b.cursorMove(dx,dy)}catch(x){}}
+ if(e.cancelable)e.preventDefault()
+},{passive:false});
+sp.addEventListener('touchend',function(e){
+ for(var i=0;i<e.changedTouches.length;i++){
+  if(e.changedTouches[i].identifier===spT.id){var was=spFinish();if(was&&e.cancelable)e.preventDefault()}
+  else if(spT.on&&e.cancelable)e.preventDefault()
+ }
+},{passive:false});
+sp.addEventListener('touchcancel',function(e){for(var i=0;i<e.changedTouches.length;i++)if(e.changedTouches[i].identifier===spT.id)spFinish()},{passive:true});
+kb.addEventListener('click',function(e){if(e.isTrusted&&e.target&&(e.target===sp||sp.contains(e.target))&&(spT.on||(spSwallow&&Date.now()<spSwallow))){spSwallow=0;e.stopPropagation();e.preventDefault()}},true);
+document.addEventListener('visibilitychange',function(){if(document.hidden)spFinish()});
+window.addEventListener('pagehide',spFinish);window.addEventListener('blur',spFinish);
+var spPrevReset=window.resetForInput;window.resetForInput=function(){spFinish();if(spPrevReset)return spPrevReset.apply(this,arguments)};
+/* ===== end Space-bar trackpad ===== */
 /* ===== Password & Text Manager ===== */
 var NB=window.AndroidKeyboard||null,EXTRA=134,GAP=6,TX_MAX=20000;
 var PM={kind:null,mode:'list',data:[],query:'',rev:null,err:null,edit:null,openedAt:0};
