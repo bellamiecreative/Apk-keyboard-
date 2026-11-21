@@ -49,8 +49,11 @@ body{font-family:"SF Pro","SF Pro Text","SF Pro Display",-apple-system,BlinkMacS
 .caret{display:inline-block;width:0;height:18px;border-left:2px solid #007AFF;vertical-align:text-bottom;margin:0 -1px;animation:pmBlink 1s steps(1) infinite}
 .tf.big{height:64px;align-items:flex-start;padding:3px 8px}
 .tf.big .tfi{margin-top:2px}
-.tfe,.tfx{flex:none;width:28px;height:26px;border:0;background:transparent;color:#6B6E76;padding:0;display:flex;align-items:center;justify-content:center;touch-action:manipulation}
-.tfe svg,.tfx svg{width:19px;height:19px}
+.tfe,.tfx,.tfc,.tfp{flex:none;width:28px;height:26px;border:0;background:transparent;color:#6B6E76;padding:0;display:flex;align-items:center;justify-content:center;touch-action:manipulation}
+.tfe svg,.tfx svg,.tfc svg,.tfp svg{width:19px;height:19px}
+.tfa{flex:none;display:flex;align-items:center}
+.tf.big .tfa{flex-direction:column;align-self:flex-start}
+.tf.empty .tfc{opacity:.4}
 .tf.empty .tfx{display:none}
 .pmSearchTf{flex:1;border-radius:17px}
 .pmList{position:absolute;left:0;right:0;top:44px;bottom:0;overflow-x:hidden;overflow-y:auto;padding:2px 8px 10px;display:flex;flex-direction:column;gap:6px;touch-action:pan-y;scrollbar-width:none;overscroll-behavior:contain}
@@ -483,6 +486,8 @@ check:'<path d="M5 12.5l4.5 4.5L19 7"/>',
 close:'<path d="M6 6l12 12M18 6L6 18"/>',
 eye:'<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
 eyeoff:'<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M4 4l16 16"/>',
+copy:'<rect x="9" y="9" width="11.5" height="11.5" rx="2.5"/><path d="M15 9V6.5A2.5 2.5 0 0 0 12.5 4h-6A2.5 2.5 0 0 0 4 6.5v6A2.5 2.5 0 0 0 6.5 15H9"/>',
+paste:'<rect x="5" y="5" width="14" height="16" rx="2.5"/><path d="M9.5 5V4a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1"/><path d="M12 10.5v6M9.5 14l2.5 2.5 2.5-2.5"/>',
 grip:'<g fill="currentColor" stroke="none"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></g>',
 mail:'<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3.5 7.5l8.5 6 8.5-6"/>',
 lock:'<rect x="5" y="10.5" width="14" height="9.5" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/>',
@@ -493,7 +498,7 @@ function ic(n){return '<svg viewBox="0 0 24 24" aria-hidden="true">'+PI[n]+'</sv
 function pe(tag,cls){var e=document.createElement(tag);if(cls)e.className=cls;return e}
 function fb(){if(NB&&NB.feedback)NB.feedback()}
 function setExtra(h){if(h===extraMode)return;extraMode=h;extraH=h;resizeKeyboard();kb.style.top=extraH+'px';if(NB&&NB.setExtraHeight){try{NB.setExtraHeight(extraH)}catch(x){}}}
-var EM={no_input:'No text field is focused',empty:'Nothing to insert',id_required:'Enter an ID first',locked:'Unlock the device first',unavailable:'Update the keyboard app first',missing:'Record not found'};
+var EM={no_input:'No text field is focused',empty:'Nothing to insert',id_required:'Enter an ID first',locked:'Unlock the device first',unavailable:'Update the keyboard app first',missing:'Record not found',clip_empty:'Clipboard is empty',clip_failed:'Couldn\u2019t reach the clipboard'};
 function errMsg(c){return EM[c]||'Something went wrong'}
 function toast(m){pmToast.textContent=m;pmToast.style.display='block';clearTimeout(toastT);toastT=setTimeout(function(){pmToast.style.display='none'},2200)}
 
@@ -564,12 +569,56 @@ function mkField(root,o){
   return f.val.length
  };
  root.addEventListener('click',function(e){
-  if(e.target.closest&&e.target.closest('.tfe,.tfx'))return;
+  if(e.target.closest&&e.target.closest('.tfe,.tfx,.tfc,.tfp'))return;
   var p=f.posAt(e.clientX,e.clientY);
   if(f.onTap&&f.onTap()===false)return;
   edFocus(f);f.pos=p;f.render()
  });
+ var cBtn=root.querySelector('.tfc'),pBtn=root.querySelector('.tfp');
+ if(cBtn)cBtn.addEventListener('click',function(e){e.stopPropagation();e.preventDefault();fieldCopy(f)});
+ if(pBtn)pBtn.addEventListener('click',function(e){e.stopPropagation();e.preventDefault();fieldPaste(f)});
  f.render();return f
+}
+/* ---- clipboard (copy / paste icons). Native bridge first: file:// pages have no navigator.clipboard ---- */
+function clipCopy(text,secret,done){
+ if(NB){
+  if(typeof NB.copyText!=='function'){done('unavailable');return}
+  var r;try{r=JSON.parse(NB.copyText(text,!!secret))}catch(x){done('bridge');return}
+  done(r&&r.ok?null:((r&&r.error)||'clip_failed'));return
+ }
+ try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(function(){done(null)},function(){done('clip_failed')});return}}catch(x){}
+ done('clip_failed')
+}
+function clipPaste(done){
+ if(NB){
+  if(typeof NB.pasteText!=='function'){done('unavailable');return}
+  var r;try{r=JSON.parse(NB.pasteText())}catch(x){done('bridge');return}
+  if(r&&r.ok)done(null,String(r.text||''));else done((r&&r.error)||'clip_failed');return
+ }
+ try{if(navigator.clipboard&&navigator.clipboard.readText){navigator.clipboard.readText().then(function(t){done(t?null:'clip_empty',t||'')},function(){done('clip_failed')});return}}catch(x){}
+ done('clip_failed')
+}
+function fieldFocus(f){
+ if(ed.cur===f)return true;
+ if(f.onTap&&f.onTap()===false)return false;
+ edFocus(f);return true
+}
+function fieldCopy(f){
+ if(!f.val){toast('Nothing to copy');return}
+ clipCopy(f.val,f.secret,function(err){if(err){toast(errMsg(err));return}fb();toast('Copied')})
+}
+function fieldPaste(f){
+ clipPaste(function(err,t){
+  if(err){toast(errMsg(err));return}
+  t=String(t||'');
+  t=f.multi?t.replace(/\r\n?/g,'\n'):t.replace(/(\r\n|\r|\n)+$/,'').replace(/\r\n|\r|\n/g,' ');
+  if(!t){toast('Clipboard is empty');return}
+  var room=f.max-f.val.length;
+  if(room<=0){toast('Field is full');return}
+  if(!fieldFocus(f))return;
+  f.insert(t);fb();
+  if(t.length>room)toast('Pasted (cut to fit)')
+ })
 }
 
 /* ---- editor engine: routes keyboard input into the focused field instead of the host app ---- */
@@ -607,7 +656,7 @@ function setInputConfig(type,imeOptions,caps){
 
 /* ---- DOM ---- */
 var pmPanel=pe('div','pmPanel');
-pmPanel.innerHTML='<div class="pmHead"><button type="button" class="pmBtn" id="pmBack" aria-label="Back">'+ic('back')+'</button><div class="tf pmSearchTf empty" id="pmSearch"><span class="tfi">'+ic('search')+'</span><div class="tft" dir="auto"></div><button type="button" class="tfx" id="pmClear" aria-label="Clear search">'+ic('close')+'</button></div><button type="button" class="pmBtn pmAdd" id="pmAdd" aria-label="Add">'+ic('plus')+'</button></div><div class="pmList" id="pmList"></div>';
+pmPanel.innerHTML='<div class="pmHead"><button type="button" class="pmBtn" id="pmBack" aria-label="Back">'+ic('back')+'</button><div class="tf pmSearchTf empty" id="pmSearch"><span class="tfi">'+ic('search')+'</span><div class="tft" dir="auto"></div><span class="tfa"><button type="button" class="tfc" aria-label="Copy search text">'+ic('copy')+'</button><button type="button" class="tfp" aria-label="Paste into search">'+ic('paste')+'</button></span><button type="button" class="tfx" id="pmClear" aria-label="Clear search">'+ic('close')+'</button></div><button type="button" class="pmBtn pmAdd" id="pmAdd" aria-label="Add">'+ic('plus')+'</button></div><div class="pmList" id="pmList"></div>';
 var pmEd=pe('div','pmEd');
 pmEd.innerHTML='<div class="edHead"><button type="button" class="pmBtn" id="edClose" aria-label="Close">'+ic('close')+'</button><div class="edTitle" id="edTitle"></div><button type="button" class="pmBtn edSave" id="edSave" aria-label="Save">'+ic('check')+'</button></div><div class="edBody" id="edBody"></div>';
 var pmMenu=pe('div','pmMenu');
@@ -781,7 +830,7 @@ function openEditor(rec){
  PM.mode='edit';PM.edit={uid:rec?rec.uid:'',fields:null,init:''};
  pmPanel.style.display='none';pmEd.style.display='block';
  edTitle.textContent=(rec?'Edit ':'New ')+(pw?'password':'text');
- function fh(icon,eye,big){return '<div class="tf'+(big?' big':'')+'"><span class="tfi">'+ic(icon)+'</span><div class="tft'+(big?' multi':'')+'" dir="auto"></div>'+(eye?'<button type="button" class="tfe" aria-label="Show password">'+ic('eye')+'</button>':'')+'</div>'}
+ function fh(icon,eye,big){return '<div class="tf'+(big?' big':'')+'"><span class="tfi">'+ic(icon)+'</span><div class="tft'+(big?' multi':'')+'" dir="auto"></div><span class="tfa"><button type="button" class="tfc" aria-label="Copy">'+ic('copy')+'</button><button type="button" class="tfp" aria-label="Paste">'+ic('paste')+'</button>'+(eye?'<button type="button" class="tfe" aria-label="Show password">'+ic('eye')+'</button>':'')+'</span></div>'}
  var F;
  if(pw){
   edBody.innerHTML=fh('tag')+fh('mail')+fh('lock',true);
