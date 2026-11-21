@@ -17,15 +17,101 @@ body{font-family:"SF Pro","SF Pro Text","SF Pro Display",-apple-system,BlinkMacS
 .ico{position:absolute;color:#4F555C;pointer-events:none}.ico svg{display:block;width:100%;height:100%}
 .key:focus-visible,.ico:focus-visible{outline:2px solid #2563eb;outline-offset:1px}
 
-#emojiPanel{position:absolute;inset:0;display:none;z-index:5;background:#E8EAF1}#emojiSearch{position:absolute;left:8px;top:7px;width:374px;height:35px;border:0;border-radius:22px;background:#F7F8FC;padding:0 14px;font:14px Arial;color:#333;outline:none}#emojiGrid{position:absolute;left:0;right:0;top:52px;height:139px;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(4,1fr);overflow:auto;align-items:center;justify-items:center}#emojiCategories{position:absolute;left:4px;right:4px;top:197px;height:28px;display:flex;align-items:center;gap:0;overflow-x:auto;white-space:nowrap}.emojiCell{width:100%;height:34px;border:0;background:transparent;font-size:25px}.emojiCat{flex:0 0 27px;width:27px;height:27px;border:0;border-radius:50%;background:transparent;color:#626872;font-size:17px}.emojiCat.active{background:#D4D8E1}.emojiSticker img{width:29px;height:29px;object-fit:cover;border-radius:5px}.ico{z-index:6}#emojiABC{flex:0 0 43px;border:0;background:transparent;font-size:12px;text-align:left}
+#emojiPanel{position:absolute;inset:0;display:none;z-index:5;background:#EBECF2}#emojiSearch{position:absolute;left:8px;top:8px;width:374px;height:35px;box-sizing:border-box;border:0;border-radius:18px;background:#F8F9FF url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2385868C' stroke-width='2.3' stroke-linecap='round'%3E%3Ccircle cx='10' cy='10' r='6.6'/%3E%3Cpath d='M15 15l6 6'/%3E%3C/svg%3E") no-repeat 10px center;background-size:15px 15px;padding:0 12px 0 32px;font:15px/35px Arial,sans-serif;color:#1C1C1E;outline:none;-webkit-appearance:none;appearance:none}#emojiSearch::placeholder{color:#7B7C82;opacity:1}.emojiStrip{position:absolute;left:0;right:0;top:48px;height:140px;display:grid;grid-auto-flow:column;grid-template-rows:repeat(4,35px);grid-auto-columns:50.77px;padding-left:4.9px;box-sizing:border-box;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:none}.emojiStrip::-webkit-scrollbar{display:none}#emojiResults{display:none}.emojiWrap{display:contents}.emojiCell{width:50.77px;height:35px;border:0;background:transparent;font-size:26px;line-height:1;padding:0;display:flex;align-items:center;justify-content:center}.emojiFill{display:block;width:50.77px;height:35px}.emojiGap{display:block;grid-row:1/span 4;width:50.77px}.emojiEmpty{grid-column:span 8;grid-row:1/span 4;display:flex;align-items:center;justify-content:center;padding-right:30px;color:#8A8C94;font:14px Arial,sans-serif}.emojiSticker img{width:32px;height:32px;object-fit:cover;border-radius:6px;display:block}#emojiCategories{position:absolute;left:0;right:0;top:194px;height:28px}.emojiCat{position:absolute;top:0;width:27px;height:27px;border:0;border-radius:50%;background:transparent;color:#5C5D63;padding:0;display:flex;align-items:center;justify-content:center}.emojiCat svg{width:21px;height:21px;display:block;fill:none;stroke:currentColor;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round}.emojiCat.active{background:#D5D8E2;color:#000}#emojiABC{position:absolute;left:14px;top:0;width:46px;height:27px;border:0;background:transparent;color:#000;font:14.5px/27px Arial,sans-serif;text-align:left;padding:0}#emojiBS{position:absolute;left:346px;top:-1px;width:36px;height:29px;border:0;background:transparent;padding:0;display:flex;align-items:center;justify-content:center}.ico{z-index:6}
+
+/* Key popup / character preview */
+.keyPop{position:absolute;z-index:30;pointer-events:none;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+.keyPopBubble,.keyPopStem{position:absolute;background:#FAFAFC}
+.keyPopBubble{left:0;top:0;width:100%;height:50px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#111;font-size:34px;line-height:1;font-weight:400;white-space:nowrap}
+.keyPopStem{border-radius:0 0 5.5px 5.5px}
+.keyPopBubble img{width:38px;height:38px;object-fit:cover;border-radius:6px;display:block}
+.emojiCell{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+
+/* ===== Password & Text Manager ===== */
+.pmPanel,.pmEd,.pmMenu,.pmDlg{position:absolute;left:0;width:390px;display:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.pmPanel svg,.pmEd svg,.pmMenu svg,.pmDlg svg{display:block;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.pmPanel{top:0;height:283.2px;z-index:20;background:#EBECF2;overflow:hidden}
+.pmHead{display:flex;align-items:center;gap:6px;height:44px;padding:0 6px}
+.pmBtn{flex:none;width:36px;height:34px;border:0;border-radius:9px;background:transparent;color:#007AFF;display:flex;align-items:center;justify-content:center;padding:0;touch-action:manipulation;cursor:pointer}
+.pmBtn svg{width:24px;height:24px}
+.pmBtn:active{background:rgba(0,0,0,.09)}
+.pmAdd,.edSave{background:#007AFF;color:#fff}
+.pmAdd:active,.edSave:active{background:#0A66D6}
+.tf{display:flex;align-items:center;gap:6px;min-width:0;height:34px;padding:0 8px;border:1.5px solid transparent;border-radius:10px;background:#FAFAFC;color:#111;cursor:text}
+.tf.focus{border-color:#007AFF}
+.tf.bad{border-color:#FF3B30;animation:pmShake .3s}
+.tfi{flex:none;width:18px;height:18px;color:#8A8C94;display:flex}
+.tfi svg{width:18px;height:18px}
+.tft{flex:1;min-width:0;overflow:hidden;white-space:pre;font-size:15px;line-height:22px;color:#111;text-align:start;font-family:inherit}
+.tft .ph{color:#9A9CA4;pointer-events:none}
+.tft.multi{white-space:pre-wrap;word-break:break-word;overflow-y:auto;scrollbar-width:none;touch-action:pan-y;align-self:stretch;line-height:20px}
+.tft.multi::-webkit-scrollbar{display:none}
+.caret{display:inline-block;width:0;height:18px;border-left:2px solid #007AFF;vertical-align:text-bottom;margin:0 -1px;animation:pmBlink 1s steps(1) infinite}
+.tf.big{height:64px;align-items:flex-start;padding:3px 8px}
+.tf.big .tfi{margin-top:2px}
+.tfe,.tfx{flex:none;width:28px;height:26px;border:0;background:transparent;color:#6B6E76;padding:0;display:flex;align-items:center;justify-content:center;touch-action:manipulation}
+.tfe svg,.tfx svg{width:19px;height:19px}
+.tf.empty .tfx{display:none}
+.pmSearchTf{flex:1;border-radius:17px}
+.pmList{position:absolute;left:0;right:0;top:44px;bottom:0;overflow-x:hidden;overflow-y:auto;padding:2px 8px 10px;display:flex;flex-direction:column;gap:6px;touch-action:pan-y;scrollbar-width:none;overscroll-behavior:contain}
+.pmList::-webkit-scrollbar{display:none}
+.pmRow{position:relative;flex:none;height:66px;display:flex;align-items:center;gap:2px;padding:0 4px 0 2px;border-radius:12px;background:#FAFAFC;box-shadow:0 1px 0 rgba(67,74,84,.2);transition:transform .14s ease}
+.pmRow.drag{z-index:5;transition:none;background:#fff;box-shadow:0 8px 20px rgba(0,0,0,.28)}
+.pmGrip{flex:none;width:26px;height:58px;border:0;background:transparent;color:#9A9CA4;display:flex;align-items:center;justify-content:center;padding:0;touch-action:none;cursor:grab}
+.pmGrip svg{width:18px;height:18px}
+.pmMain{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;font-family:inherit}
+.pmId{font-size:15px;font-weight:600;line-height:19px;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:start}
+.pmChips{display:flex;gap:5px;min-width:0}
+.pmChip{flex:1;min-width:0;height:30px;border:0;border-radius:8px;background:#EEF0F6;color:#2B2D33;display:flex;align-items:center;gap:5px;padding:0 7px;font-family:inherit;font-size:13px;touch-action:manipulation}
+.pmChip>svg,.pmPassBtn>svg{width:15px;height:15px;flex:none;color:#6B6E76}
+.pmChip>span,.pmPassBtn>span{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;text-align:start}
+.pmChip:active,.pmPassWrap:active{background:#DCE6FB}
+.pmChip.off{opacity:.45}
+.pmPassWrap{padding:0 0 0 7px;gap:0}
+.pmPassBtn{flex:1;min-width:0;height:30px;border:0;background:transparent;color:inherit;display:flex;align-items:center;gap:5px;padding:0;font-family:inherit;font-size:13px}
+.pmEye{flex:none;width:30px;height:30px;border:0;background:transparent;color:#6B6E76;display:flex;align-items:center;justify-content:center;padding:0}
+.pmEye svg{width:18px;height:18px}
+.flash{background:#CFE3FF!important}
+.pmIcoBtn{flex:none;width:34px;height:44px;border:0;background:transparent;color:#007AFF;display:flex;align-items:center;justify-content:center;padding:0;touch-action:manipulation}
+.pmIcoBtn svg{width:20px;height:20px}
+.pmIcoBtn.del{color:#FF3B30}
+.pmIcoBtn:active{opacity:.55}
+.pmTxMain{border:0;background:transparent;text-align:start;justify-content:center;gap:2px;padding:0 4px;height:100%;touch-action:manipulation}
+.pmTxt{font-size:13px;line-height:16px;color:#5C5F67;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;text-align:start}
+.pmEmpty{margin:auto;padding:0 24px;color:#8A8C94;font-size:14px;line-height:20px;text-align:center}
+.pmWide{margin:0 auto 18px;height:36px;padding:0 22px;border:0;border-radius:10px;background:#007AFF;color:#fff;font-size:15px;font-family:inherit}
+.pmEd{top:0;height:134px;z-index:20;background:#EBECF2}
+.edHead{display:flex;align-items:center;height:32px;padding:0 6px}
+.edTitle{flex:1;text-align:center;font-size:15px;font-weight:600;color:#111}
+.edBody{display:flex;flex-direction:column;gap:4px;padding:2px 8px 0}
+.edBody .tf{flex:none;height:30px}
+.edBody .tf.big{height:64px}
+.pmMenu{top:0;height:283.2px;z-index:25}
+.mnCard{position:absolute;left:8px;top:118px;width:152px;padding:4px;border-radius:14px;background:#FAFAFC;box-shadow:0 6px 22px rgba(0,0,0,.3),0 0 0 .5px rgba(0,0,0,.08);transform-origin:32px 100%;animation:pmPop .14s ease-out}
+.mnItem{display:flex;align-items:center;gap:10px;width:100%;height:44px;padding:0 12px;border:0;border-radius:10px;background:transparent;color:#111;font-family:inherit;font-size:16px;text-align:start}
+.mnItem:active{background:#E3E5EC}
+.mnItem svg{width:20px;height:20px;color:#3A3D44;flex:none}
+.mnTip{position:absolute;left:26px;bottom:-6px;width:14px;height:14px;background:#FAFAFC;border-radius:0 0 3px 0;transform:rotate(45deg);box-shadow:2px 2px 3px rgba(0,0,0,.12)}
+.pmDlg{top:0;height:283.2px;z-index:40;background:rgba(0,0,0,.35)}
+.dlgCard{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:290px;padding:12px 14px;border-radius:14px;background:#FAFAFC;text-align:center}
+.dlgTitle{font-size:16px;font-weight:600;line-height:20px;color:#111;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.dlgMsg{margin-top:3px;font-size:13px;line-height:17px;color:#5C5F67}
+.dlgBtns{display:flex;gap:8px;margin-top:10px}
+.dlgBtn{flex:1;height:36px;border:0;border-radius:9px;background:#E8EAF0;color:#007AFF;font-family:inherit;font-size:15px;font-weight:500}
+.dlgBtn.danger{background:#FF3B30;color:#fff}
+.dlgBtn:active{opacity:.7}
+.pmToast{position:absolute;left:50%;top:8px;transform:translateX(-50%);z-index:50;max-width:340px;padding:6px 12px;border-radius:15px;background:rgba(40,42,48,.93);color:#fff;font-size:13px;line-height:18px;white-space:nowrap;display:none;pointer-events:none}
+@keyframes pmBlink{50%{opacity:0}}
+@keyframes pmPop{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+@keyframes pmShake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 </style>
 </head>
 <body><div id="screen"><div id="kb" role="group" aria-label="Bellamie keyboard"></div></div>
 <script>
 (function(){
 'use strict';
-var kb=document.getElementById('kb'),screen=document.getElementById('screen');
-function resizeKeyboard(){var scale=window.innerWidth/390;screen.style.transform='scale('+scale+')';document.documentElement.style.height=(283.2*scale)+'px';document.body.style.height=(283.2*scale)+'px'}
+var kb=document.getElementById('kb'),screen=document.getElementById('screen'),extraH=0;
+function resizeKeyboard(){var scale=window.innerWidth/390,H=283.2+extraH;screen.style.transform='scale('+scale+')';screen.style.height=H+'px';document.documentElement.style.height=(H*scale)+'px';document.body.style.height=(H*scale)+'px'}
 window.addEventListener('resize',resizeKeyboard);resizeKeyboard();
 var rows=[
 {y:6.8,keys:{Q:2.25,W:41.05,E:79.85,R:118.65,T:157.45,Y:196.25,U:235.05,I:273.85,O:312.65,P:351.45}},
@@ -44,7 +130,7 @@ var rt=document.createElement('button');rt.textContent='return';add(rt,295.3,164
 function icon(x,y,w,h,html,label){var d=document.createElement('div');d.className='ico';d.setAttribute('role','button');d.setAttribute('aria-label',label);d.setAttribute('tabindex','0');d.style.cssText='left:'+x+'px;top:'+y+'px;width:'+w+'px;height:'+h+'px;pointer-events:auto;cursor:pointer;touch-action:manipulation';d.innerHTML=html;kb.appendChild(d);return d}
 var globe=icon(25.6,229.9,29.2,29.3,'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29.2 29.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="14.6" cy="14.65" r="12.6"/><ellipse cx="14.6" cy="14.65" rx="5.4" ry="12.6"/><path d="M2 14.65h25.2M4.2 7.9h20.8M4.2 21.4h20.8"/></svg>','Switch language');
 var voice=icon(340,229.9,20.4,30.1,'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20.4 30.1" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="5.7" y="1.2" width="9" height="16.5" rx="4.5"/><path d="M1.6 13.2a8.6 8.6 0 0 0 17.2 0M10.2 21.8v6.6M5.6 28.6h9.2"/></svg>','Voice input');
-var emojiPanel=document.createElement('div');emojiPanel.id='emojiPanel';emojiPanel.innerHTML='<input id="emojiSearch" type="search" placeholder="Search Emoji"><div id="emojiGrid"></div><div id="emojiCategories"></div>';kb.appendChild(emojiPanel);var emojiSearch=emojiPanel.querySelector('#emojiSearch'),emojiGrid=emojiPanel.querySelector('#emojiGrid'),emojiCategories=emojiPanel.querySelector('#emojiCategories');
+var emojiPanel=document.createElement('div');emojiPanel.id='emojiPanel';emojiPanel.innerHTML='<input id="emojiSearch" type="search" placeholder="Search Emoji" dir="auto" autocomplete="off" autocapitalize="off" spellcheck="false"><div id="emojiGrid" class="emojiStrip"></div><div id="emojiResults" class="emojiStrip"></div><div id="emojiCategories"></div>';kb.appendChild(emojiPanel);var emojiSearch=emojiPanel.querySelector('#emojiSearch'),emojiGrid=emojiPanel.querySelector('#emojiGrid'),emojiCategories=emojiPanel.querySelector('#emojiCategories');
 var letters=Array.prototype.slice.call(kb.querySelectorAll('.letter'));
 kb.querySelectorAll('.key').forEach(function(key){key.addEventListener('pointerdown',function(){if(window.AndroidKeyboard&&AndroidKeyboard.feedback)AndroidKeyboard.feedback()})});
 var upper=true,shiftLocked=false,manualShiftOverride=false,lastShiftAt=0,lastSpaceAt=0,doubleSpaceBlocked=false,kurdish=false,kuShift=false,layout='letters',inputMode='text',actionLabel='return',emojiPage=0;
@@ -60,13 +146,178 @@ var emojiPages=[['😀','😂','🥹','😍','🥰','😘','😊','😉','😭',
 var KU={Q:'ق',W:'و',E:'ە',R:'ر',T:'ت',Y:'ی',U:'ئ',I:'ح',O:'ۆ',P:'پ',A:'ا',S:'س',D:'د',F:'ف',G:'گ',H:'هـ',J:'ژ',K:'ک',L:'ل',Z:'ز',X:'خ',C:'ج',V:'ڤ',B:'ب',N:'ن',M:'م'};
 var KU2={Q:'ء',W:'وو',E:'ە',R:'ڕ',T:'ط',Y:'ێ',U:'ي',I:'ع',O:'ۆ',P:'ث',A:'آ',S:'ش',D:'ذ',F:'ظ',G:'غ',H:'هـ',J:'ژ',K:'ک',L:'ڵ',Z:'ض',X:'ص',C:'چ',V:'ڤ',B:'ب',N:'ن',M:'م'};
 var shiftOn=shift.innerHTML,shiftLockedIcon=shift.innerHTML.replace('</svg>','<path d="M7.5 22.2h9" stroke="#000" stroke-width="2.2" stroke-linecap="round"/></svg>'),shiftOff=svgOpen('0 0 24 24',24,24)+'<path d="M12 2.8 2.6 13.2h5.9v6.6c0 .6.4 1 1 1h5c.6 0 1-.4 1-1v-6.6h5.9z" stroke="#000" stroke-width="1.8" stroke-linejoin="round"/></svg>';
-var emojiGroups={smile:'😀 😃 😄 😁 😆 😅 🤣 😂 🙂 🙃 😉 😊 😇 🥰 😍 🤩 😘 😋 😛 😜 🤪 😝 🤗 🤔 😐 😑 😏 🙄 😬 😴 😷 🤒 🤢 🤮 🥵 🥶 😵 🤯 🥳 😎 🤓 🧐 😕 😟 🙁 ☹️ 😮 😯 😲 😳 🥺 😦 😧 😨 😰 😥 😢 😭 😱 😖 😣 😞 😓 😩 😫 🥱 😤 😡 😠 🤬 😈 💀 💩 🤡 👻 👽 🤖',people:'👋 🤚 🖐️ ✋ 🖖 👌 🤌 🤏 ✌️ 🤞 🫰 🤟 🤘 🤙 👈 👉 👆 👇 ☝️ 👍 👎 ✊ 👊 👏 🙌 🫶 👐 🤲 🤝 🙏 ✍️ 💅 🤳 💪 🦾 🦵 🦶 👂 👃 🧠 🦷 👀 👁️ 👅 👄 💋',animals:'🐵 🐒 🦍 🐶 🐕 🦊 🐱 🐈 🦁 🐯 🐴 🦄 🦓 🦌 🐮 🐷 🐏 🐑 🐐 🐪 🦙 🦒 🐘 🦏 🐭 🐹 🐰 🐻 🐼 🐨 🦥 🦘 🦃 🐔 🐧 🦅 🦆 🦉 🐸 🐊 🐢 🐍 🐲 🐉 🐳 🐬 🦈 🐙 🦀 🐌 🦋 🐛 🐜 🐝 🐞 🕷️ 🦂',food:'🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐 🍒 🍑 🥭 🍍 🥥 🥝 🍅 🍆 🥑 🥦 🥬 🥒 🌶️ 🌽 🥕 🧄 🧅 🥔 🍞 🥐 🥯 🧀 🥚 🍳 🥓 🥩 🍗 🌭 🍔 🍟 🍕 🥪 🌮 🌯 🥗 🍝 🍜 🍣 🍱 🍤 🍚 🍦 🍰 🎂 🍩 🍪 ☕ 🧃 🥤 🧋',sport:'⚽ 🏀 🏈 ⚾ 🎾 🏐 🏉 🥏 🎱 🏓 🏸 🏒 🥍 🏏 ⛳ 🎣 🥊 🥋 🎽 🛹 🛼 ⛸️ 🎿 🏂 🏋️ 🤼 🤸 ⛹️ 🤺 🏌️ 🏇 🧘 🏄 🏊 🚴 🎯 🎮 🎲 🎭 🎨 🎤 🎧 🎹 🥁 🎷 🎺 🎸 🎻',travel:'🚗 🚕 🚙 🚌 🏎️ 🚓 🚑 🚒 🚐 🚚 🚛 🚜 🚲 🛵 🏍️ 🚨 ✈️ 🛫 🛬 🚁 🚀 🛸 🚉 🚄 🚂 🚢 ⛵ 🛶 ⚓ 🗺️ 🗽 🗼 🏰 🎡 🎢 ⛲ ⛺ 🏖️ 🏝️ 🌋 ⛰️ 🌅 🌄 🌇 🌃 🌌',objects:'⌚ 📱 💻 ⌨️ 🖥️ 🖨️ 🖱️ 💾 💿 📷 📸 📹 🎥 📞 ☎️ 📺 📻 🎙️ 🧭 ⏱️ ⏰ 🕰️ 🔋 🔌 💡 🔦 🕯️ 💰 💳 💎 🔧 🔨 ⚙️ 🧱 🛏️ 🛋️ 🚪 🚽 🚿 🛁 🧴 🧹 🧺 🧻 🧼 🛒 🎁 🎈 🎀 🧸',symbols:'❤️ 🧡 💛 💚 💙 🩵 💜 🖤 🩶 🤍 🤎 💔 ❤️‍🔥 ❤️‍🩹 💕 💞 💓 💗 💖 💘 💝 💟 ❣️ 💌 💢 💬 💭 ⚠️ 🚫 💯 🔞 ♻️ ⚜️ 🔱 ⭕ ✅ ❌ ➕ ➖ ➗ ✖️ ♾️ ‼️ ⁉️ ❓ ❗ ☮️ ☯️ ✝️ ☪️ 🕉️ ✡️ 🔯 🕎',flags:'🏁 🚩 🎌 🏴 🏳️ 🏳️‍🌈 🏳️‍⚧️ 🇦🇫 🇦🇱 🇩🇿 🇦🇷 🇦🇺 🇧🇩 🇧🇪 🇧🇷 🇨🇦 🇨🇳 🇩🇪 🇬🇷 🇮🇳 🇮🇶 🇮🇷 🇮🇪 🇮🇹 🇯🇵 🇯🇴 🇰🇷 🇰🇼 🇱🇧 🇵🇰 🇵🇸 🇶🇦 🇷🇺 🇸🇦 🇸🇾 🇹🇷 🇺🇦 🇦🇪 🇬🇧 🇺🇸 🇾🇪'};
-var flagCodes='AC AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL CM CN CO CP CR CU CV CW CX CY CZ DE DG DJ DK DM DO DZ EA EC EE EG EH ER ES ET EU FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU IC ID IE IL IM IN IO IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM UN US UY UZ VA VC VE VG VI VN VU WF WS XK YE YT ZA ZM ZW'.split(' ');emojiGroups.flags=flagCodes.map(function(code){return String.fromCodePoint(127397+code.charCodeAt(0),127397+code.charCodeAt(1))}).join(' ');
-function showEmojiPanel(){var items=emojiCategory==='recent'?recentEmojis:(emojiGroups[emojiCategory]||'').split(' ');var q=emojiSearch.value.trim().toLowerCase();if(q){var all=Object.keys(emojiGroups).map(function(k){return emojiGroups[k]}).join(' ').split(' ');items=all.filter(function(e){return e.indexOf(q)>=0})}emojiGrid.innerHTML='';if(emojiCategory==='recent'&&!q){customStickers.slice(0,32).forEach(function(uri){var st=document.createElement('button');st.className='emojiCell emojiSticker';var im=document.createElement('img');im.src=uri;st.appendChild(im);st.onclick=function(){if(window.AndroidKeyboard&&AndroidKeyboard.insertImage)AndroidKeyboard.insertImage(uri)};emojiGrid.appendChild(st)})}items.slice(0,160).forEach(function(e){if(!e)return;var b=document.createElement('button');b.className='emojiCell';b.textContent=e;b.onclick=function(){commit(e);recentEmojis=[e].concat(recentEmojis.filter(function(x){return x!==e})).slice(0,32);try{localStorage.setItem('bellamie_recent_emoji',JSON.stringify(recentEmojis))}catch(x){}};emojiGrid.appendChild(b)});emojiCategories.querySelectorAll('.emojiCat').forEach(function(b){b.classList.toggle('active',b.dataset.cat===emojiCategory)})}
-function buildEmojiBar(){var a=document.createElement('button');a.id='emojiABC';a.textContent='ABC';a.onclick=function(){layout='letters';updateCase()};emojiCategories.appendChild(a);var skip=document.createElement('span');skip.style.flex='0 0 8px';emojiCategories.appendChild(skip);var img=document.createElement('button');img.className='emojiCat';img.textContent='▧';img.title='Add image';img.onclick=function(){if(window.AndroidKeyboard&&AndroidKeyboard.pickImage)AndroidKeyboard.pickImage()};emojiCategories.appendChild(img);[{id:'recent',i:'◷'},{id:'smile',i:'☻'},{id:'people',i:'♟'},{id:'animals',i:'🐶'},{id:'food',i:'🍎'},{id:'sport',i:'⚽'},{id:'travel',i:'🚗'},{id:'objects',i:'♧'},{id:'symbols',i:'♡'},{id:'flags',i:'⚑'}].forEach(function(c){var b=document.createElement('button');b.className='emojiCat';b.dataset.cat=c.id;b.textContent=c.i;b.onclick=function(){emojiCategory=c.id;emojiSearch.value='';showEmojiPanel()};emojiCategories.appendChild(b)})}
-buildEmojiBar();emojiSearch.addEventListener('input',showEmojiPanel);window.addCustomSticker=function(uri){customStickers.unshift(uri);customStickers=customStickers.slice(0,32);try{localStorage.setItem('bellamie_custom_stickers',JSON.stringify(customStickers))}catch(e){}emojiCategory='recent';showEmojiPanel()};
+/* ===== Emoji panel (iOS-style horizontal strip) ===== */
+var EMO_SECTIONS=[['smile','\ud83d\ude00 \ud83d\ude03 \ud83d\ude04 \ud83d\ude01 \ud83d\ude06 \ud83e\udd79 \ud83d\ude05 \ud83d\ude02 \ud83e\udd23 \ud83e\udd72 \u263a\ufe0f \ud83d\ude0a \ud83d\ude07 \ud83d\ude42 \ud83d\ude43 \ud83d\ude09 \ud83d\ude0c \ud83d\ude0d \ud83e\udd70 \ud83d\ude18 \ud83d\ude17 \ud83d\ude19 \ud83d\ude1a \ud83d\ude0b \ud83d\ude1b \ud83d\ude1d \ud83d\ude1c \ud83e\udd2a \ud83e\udd28 \ud83e\uddd0 \ud83e\udd13 \ud83d\ude0e \ud83e\udd78 \ud83e\udd29 \ud83e\udd73 \ud83d\ude42\u200d\u2195\ufe0f \ud83d\ude0f \ud83d\ude12 \ud83d\ude42\u200d\u2194\ufe0f \ud83d\ude1e \ud83d\ude14 \ud83d\ude1f \ud83d\ude15 \ud83d\ude41 \u2639\ufe0f \ud83d\ude23 \ud83d\ude16 \ud83d\ude2b \ud83d\ude29 \ud83e\udd7a \ud83d\ude22 \ud83d\ude2d \ud83d\ude24 \ud83d\ude20 \ud83d\ude21 \ud83e\udd2c \ud83e\udd2f \ud83d\ude33 \ud83e\udd75 \ud83e\udd76 \ud83d\ude36\u200d\ud83c\udf2b\ufe0f \ud83d\ude31 \ud83d\ude28 \ud83d\ude30 \ud83d\ude25 \ud83d\ude13 \ud83e\udd17 \ud83e\udd14 \ud83e\udee3 \ud83e\udd2d \ud83e\udee2 \ud83e\udee1 \ud83e\udd2b \ud83e\udee0 \ud83e\udd25 \ud83d\ude36 \ud83e\udee5 \ud83d\ude10 \ud83e\udee4 \ud83d\ude11 \ud83e\udee8 \ud83d\ude2c \ud83d\ude44 \ud83d\ude2f \ud83d\ude26 \ud83d\ude27 \ud83d\ude2e \ud83d\ude32 \ud83e\udd71 \ud83e\udee9 \ud83d\ude34 \ud83e\udd24 \ud83d\ude2a \ud83d\ude2e\u200d\ud83d\udca8 \ud83d\ude35 \ud83d\ude35\u200d\ud83d\udcab \ud83e\udd10 \ud83e\udd74 \ud83e\udd22 \ud83e\udd2e \ud83e\udd27 \ud83d\ude37 \ud83e\udd12 \ud83e\udd15 \ud83e\udd11 \ud83e\udd20 \ud83d\ude08 \ud83d\udc7f \ud83d\udc79 \ud83d\udc7a \ud83e\udd21 \ud83d\udca9 \ud83d\udc7b \ud83d\udc80 \u2620\ufe0f \ud83d\udc7d \ud83d\udc7e \ud83e\udd16 \ud83c\udf83 \ud83d\ude3a \ud83d\ude38 \ud83d\ude39 \ud83d\ude3b \ud83d\ude3c \ud83d\ude3d \ud83d\ude40 \ud83d\ude3f \ud83d\ude3e \ud83e\udef6 \ud83d\udc50 \ud83e\udd32 \ud83d\ude4c \ud83d\udc4f \ud83e\udd1d \ud83d\udc4d \ud83d\udc4e \ud83d\udc4a \u270a \ud83e\udd1b \ud83e\udd1c \ud83e\udef7 \ud83e\udef8 \ud83e\udd1e \u270c\ufe0f \ud83e\udef0 \ud83e\udd1f \ud83e\udd18 \ud83d\udc4c \ud83e\udd0c \ud83e\udd0f \ud83e\udef3 \ud83e\udef4 \ud83d\udc48 \ud83d\udc49 \ud83d\udc46 \ud83d\udc47 \u261d\ufe0f \u270b \ud83e\udd1a \ud83d\udd90\ufe0f \ud83d\udd96 \ud83d\udc4b \ud83e\udd19 \ud83e\udef1 \ud83e\udef2 \ud83d\udcaa \ud83e\uddbe \ud83d\udd95 \u270d\ufe0f \ud83d\ude4f \ud83e\udef5 \ud83e\uddb6 \ud83e\uddb5 \ud83e\uddbf \ud83d\udc84 \ud83d\udc8b \ud83d\udc44 \ud83e\udee6 \ud83e\uddb7 \ud83d\udc45 \ud83d\udc42 \ud83e\uddbb \ud83d\udc43 \ud83e\udec6 \ud83d\udc63 \ud83d\udc41\ufe0f \ud83d\udc40 \ud83e\udec0 \ud83e\udec1 \ud83e\udde0 \ud83d\udde3\ufe0f \ud83d\udc64 \ud83d\udc65 \ud83e\udec2 \ud83d\udc76 \ud83d\udc67 \ud83e\uddd2 \ud83d\udc66 \ud83d\udc69 \ud83e\uddd1 \ud83d\udc68 \ud83d\udc69\u200d\ud83e\uddb1 \ud83e\uddd1\u200d\ud83e\uddb1 \ud83d\udc68\u200d\ud83e\uddb1 \ud83d\udc69\u200d\ud83e\uddb0 \ud83e\uddd1\u200d\ud83e\uddb0 \ud83d\udc68\u200d\ud83e\uddb0 \ud83d\udc71\u200d\u2640\ufe0f \ud83d\udc71 \ud83d\udc71\u200d\u2642\ufe0f \ud83d\udc69\u200d\ud83e\uddb3 \ud83e\uddd1\u200d\ud83e\uddb3 \ud83d\udc68\u200d\ud83e\uddb3 \ud83d\udc69\u200d\ud83e\uddb2 \ud83e\uddd1\u200d\ud83e\uddb2 \ud83d\udc68\u200d\ud83e\uddb2 \ud83e\uddd4\u200d\u2640\ufe0f \ud83e\uddd4 \ud83e\uddd4\u200d\u2642\ufe0f \ud83d\udc75 \ud83e\uddd3 \ud83d\udc74 \ud83d\udc72 \ud83d\udc73\u200d\u2640\ufe0f \ud83d\udc73 \ud83d\udc73\u200d\u2642\ufe0f \ud83e\uddd5 \ud83d\udc6e\u200d\u2640\ufe0f \ud83d\udc6e \ud83d\udc6e\u200d\u2642\ufe0f \ud83d\udc77\u200d\u2640\ufe0f \ud83d\udc77 \ud83d\udc77\u200d\u2642\ufe0f \ud83d\udc82\u200d\u2640\ufe0f \ud83d\udc82 \ud83d\udc82\u200d\u2642\ufe0f \ud83d\udd75\ufe0f\u200d\u2640\ufe0f \ud83d\udd75\ufe0f \ud83d\udd75\ufe0f\u200d\u2642\ufe0f \ud83d\udc69\u200d\u2695\ufe0f \ud83e\uddd1\u200d\u2695\ufe0f \ud83d\udc68\u200d\u2695\ufe0f \ud83d\udc69\u200d\ud83c\udf3e \ud83e\uddd1\u200d\ud83c\udf3e \ud83d\udc68\u200d\ud83c\udf3e \ud83d\udc69\u200d\ud83c\udf73 \ud83e\uddd1\u200d\ud83c\udf73 \ud83d\udc68\u200d\ud83c\udf73 \ud83d\udc69\u200d\ud83c\udf93 \ud83e\uddd1\u200d\ud83c\udf93 \ud83d\udc68\u200d\ud83c\udf93 \ud83d\udc69\u200d\ud83c\udfa4 \ud83e\uddd1\u200d\ud83c\udfa4 \ud83d\udc68\u200d\ud83c\udfa4 \ud83d\udc69\u200d\ud83c\udfeb \ud83e\uddd1\u200d\ud83c\udfeb \ud83d\udc68\u200d\ud83c\udfeb \ud83d\udc69\u200d\ud83c\udfed \ud83e\uddd1\u200d\ud83c\udfed \ud83d\udc68\u200d\ud83c\udfed \ud83d\udc69\u200d\ud83d\udcbb \ud83e\uddd1\u200d\ud83d\udcbb \ud83d\udc68\u200d\ud83d\udcbb \ud83d\udc69\u200d\ud83d\udcbc \ud83e\uddd1\u200d\ud83d\udcbc \ud83d\udc68\u200d\ud83d\udcbc \ud83d\udc69\u200d\ud83d\udd27 \ud83e\uddd1\u200d\ud83d\udd27 \ud83d\udc68\u200d\ud83d\udd27 \ud83d\udc69\u200d\ud83d\udd2c \ud83e\uddd1\u200d\ud83d\udd2c \ud83d\udc68\u200d\ud83d\udd2c \ud83d\udc69\u200d\ud83c\udfa8 \ud83e\uddd1\u200d\ud83c\udfa8 \ud83d\udc68\u200d\ud83c\udfa8 \ud83d\udc69\u200d\ud83d\ude92 \ud83e\uddd1\u200d\ud83d\ude92 \ud83d\udc68\u200d\ud83d\ude92 \ud83d\udc69\u200d\u2708\ufe0f \ud83e\uddd1\u200d\u2708\ufe0f \ud83d\udc68\u200d\u2708\ufe0f \ud83d\udc69\u200d\ud83d\ude80 \ud83e\uddd1\u200d\ud83d\ude80 \ud83d\udc68\u200d\ud83d\ude80 \ud83d\udc69\u200d\u2696\ufe0f \ud83e\uddd1\u200d\u2696\ufe0f \ud83d\udc68\u200d\u2696\ufe0f \ud83d\udc70\u200d\u2640\ufe0f \ud83d\udc70 \ud83d\udc70\u200d\u2642\ufe0f \ud83e\udd35\u200d\u2640\ufe0f \ud83e\udd35 \ud83e\udd35\u200d\u2642\ufe0f \ud83d\udc78 \ud83e\udec5 \ud83e\udd34 \ud83e\udd77 \ud83e\uddb8\u200d\u2640\ufe0f \ud83e\uddb8 \ud83e\uddb8\u200d\u2642\ufe0f \ud83e\uddb9\u200d\u2640\ufe0f \ud83e\uddb9 \ud83e\uddb9\u200d\u2642\ufe0f \ud83e\udd36 \ud83e\uddd1\u200d\ud83c\udf84 \ud83c\udf85 \ud83e\uddd9\u200d\u2640\ufe0f \ud83e\uddd9 \ud83e\uddd9\u200d\u2642\ufe0f \ud83e\udddd\u200d\u2640\ufe0f \ud83e\udddd \ud83e\udddd\u200d\u2642\ufe0f \ud83e\uddcc \ud83e\udddb\u200d\u2640\ufe0f \ud83e\udddb \ud83e\udddb\u200d\u2642\ufe0f \ud83e\udddf\u200d\u2640\ufe0f \ud83e\udddf \ud83e\udddf\u200d\u2642\ufe0f \ud83e\uddde\u200d\u2640\ufe0f \ud83e\uddde \ud83e\uddde\u200d\u2642\ufe0f \ud83e\udddc\u200d\u2640\ufe0f \ud83e\udddc \ud83e\udddc\u200d\u2642\ufe0f \ud83e\uddda\u200d\u2640\ufe0f \ud83e\uddda \ud83e\uddda\u200d\u2642\ufe0f \ud83d\udc7c \ud83e\udd30 \ud83e\udec4 \ud83e\udec3 \ud83e\udd31 \ud83d\udc69\u200d\ud83c\udf7c \ud83e\uddd1\u200d\ud83c\udf7c \ud83d\udc68\u200d\ud83c\udf7c \ud83d\ude47\u200d\u2640\ufe0f \ud83d\ude47 \ud83d\ude47\u200d\u2642\ufe0f \ud83d\udc81\u200d\u2640\ufe0f \ud83d\udc81 \ud83d\udc81\u200d\u2642\ufe0f \ud83d\ude45\u200d\u2640\ufe0f \ud83d\ude45 \ud83d\ude45\u200d\u2642\ufe0f \ud83d\ude46\u200d\u2640\ufe0f \ud83d\ude46 \ud83d\ude46\u200d\u2642\ufe0f \ud83d\ude4b\u200d\u2640\ufe0f \ud83d\ude4b \ud83d\ude4b\u200d\u2642\ufe0f \ud83e\uddcf\u200d\u2640\ufe0f \ud83e\uddcf \ud83e\uddcf\u200d\u2642\ufe0f \ud83e\udd26\u200d\u2640\ufe0f \ud83e\udd26 \ud83e\udd26\u200d\u2642\ufe0f \ud83e\udd37\u200d\u2640\ufe0f \ud83e\udd37 \ud83e\udd37\u200d\u2642\ufe0f \ud83d\ude4e\u200d\u2640\ufe0f \ud83d\ude4e \ud83d\ude4e\u200d\u2642\ufe0f \ud83d\ude4d\u200d\u2640\ufe0f \ud83d\ude4d \ud83d\ude4d\u200d\u2642\ufe0f \ud83d\udc87\u200d\u2640\ufe0f \ud83d\udc87 \ud83d\udc87\u200d\u2642\ufe0f \ud83d\udc86\u200d\u2640\ufe0f \ud83d\udc86 \ud83d\udc86\u200d\u2642\ufe0f \ud83e\uddd6\u200d\u2640\ufe0f \ud83e\uddd6 \ud83e\uddd6\u200d\u2642\ufe0f \ud83d\udc85 \ud83e\udd33 \ud83d\udc83 \ud83d\udd7a \ud83d\udc6f\u200d\u2640\ufe0f \ud83d\udc6f \ud83d\udc6f\u200d\u2642\ufe0f \ud83d\udd74\ufe0f \ud83d\udc69\u200d\ud83e\uddbd \ud83e\uddd1\u200d\ud83e\uddbd \ud83d\udc68\u200d\ud83e\uddbd \ud83d\udc69\u200d\ud83e\uddbd\u200d\u27a1\ufe0f \ud83e\uddd1\u200d\ud83e\uddbd\u200d\u27a1\ufe0f \ud83d\udc68\u200d\ud83e\uddbd\u200d\u27a1\ufe0f \ud83d\udc69\u200d\ud83e\uddbc \ud83e\uddd1\u200d\ud83e\uddbc \ud83d\udc68\u200d\ud83e\uddbc \ud83d\udc69\u200d\ud83e\uddbc\u200d\u27a1\ufe0f \ud83e\uddd1\u200d\ud83e\uddbc\u200d\u27a1\ufe0f \ud83d\udc68\u200d\ud83e\uddbc\u200d\u27a1\ufe0f \ud83d\udeb6\u200d\u2640\ufe0f \ud83d\udeb6 \ud83d\udeb6\u200d\u2642\ufe0f \ud83d\udeb6\u200d\u2640\ufe0f\u200d\u27a1\ufe0f \ud83d\udeb6\u200d\u27a1\ufe0f \ud83d\udeb6\u200d\u2642\ufe0f\u200d\u27a1\ufe0f \ud83d\udc69\u200d\ud83e\uddaf \ud83e\uddd1\u200d\ud83e\uddaf \ud83d\udc68\u200d\ud83e\uddaf \ud83d\udc69\u200d\ud83e\uddaf\u200d\u27a1\ufe0f \ud83e\uddd1\u200d\ud83e\uddaf\u200d\u27a1\ufe0f \ud83d\udc68\u200d\ud83e\uddaf\u200d\u27a1\ufe0f \ud83e\uddce\u200d\u2640\ufe0f \ud83e\uddce \ud83e\uddce\u200d\u2642\ufe0f \ud83c\udfc3\u200d\u2640\ufe0f \ud83c\udfc3 \ud83c\udfc3\u200d\u2642\ufe0f \ud83c\udfc3\u200d\u2640\ufe0f\u200d\u27a1\ufe0f \ud83c\udfc3\u200d\u27a1\ufe0f \ud83c\udfc3\u200d\u2642\ufe0f\u200d\u27a1\ufe0f \ud83e\uddce\u200d\u2640\ufe0f\u200d\u27a1\ufe0f \ud83e\uddce\u200d\u27a1\ufe0f \ud83e\uddce\u200d\u2642\ufe0f\u200d\u27a1\ufe0f \ud83e\uddcd\u200d\u2640\ufe0f \ud83e\uddcd \ud83e\uddcd\u200d\u2642\ufe0f \ud83d\udc6b \ud83d\udc6d \ud83d\udc6c \ud83d\udc69\u200d\u2764\ufe0f\u200d\ud83d\udc68 \ud83d\udc69\u200d\u2764\ufe0f\u200d\ud83d\udc69 \ud83e\uddd1\u200d\u2764\ufe0f\u200d\ud83e\uddd1 \ud83d\udc68\u200d\u2764\ufe0f\u200d\ud83d\udc68 \ud83d\udc69\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68 \ud83d\udc69\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc69 \ud83e\uddd1\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83e\uddd1 \ud83d\udc68\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68 \ud83e\udea2 \ud83e\uddf6 \ud83e\uddf5 \ud83e\udea1 \ud83e\udde5 \ud83e\udd7c \ud83e\uddba \ud83d\udc5a \ud83d\udc55 \ud83d\udc56 \ud83e\ude72 \ud83e\ude73 \ud83d\udc54 \ud83d\udc57 \ud83d\udc59 \ud83e\ude71 \ud83d\udc58 \ud83e\udd7b \ud83e\ude74 \ud83e\udd7f \ud83d\udc60 \ud83d\udc61 \ud83d\udc62 \ud83d\udc5e \ud83d\udc5f \ud83e\udd7e \ud83e\udde6 \ud83e\udde4 \ud83e\udde3 \ud83c\udfa9 \ud83e\udde2 \ud83d\udc52 \ud83c\udf93 \u26d1\ufe0f \ud83e\ude96 \ud83d\udc51 \ud83d\udc8d \ud83d\udc5d \ud83d\udc5b \ud83d\udc5c \ud83d\udcbc \ud83c\udf92 \ud83e\uddf3 \ud83d\udc53 \ud83d\udd76\ufe0f \ud83e\udd7d \ud83c\udf02'],['animals','\ud83d\udc36 \ud83d\udc31 \ud83d\udc2d \ud83d\udc39 \ud83d\udc30 \ud83e\udd8a \ud83d\udc3b \ud83d\udc3c \ud83d\udc3b\u200d\u2744\ufe0f \ud83d\udc28 \ud83d\udc2f \ud83e\udd81 \ud83d\udc2e \ud83d\udc37 \ud83d\udc3d \ud83d\udc38 \ud83d\udc35 \ud83d\ude48 \ud83d\ude49 \ud83d\ude4a \ud83d\udc12 \ud83d\udc14 \ud83d\udc27 \ud83d\udc26 \ud83d\udc24 \ud83d\udc23 \ud83d\udc25 \ud83e\udebf \ud83e\udd86 \ud83d\udc26\u200d\u2b1b \ud83e\udd85 \ud83e\udd89 \ud83e\udd87 \ud83d\udc3a \ud83d\udc17 \ud83d\udc34 \ud83e\udd84 \ud83e\udece \ud83d\udc1d \ud83e\udeb1 \ud83d\udc1b \ud83e\udd8b \ud83d\udc0c \ud83d\udc1e \ud83d\udc1c \ud83e\udeb0 \ud83e\udeb2 \ud83e\udeb3 \ud83e\udd9f \ud83e\udd97 \ud83d\udd77\ufe0f \ud83d\udd78\ufe0f \ud83e\udd82 \ud83d\udc22 \ud83d\udc0d \ud83e\udd8e \ud83e\udd96 \ud83e\udd95 \ud83d\udc19 \ud83e\udd91 \ud83e\udebc \ud83e\udd90 \ud83e\udd9e \ud83e\udd80 \ud83d\udc21 \ud83d\udc20 \ud83d\udc1f \ud83d\udc2c \ud83d\udc33 \ud83d\udc0b \ud83e\udd88 \ud83e\uddad \ud83d\udc0a \ud83d\udc05 \ud83d\udc06 \ud83e\udd93 \ud83e\udd8d \ud83e\udda7 \ud83e\udda3 \ud83d\udc18 \ud83e\udd9b \ud83e\udd8f \ud83d\udc2a \ud83d\udc2b \ud83e\udd92 \ud83e\udd98 \ud83e\uddac \ud83d\udc03 \ud83d\udc02 \ud83d\udc04 \ud83e\udecf \ud83d\udc0e \ud83d\udc16 \ud83d\udc0f \ud83d\udc11 \ud83e\udd99 \ud83d\udc10 \ud83e\udd8c \ud83d\udc15 \ud83d\udc29 \ud83e\uddae \ud83d\udc15\u200d\ud83e\uddba \ud83d\udc08 \ud83d\udc08\u200d\u2b1b \ud83e\udeb6 \ud83e\udebd \ud83d\udc13 \ud83e\udd83 \ud83e\udda4 \ud83e\udd9a \ud83e\udd9c \ud83e\udda2 \ud83e\udda9 \ud83d\udd4a\ufe0f \ud83d\udc07 \ud83e\udd9d \ud83e\udda8 \ud83e\udda1 \ud83e\uddab \ud83e\udda6 \ud83e\udda5 \ud83d\udc01 \ud83d\udc00 \ud83d\udc3f\ufe0f \ud83e\udd94 \ud83d\udc3e \ud83d\udc09 \ud83d\udc32 \ud83d\udc26\u200d\ud83d\udd25 \ud83c\udf35 \ud83c\udf84 \ud83c\udf32 \ud83c\udf33 \ud83c\udf34 \ud83e\udebe \ud83e\udeb5 \ud83c\udf31 \ud83c\udf3f \u2618\ufe0f \ud83c\udf40 \ud83c\udf8d \ud83e\udeb4 \ud83c\udf8b \ud83c\udf43 \ud83c\udf42 \ud83c\udf41 \ud83e\udeba \ud83e\udeb9 \ud83c\udf44 \ud83c\udf44\u200d\ud83d\udfeb \ud83d\udc1a \ud83e\udeb8 \ud83e\udea8 \ud83c\udf3e \ud83d\udc90 \ud83c\udf37 \ud83c\udf39 \ud83e\udd40 \ud83e\udebb \ud83e\udeb7 \ud83c\udf3a \ud83c\udf38 \ud83c\udf3c \ud83c\udf3b \ud83c\udf1e \ud83c\udf1d \ud83c\udf1b \ud83c\udf1c \ud83c\udf1a \ud83c\udf15 \ud83c\udf16 \ud83c\udf17 \ud83c\udf18 \ud83c\udf11 \ud83c\udf12 \ud83c\udf13 \ud83c\udf14 \ud83c\udf19 \ud83c\udf0e \ud83c\udf0d \ud83c\udf0f \ud83e\ude90 \ud83d\udcab \u2b50 \ud83c\udf1f \u2728 \u26a1 \u2604\ufe0f \ud83d\udca5 \ud83d\udd25 \ud83c\udf2a\ufe0f \ud83c\udf08 \u2600\ufe0f \ud83c\udf24\ufe0f \u26c5 \ud83c\udf25\ufe0f \u2601\ufe0f \ud83c\udf26\ufe0f \ud83c\udf27\ufe0f \u26c8\ufe0f \ud83c\udf29\ufe0f \ud83c\udf28\ufe0f \u2744\ufe0f \u2603\ufe0f \u26c4 \ud83c\udf2c\ufe0f \ud83d\udca8 \ud83d\udca7 \ud83d\udca6 \ud83e\udee7 \u2614 \u2602\ufe0f \ud83c\udf0a \ud83c\udf2b\ufe0f'],['food','\ud83c\udf4f \ud83c\udf4e \ud83c\udf50 \ud83c\udf4a \ud83c\udf4b \ud83c\udf4b\u200d\ud83d\udfe9 \ud83c\udf4c \ud83c\udf49 \ud83c\udf47 \ud83c\udf53 \ud83e\uded0 \ud83c\udf48 \ud83c\udf52 \ud83c\udf51 \ud83e\udd6d \ud83c\udf4d \ud83e\udd65 \ud83e\udd5d \ud83c\udf45 \ud83c\udf46 \ud83e\udd51 \ud83e\udedb \ud83e\udd66 \ud83e\udd6c \ud83e\udd52 \ud83c\udf36\ufe0f \ud83e\uded1 \ud83c\udf3d \ud83e\udd55 \ud83e\uded2 \ud83e\uddc4 \ud83e\uddc5 \ud83e\udd54 \ud83e\udedc \ud83c\udf60 \ud83e\udeda \ud83e\udd50 \ud83e\udd6f \ud83c\udf5e \ud83e\udd56 \ud83e\udd68 \ud83e\uddc0 \ud83e\udd5a \ud83c\udf73 \ud83e\uddc8 \ud83e\udd5e \ud83e\uddc7 \ud83e\udd53 \ud83e\udd69 \ud83c\udf57 \ud83c\udf56 \ud83e\uddb4 \ud83c\udf2d \ud83c\udf54 \ud83c\udf5f \ud83c\udf55 \ud83e\uded3 \ud83e\udd6a \ud83e\udd59 \ud83e\uddc6 \ud83c\udf2e \ud83c\udf2f \ud83e\uded4 \ud83e\udd57 \ud83e\udd58 \ud83e\uded5 \ud83e\udd6b \ud83e\uded9 \ud83c\udf5d \ud83c\udf5c \ud83c\udf72 \ud83c\udf5b \ud83c\udf63 \ud83c\udf71 \ud83e\udd5f \ud83e\uddaa \ud83c\udf64 \ud83c\udf59 \ud83c\udf5a \ud83c\udf58 \ud83c\udf65 \ud83e\udd60 \ud83e\udd6e \ud83c\udf62 \ud83c\udf61 \ud83c\udf67 \ud83c\udf68 \ud83c\udf66 \ud83e\udd67 \ud83e\uddc1 \ud83c\udf70 \ud83c\udf82 \ud83c\udf6e \ud83c\udf6d \ud83c\udf6c \ud83c\udf6b \ud83c\udf7f \ud83c\udf69 \ud83c\udf6a \ud83c\udf30 \ud83e\udd5c \ud83e\uded8 \ud83c\udf6f \ud83e\udd5b \ud83e\uded7 \ud83c\udf7c \ud83e\uded6 \u2615 \ud83c\udf75 \ud83e\uddc3 \ud83e\udd64 \ud83e\uddcb \ud83c\udf76 \ud83c\udf7a \ud83c\udf7b \ud83e\udd42 \ud83c\udf77 \ud83e\udd43 \ud83c\udf78 \ud83c\udf79 \ud83e\uddc9 \ud83c\udf7e \ud83e\uddca \ud83e\udd44 \ud83c\udf74 \ud83c\udf7d\ufe0f \ud83e\udd63 \ud83e\udd61 \ud83e\udd62 \ud83e\uddc2'],['sport','\u26bd \ud83c\udfc0 \ud83c\udfc8 \u26be \ud83e\udd4e \ud83c\udfbe \ud83c\udfd0 \ud83c\udfc9 \ud83e\udd4f \ud83c\udfb1 \ud83e\ude80 \ud83c\udfd3 \ud83c\udff8 \ud83c\udfd2 \ud83c\udfd1 \ud83e\udd4d \ud83c\udfcf \ud83e\ude83 \ud83e\udd45 \u26f3 \ud83e\ude81 \ud83d\udedd \ud83c\udff9 \ud83c\udfa3 \ud83e\udd3f \ud83e\udd4a \ud83e\udd4b \ud83c\udfbd \ud83d\udef9 \ud83d\udefc \ud83d\udef7 \u26f8\ufe0f \ud83e\udd4c \ud83c\udfbf \u26f7\ufe0f \ud83c\udfc2 \ud83e\ude82 \ud83c\udfcb\ufe0f\u200d\u2640\ufe0f \ud83c\udfcb\ufe0f \ud83c\udfcb\ufe0f\u200d\u2642\ufe0f \ud83e\udd3c\u200d\u2640\ufe0f \ud83e\udd3c \ud83e\udd3c\u200d\u2642\ufe0f \ud83e\udd38\u200d\u2640\ufe0f \ud83e\udd38 \ud83e\udd38\u200d\u2642\ufe0f \u26f9\ufe0f\u200d\u2640\ufe0f \u26f9\ufe0f \u26f9\ufe0f\u200d\u2642\ufe0f \ud83e\udd3a \ud83e\udd3e\u200d\u2640\ufe0f \ud83e\udd3e \ud83e\udd3e\u200d\u2642\ufe0f \ud83c\udfcc\ufe0f\u200d\u2640\ufe0f \ud83c\udfcc\ufe0f \ud83c\udfcc\ufe0f\u200d\u2642\ufe0f \ud83c\udfc7 \ud83e\uddd8\u200d\u2640\ufe0f \ud83e\uddd8 \ud83e\uddd8\u200d\u2642\ufe0f \ud83c\udfc4\u200d\u2640\ufe0f \ud83c\udfc4 \ud83c\udfc4\u200d\u2642\ufe0f \ud83c\udfca\u200d\u2640\ufe0f \ud83c\udfca \ud83c\udfca\u200d\u2642\ufe0f \ud83e\udd3d\u200d\u2640\ufe0f \ud83e\udd3d \ud83e\udd3d\u200d\u2642\ufe0f \ud83d\udea3\u200d\u2640\ufe0f \ud83d\udea3 \ud83d\udea3\u200d\u2642\ufe0f \ud83e\uddd7\u200d\u2640\ufe0f \ud83e\uddd7 \ud83e\uddd7\u200d\u2642\ufe0f \ud83d\udeb5\u200d\u2640\ufe0f \ud83d\udeb5 \ud83d\udeb5\u200d\u2642\ufe0f \ud83d\udeb4\u200d\u2640\ufe0f \ud83d\udeb4 \ud83d\udeb4\u200d\u2642\ufe0f \ud83c\udfc6 \ud83e\udd47 \ud83e\udd48 \ud83e\udd49 \ud83c\udfc5 \ud83c\udf96\ufe0f \ud83c\udff5\ufe0f \ud83c\udf97\ufe0f \ud83c\udf9f\ufe0f \ud83c\udfab \ud83c\udfaa \ud83e\udd39\u200d\u2640\ufe0f \ud83e\udd39 \ud83e\udd39\u200d\u2642\ufe0f \ud83c\udfad \ud83e\ude70 \ud83c\udfa8 \ud83e\udedf \ud83c\udfac \ud83c\udfa4 \ud83c\udfa7 \ud83c\udfbc \ud83c\udfb9 \ud83e\ude87 \ud83e\udd41 \ud83e\ude98 \ud83c\udfb7 \ud83c\udfba \ud83e\ude97 \ud83c\udfb8 \ud83e\ude95 \ud83e\ude89 \ud83c\udfbb \ud83e\ude88 \ud83c\udfb2 \u265f\ufe0f \ud83c\udfaf \ud83c\udfb3 \ud83c\udfae \ud83c\udfb0 \ud83e\udde9'],['travel','\ud83d\ude97 \ud83d\ude95 \ud83d\ude99 \ud83d\ude8c \ud83d\ude8e \ud83c\udfce\ufe0f \ud83d\ude93 \ud83d\ude91 \ud83d\ude92 \ud83d\ude90 \ud83d\udefb \ud83d\ude9a \ud83d\ude9b \ud83d\ude9c \ud83e\uddaf \ud83e\uddbd \ud83e\uddbc \ud83e\ude7c \ud83d\udef4 \ud83d\udeb2 \ud83d\udef5 \ud83c\udfcd\ufe0f \ud83d\udefa \ud83d\udede \ud83d\udea8 \ud83d\ude94 \ud83d\ude8d \ud83d\ude98 \ud83d\ude96 \ud83d\udea1 \ud83d\udea0 \ud83d\ude9f \ud83d\ude83 \ud83d\ude8b \ud83d\ude9e \ud83d\ude9d \ud83d\ude84 \ud83d\ude85 \ud83d\ude88 \ud83d\ude82 \ud83d\ude86 \ud83d\ude87 \ud83d\ude8a \ud83d\ude89 \u2708\ufe0f \ud83d\udeeb \ud83d\udeec \ud83d\udee9\ufe0f \ud83d\udcba \ud83d\udef0\ufe0f \ud83d\ude80 \ud83d\udef8 \ud83d\ude81 \ud83d\udef6 \u26f5 \ud83d\udea4 \ud83d\udee5\ufe0f \ud83d\udef3\ufe0f \u26f4\ufe0f \ud83d\udea2 \ud83d\udedf \u2693 \ud83e\ude9d \u26fd \ud83d\udea7 \ud83d\udea6 \ud83d\udea5 \ud83d\ude8f \ud83d\uddfa\ufe0f \ud83d\uddff \ud83d\uddfd \ud83d\uddfc \ud83c\udff0 \ud83c\udfef \ud83c\udfdf\ufe0f \ud83c\udfa1 \ud83c\udfa2 \ud83c\udfa0 \u26f2 \u26f1\ufe0f \ud83c\udfd6\ufe0f \ud83c\udfdd\ufe0f \ud83c\udfdc\ufe0f \ud83c\udf0b \u26f0\ufe0f \ud83c\udfd4\ufe0f \ud83d\uddfb \ud83c\udfd5\ufe0f \u26fa \ud83d\uded6 \ud83c\udfe0 \ud83c\udfe1 \ud83c\udfd8\ufe0f \ud83c\udfda\ufe0f \ud83c\udfd7\ufe0f \ud83c\udfed \ud83c\udfe2 \ud83c\udfec \ud83c\udfe3 \ud83c\udfe4 \ud83c\udfe5 \ud83c\udfe6 \ud83c\udfe8 \ud83c\udfea \ud83c\udfeb \ud83c\udfe9 \ud83d\udc92 \ud83c\udfdb\ufe0f \u26ea \ud83d\udd4c \ud83d\udd4d \ud83d\uded5 \ud83d\udd4b \u26e9\ufe0f \ud83d\udee4\ufe0f \ud83d\udee3\ufe0f \ud83d\uddfe \ud83c\udf91 \ud83c\udfde\ufe0f \ud83c\udf05 \ud83c\udf04 \ud83c\udf20 \ud83c\udf87 \ud83c\udf86 \ud83c\udf07 \ud83c\udf06 \ud83c\udfd9\ufe0f \ud83c\udf03 \ud83c\udf0c \ud83c\udf09 \ud83c\udf01'],['objects','\u231a \ud83d\udcf1 \ud83d\udcf2 \ud83d\udcbb \u2328\ufe0f \ud83d\udda5\ufe0f \ud83d\udda8\ufe0f \ud83d\uddb1\ufe0f \ud83d\uddb2\ufe0f \ud83d\udd79\ufe0f \ud83d\udddc\ufe0f \ud83d\udcbd \ud83d\udcbe \ud83d\udcbf \ud83d\udcc0 \ud83d\udcfc \ud83d\udcf7 \ud83d\udcf8 \ud83d\udcf9 \ud83c\udfa5 \ud83d\udcfd\ufe0f \ud83c\udf9e\ufe0f \ud83d\udcde \u260e\ufe0f \ud83d\udcdf \ud83d\udce0 \ud83d\udcfa \ud83d\udcfb \ud83c\udf99\ufe0f \ud83c\udf9a\ufe0f \ud83c\udf9b\ufe0f \ud83e\udded \u23f1\ufe0f \u23f2\ufe0f \u23f0 \ud83d\udd70\ufe0f \u231b \u23f3 \ud83d\udce1 \ud83d\udd0b \ud83e\udeab \ud83d\udd0c \ud83d\udca1 \ud83d\udd26 \ud83d\udd6f\ufe0f \ud83e\ude94 \ud83e\uddef \ud83d\udee2\ufe0f \ud83d\udcb8 \ud83d\udcb5 \ud83d\udcb4 \ud83d\udcb6 \ud83d\udcb7 \ud83e\ude99 \ud83d\udcb0 \ud83d\udcb3 \ud83e\udeaa \ud83d\udc8e \u2696\ufe0f \ud83e\ude9c \ud83e\uddf0 \ud83e\ude9b \ud83d\udd27 \ud83d\udd28 \u2692\ufe0f \ud83d\udee0\ufe0f \u26cf\ufe0f \ud83e\ude8f \ud83e\ude9a \ud83d\udd29 \u2699\ufe0f \ud83e\udea4 \ud83e\uddf1 \u26d3\ufe0f \u26d3\ufe0f\u200d\ud83d\udca5 \ud83e\uddf2 \ud83d\udd2b \ud83d\udca3 \ud83e\udde8 \ud83e\ude93 \ud83d\udd2a \ud83d\udde1\ufe0f \u2694\ufe0f \ud83d\udee1\ufe0f \ud83d\udeac \u26b0\ufe0f \ud83e\udea6 \u26b1\ufe0f \ud83c\udffa \ud83d\udd2e \ud83d\udcff \ud83e\uddff \ud83e\udeac \ud83d\udc88 \u2697\ufe0f \ud83d\udd2d \ud83d\udd2c \ud83d\udd73\ufe0f \ud83e\ude7b \ud83e\ude79 \ud83e\ude7a \ud83d\udc8a \ud83d\udc89 \ud83e\ude78 \ud83e\uddec \ud83e\udda0 \ud83e\uddeb \ud83e\uddea \ud83c\udf21\ufe0f \ud83e\uddf9 \ud83e\udea0 \ud83e\uddfa \ud83e\uddfb \ud83d\udebd \ud83d\udeb0 \ud83d\udebf \ud83d\udec1 \ud83d\udec0 \ud83e\uddfc \ud83e\udea5 \ud83e\ude92 \ud83e\udeae \ud83e\uddfd \ud83e\udea3 \ud83e\uddf4 \ud83d\udece\ufe0f \ud83d\udd11 \ud83d\udddd\ufe0f \ud83d\udeaa \ud83e\ude91 \ud83d\udecb\ufe0f \ud83d\udecf\ufe0f \ud83d\udecc \ud83e\uddf8 \ud83e\ude86 \ud83d\uddbc\ufe0f \ud83e\ude9e \ud83e\ude9f \ud83d\udecd\ufe0f \ud83d\uded2 \ud83c\udf81 \ud83c\udf88 \ud83c\udf8f \ud83c\udf80 \ud83e\ude84 \ud83e\ude85 \ud83c\udf8a \ud83c\udf89 \ud83c\udf8e \ud83e\udead \ud83c\udfee \ud83c\udf90 \ud83e\udea9 \ud83e\udde7 \u2709\ufe0f \ud83d\udce9 \ud83d\udce8 \ud83d\udce7 \ud83d\udc8c \ud83d\udce5 \ud83d\udce4 \ud83d\udce6 \ud83c\udff7\ufe0f \ud83e\udea7 \ud83d\udcea \ud83d\udceb \ud83d\udcec \ud83d\udced \ud83d\udcee \ud83d\udcef \ud83d\udcdc \ud83d\udcc3 \ud83d\udcc4 \ud83d\udcd1 \ud83e\uddfe \ud83d\udcca \ud83d\udcc8 \ud83d\udcc9 \ud83d\uddd2\ufe0f \ud83d\udcc6 \ud83d\uddd3\ufe0f \ud83d\udcc5 \ud83d\uddd1\ufe0f \ud83d\udcc7 \ud83d\uddc3\ufe0f \ud83d\uddf3\ufe0f \ud83d\uddc4\ufe0f \ud83d\udccb \ud83d\udcc1 \ud83d\udcc2 \ud83d\uddc2\ufe0f \ud83d\uddde\ufe0f \ud83d\udcf0 \ud83d\udcd3 \ud83d\udcd4 \ud83d\udcd2 \ud83d\udcd5 \ud83d\udcd7 \ud83d\udcd8 \ud83d\udcd9 \ud83d\udcda \ud83d\udcd6 \ud83d\udd16 \ud83e\uddf7 \ud83d\udd17 \ud83d\udcce \ud83d\udd87\ufe0f \ud83d\udcd0 \ud83d\udccf \ud83e\uddee \ud83d\udccc \ud83d\udccd \u2702\ufe0f \ud83d\udd8a\ufe0f \ud83d\udd8b\ufe0f \u2712\ufe0f \ud83d\udd8c\ufe0f \ud83d\udd8d\ufe0f \ud83d\udcdd \u270f\ufe0f \ud83d\udd0d \ud83d\udd0e \ud83d\udd0f \ud83d\udd10 \ud83d\udd12 \ud83d\udd13'],['symbols','\ud83e\ude77 \u2764\ufe0f \ud83e\udde1 \ud83d\udc9b \ud83d\udc9a \ud83e\ude75 \ud83d\udc99 \ud83d\udc9c \ud83d\udda4 \ud83e\ude76 \ud83e\udd0d \ud83e\udd0e \ud83d\udc94 \u2764\ufe0f\u200d\ud83d\udd25 \u2764\ufe0f\u200d\ud83e\ude79 \u2763\ufe0f \ud83d\udc95 \ud83d\udc9e \ud83d\udc93 \ud83d\udc97 \ud83d\udc96 \ud83d\udc98 \ud83d\udc9d \ud83d\udc9f \u262e\ufe0f \u271d\ufe0f \u262a\ufe0f \ud83d\udd49\ufe0f \u2638\ufe0f \ud83e\udeaf \u2721\ufe0f \ud83d\udd2f \ud83d\udd4e \u262f\ufe0f \u2626\ufe0f \ud83d\uded0 \u26ce \u2648 \u2649 \u264a \u264b \u264c \u264d \u264e \u264f \u2650 \u2651 \u2652 \u2653 \ud83c\udd94 \u269b\ufe0f \ud83c\ude51 \u2622\ufe0f \u2623\ufe0f \ud83d\udcf4 \ud83d\udcf3 \ud83c\ude36 \ud83c\ude1a \ud83c\ude38 \ud83c\ude3a \ud83c\ude37\ufe0f \u2734\ufe0f \ud83c\udd9a \ud83d\udcae \ud83c\ude50 \u3299\ufe0f \u3297\ufe0f \ud83c\ude34 \ud83c\ude35 \ud83c\ude39 \ud83c\ude32 \ud83c\udd70\ufe0f \ud83c\udd71\ufe0f \ud83c\udd8e \ud83c\udd91 \ud83c\udd7e\ufe0f \ud83c\udd98 \u274c \u2b55 \ud83d\uded1 \u26d4 \ud83d\udcdb \ud83d\udeab \ud83d\udcaf \ud83d\udca2 \u2668\ufe0f \ud83d\udeb7 \ud83d\udeaf \ud83d\udeb3 \ud83d\udeb1 \ud83d\udd1e \ud83d\udcf5 \ud83d\udead \u2757 \u2755 \u2753 \u2754 \u203c\ufe0f \u2049\ufe0f \ud83d\udd05 \ud83d\udd06 \u303d\ufe0f \u26a0\ufe0f \ud83d\udeb8 \ud83d\udd31 \u269c\ufe0f \ud83d\udd30 \u267b\ufe0f \u2705 \ud83c\ude2f \ud83d\udcb9 \u2747\ufe0f \u2733\ufe0f \u274e \ud83c\udf10 \ud83d\udca0 \u24c2\ufe0f \ud83c\udf00 \ud83d\udca4 \ud83c\udfe7 \ud83d\udebe \u267f \ud83c\udd7f\ufe0f \ud83d\uded7 \ud83c\ude33 \ud83c\ude02\ufe0f \ud83d\udec2 \ud83d\udec3 \ud83d\udec4 \ud83d\udec5 \ud83d\udedc \ud83d\udeb9 \ud83d\udeba \ud83d\udebc \ud83e\uddd1\u200d\ud83e\uddd1\u200d\ud83e\uddd2 \ud83e\uddd1\u200d\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 \ud83e\uddd1\u200d\ud83e\uddd2 \ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 \u26a7\ufe0f \ud83d\udebb \ud83d\udeae \ud83c\udfa6 \ud83d\udcf6 \ud83c\ude01 \ud83d\udd23 \u2139\ufe0f \ud83d\udd24 \ud83d\udd21 \ud83d\udd20 \ud83c\udd96 \ud83c\udd97 \ud83c\udd99 \ud83c\udd92 \ud83c\udd95 \ud83c\udd93 0\ufe0f\u20e3 1\ufe0f\u20e3 2\ufe0f\u20e3 3\ufe0f\u20e3 4\ufe0f\u20e3 5\ufe0f\u20e3 6\ufe0f\u20e3 7\ufe0f\u20e3 8\ufe0f\u20e3 9\ufe0f\u20e3 \ud83d\udd1f \ud83d\udd22 #\ufe0f\u20e3 *\ufe0f\u20e3 \u23cf\ufe0f \u25b6\ufe0f \u23f8\ufe0f \u23ef\ufe0f \u23f9\ufe0f \u23fa\ufe0f \u23ed\ufe0f \u23ee\ufe0f \u23e9 \u23ea \u23eb \u23ec \u25c0\ufe0f \ud83d\udd3c \ud83d\udd3d \u27a1\ufe0f \u2b05\ufe0f \u2b06\ufe0f \u2b07\ufe0f \u2197\ufe0f \u2198\ufe0f \u2199\ufe0f \u2196\ufe0f \u2195\ufe0f \u2194\ufe0f \u21aa\ufe0f \u21a9\ufe0f \u2934\ufe0f \u2935\ufe0f \ud83d\udd00 \ud83d\udd01 \ud83d\udd02 \ud83d\udd04 \ud83d\udd03 \ud83c\udfb5 \ud83c\udfb6 \u2795 \u2796 \u2797 \u2716\ufe0f \ud83d\udff0 \u267e\ufe0f \ud83d\udcb2 \ud83d\udcb1 \u2122\ufe0f \u00a9\ufe0f \u00ae\ufe0f \ud83d\udc41\ufe0f\u200d\ud83d\udde8\ufe0f \ud83d\udd1a \ud83d\udd19 \ud83d\udd1b \ud83d\udd1d \ud83d\udd1c \u3030\ufe0f \u27b0 \u27bf \u2714\ufe0f \u2611\ufe0f \ud83d\udd18 \ud83d\udd34 \ud83d\udfe0 \ud83d\udfe1 \ud83d\udfe2 \ud83d\udd35 \ud83d\udfe3 \u26ab \u26aa \ud83d\udfe4 \ud83d\udd3a \ud83d\udd3b \ud83d\udd38 \ud83d\udd39 \ud83d\udd36 \ud83d\udd37 \ud83d\udd32 \ud83d\udd33 \u25aa\ufe0f \u25ab\ufe0f \u25fe \u25fd \u25fc\ufe0f \u25fb\ufe0f \ud83d\udfe5 \ud83d\udfe7 \ud83d\udfe8 \ud83d\udfe9 \ud83d\udfe6 \ud83d\udfea \u2b1b \u2b1c \ud83d\udfeb \ud83d\udd08 \ud83d\udd07 \ud83d\udd09 \ud83d\udd0a \ud83d\udd14 \ud83d\udd15 \ud83d\udce3 \ud83d\udce2 \ud83d\udcac \ud83d\udcad \ud83d\uddef\ufe0f \u2660\ufe0f \u2663\ufe0f \u2665\ufe0f \u2666\ufe0f \ud83c\udccf \ud83c\udfb4 \ud83c\udc04 \ud83d\udd50 \ud83d\udd51 \ud83d\udd52 \ud83d\udd53 \ud83d\udd54 \ud83d\udd55 \ud83d\udd56 \ud83d\udd57 \ud83d\udd58 \ud83d\udd59 \ud83d\udd5a \ud83d\udd5b \ud83d\udd5c \ud83d\udd5d \ud83d\udd5e \ud83d\udd5f \ud83d\udd60 \ud83d\udd61 \ud83d\udd62 \ud83d\udd63 \ud83d\udd64 \ud83d\udd65 \ud83d\udd66 \ud83d\udd67'],['flags','\ud83c\udff3\ufe0f \ud83c\udff4 \ud83c\udff4\u200d\u2620\ufe0f \ud83c\udfc1 \ud83d\udea9 \ud83c\udff3\ufe0f\u200d\ud83c\udf08 \ud83c\udff3\ufe0f\u200d\u26a7\ufe0f \ud83c\uddfa\ud83c\uddf3 \ud83c\udde6\ud83c\uddeb \ud83c\udde6\ud83c\uddfd \ud83c\udde6\ud83c\uddf1 \ud83c\udde9\ud83c\uddff \ud83c\udde6\ud83c\uddf8 \ud83c\udde6\ud83c\udde9 \ud83c\udde6\ud83c\uddf4 \ud83c\udde6\ud83c\uddee \ud83c\udde6\ud83c\uddf6 \ud83c\udde6\ud83c\uddec \ud83c\udde6\ud83c\uddf7 \ud83c\udde6\ud83c\uddf2 \ud83c\udde6\ud83c\uddfc \ud83c\udde6\ud83c\uddfa \ud83c\udde6\ud83c\uddf9 \ud83c\udde6\ud83c\uddff \ud83c\udde7\ud83c\uddf8 \ud83c\udde7\ud83c\udded \ud83c\udde7\ud83c\udde9 \ud83c\udde7\ud83c\udde7 \ud83c\udde7\ud83c\uddfe \ud83c\udde7\ud83c\uddea \ud83c\udde7\ud83c\uddff \ud83c\udde7\ud83c\uddef \ud83c\udde7\ud83c\uddf2 \ud83c\udde7\ud83c\uddf9 \ud83c\udde7\ud83c\uddf4 \ud83c\udde7\ud83c\udde6 \ud83c\udde7\ud83c\uddfc \ud83c\udde7\ud83c\uddf7 \ud83c\uddfb\ud83c\uddec \ud83c\udde7\ud83c\uddf3 \ud83c\udde7\ud83c\uddec \ud83c\udde7\ud83c\uddeb \ud83c\udde7\ud83c\uddee \ud83c\uddf0\ud83c\udded \ud83c\udde8\ud83c\uddf2 \ud83c\udde8\ud83c\udde6 \ud83c\uddee\ud83c\udde8 \ud83c\udde8\ud83c\uddfb \ud83c\udde7\ud83c\uddf6 \ud83c\uddf0\ud83c\uddfe \ud83c\udde8\ud83c\uddeb \ud83c\uddf9\ud83c\udde9 \ud83c\uddee\ud83c\uddf4 \ud83c\udde8\ud83c\uddf1 \ud83c\udde8\ud83c\uddf3 \ud83c\udde8\ud83c\uddfd \ud83c\udde8\ud83c\udde8 \ud83c\udde8\ud83c\uddf4 \ud83c\uddf0\ud83c\uddf2 \ud83c\udde8\ud83c\uddec \ud83c\udde8\ud83c\udde9 \ud83c\udde8\ud83c\uddf0 \ud83c\udde8\ud83c\uddf7 \ud83c\udde8\ud83c\uddee \ud83c\udded\ud83c\uddf7 \ud83c\udde8\ud83c\uddfa \ud83c\udde8\ud83c\uddfc \ud83c\udde8\ud83c\uddfe \ud83c\udde8\ud83c\uddff \ud83c\udde9\ud83c\uddf0 \ud83c\udde9\ud83c\uddef \ud83c\udde9\ud83c\uddf2 \ud83c\udde9\ud83c\uddf4 \ud83c\uddea\ud83c\udde8 \ud83c\uddea\ud83c\uddec \ud83c\uddf8\ud83c\uddfb \ud83c\uddec\ud83c\uddf6 \ud83c\uddea\ud83c\uddf7 \ud83c\uddea\ud83c\uddea \ud83c\uddf8\ud83c\uddff \ud83c\uddea\ud83c\uddf9 \ud83c\uddea\ud83c\uddfa \ud83c\uddeb\ud83c\uddf0 \ud83c\uddeb\ud83c\uddf4 \ud83c\uddeb\ud83c\uddef \ud83c\uddeb\ud83c\uddee \ud83c\uddeb\ud83c\uddf7 \ud83c\uddec\ud83c\uddeb \ud83c\uddf5\ud83c\uddeb \ud83c\uddf9\ud83c\uddeb \ud83c\uddec\ud83c\udde6 \ud83c\uddec\ud83c\uddf2 \ud83c\uddec\ud83c\uddea \ud83c\udde9\ud83c\uddea \ud83c\uddec\ud83c\udded \ud83c\uddec\ud83c\uddee \ud83c\uddec\ud83c\uddf7 \ud83c\uddec\ud83c\uddf1 \ud83c\uddec\ud83c\udde9 \ud83c\uddec\ud83c\uddf5 \ud83c\uddec\ud83c\uddfa \ud83c\uddec\ud83c\uddf9 \ud83c\uddec\ud83c\uddec \ud83c\uddec\ud83c\uddf3 \ud83c\uddec\ud83c\uddfc \ud83c\uddec\ud83c\uddfe \ud83c\udded\ud83c\uddf9 \ud83c\udded\ud83c\uddf3 \ud83c\udded\ud83c\uddf0 \ud83c\udded\ud83c\uddfa \ud83c\uddee\ud83c\uddf8 \ud83c\uddee\ud83c\uddf3 \ud83c\uddee\ud83c\udde9 \ud83c\uddee\ud83c\uddf7 \ud83c\uddee\ud83c\uddf6 \ud83c\uddee\ud83c\uddea \ud83c\uddee\ud83c\uddf2 \ud83c\uddee\ud83c\uddf1 \ud83c\uddee\ud83c\uddf9 \ud83c\uddef\ud83c\uddf2 \ud83c\uddef\ud83c\uddf5 \ud83c\udf8c \ud83c\uddef\ud83c\uddea \ud83c\uddef\ud83c\uddf4 \ud83c\uddf0\ud83c\uddff \ud83c\uddf0\ud83c\uddea \ud83c\uddf0\ud83c\uddee \ud83c\uddfd\ud83c\uddf0 \ud83c\uddf0\ud83c\uddfc \ud83c\uddf0\ud83c\uddec \ud83c\uddf1\ud83c\udde6 \ud83c\uddf1\ud83c\uddfb \ud83c\uddf1\ud83c\udde7 \ud83c\uddf1\ud83c\uddf8 \ud83c\uddf1\ud83c\uddf7 \ud83c\uddf1\ud83c\uddfe \ud83c\uddf1\ud83c\uddee \ud83c\uddf1\ud83c\uddf9 \ud83c\uddf1\ud83c\uddfa \ud83c\uddf2\ud83c\uddf4 \ud83c\uddf2\ud83c\uddec \ud83c\uddf2\ud83c\uddfc \ud83c\uddf2\ud83c\uddfe \ud83c\uddf2\ud83c\uddfb \ud83c\uddf2\ud83c\uddf1 \ud83c\uddf2\ud83c\uddf9 \ud83c\uddf2\ud83c\udded \ud83c\uddf2\ud83c\uddf6 \ud83c\uddf2\ud83c\uddf7 \ud83c\uddf2\ud83c\uddfa \ud83c\uddfe\ud83c\uddf9 \ud83c\uddf2\ud83c\uddfd \ud83c\uddeb\ud83c\uddf2 \ud83c\uddf2\ud83c\udde9 \ud83c\uddf2\ud83c\udde8 \ud83c\uddf2\ud83c\uddf3 \ud83c\uddf2\ud83c\uddea \ud83c\uddf2\ud83c\uddf8 \ud83c\uddf2\ud83c\udde6 \ud83c\uddf2\ud83c\uddff \ud83c\uddf2\ud83c\uddf2 \ud83c\uddf3\ud83c\udde6 \ud83c\uddf3\ud83c\uddf7 \ud83c\uddf3\ud83c\uddf5 \ud83c\uddf3\ud83c\uddf1 \ud83c\uddf3\ud83c\udde8 \ud83c\uddf3\ud83c\uddff \ud83c\uddf3\ud83c\uddee \ud83c\uddf3\ud83c\uddea \ud83c\uddf3\ud83c\uddec \ud83c\uddf3\ud83c\uddfa \ud83c\uddf3\ud83c\uddeb \ud83c\uddf0\ud83c\uddf5 \ud83c\uddf2\ud83c\uddf0 \ud83c\uddf2\ud83c\uddf5 \ud83c\uddf3\ud83c\uddf4 \ud83c\uddf4\ud83c\uddf2 \ud83c\uddf5\ud83c\uddf0 \ud83c\uddf5\ud83c\uddfc \ud83c\uddf5\ud83c\uddf8 \ud83c\uddf5\ud83c\udde6 \ud83c\uddf5\ud83c\uddec \ud83c\uddf5\ud83c\uddfe \ud83c\uddf5\ud83c\uddea \ud83c\uddf5\ud83c\udded \ud83c\uddf5\ud83c\uddf3 \ud83c\uddf5\ud83c\uddf1 \ud83c\uddf5\ud83c\uddf9 \ud83c\uddf5\ud83c\uddf7 \ud83c\uddf6\ud83c\udde6 \ud83c\uddf7\ud83c\uddea \ud83c\uddf7\ud83c\uddf4 \ud83c\uddf7\ud83c\uddfa \ud83c\uddf7\ud83c\uddfc \ud83c\uddfc\ud83c\uddf8 \ud83c\uddf8\ud83c\uddf2 \ud83c\uddf8\ud83c\uddf9 \ud83c\udde8\ud83c\uddf6 \ud83c\uddf8\ud83c\udde6 \ud83c\uddf8\ud83c\uddf3 \ud83c\uddf7\ud83c\uddf8 \ud83c\uddf8\ud83c\udde8 \ud83c\uddf8\ud83c\uddf1 \ud83c\uddf8\ud83c\uddec \ud83c\uddf8\ud83c\uddfd \ud83c\uddf8\ud83c\uddf0 \ud83c\uddf8\ud83c\uddee \ud83c\uddec\ud83c\uddf8 \ud83c\uddf8\ud83c\udde7 \ud83c\uddf8\ud83c\uddf4 \ud83c\uddff\ud83c\udde6 \ud83c\uddf0\ud83c\uddf7 \ud83c\uddf8\ud83c\uddf8 \ud83c\uddea\ud83c\uddf8 \ud83c\uddf1\ud83c\uddf0 \ud83c\udde7\ud83c\uddf1 \ud83c\uddf8\ud83c\udded \ud83c\uddf0\ud83c\uddf3 \ud83c\uddf1\ud83c\udde8 \ud83c\uddf5\ud83c\uddf2 \ud83c\uddfb\ud83c\udde8 \ud83c\uddf8\ud83c\udde9 \ud83c\uddf8\ud83c\uddf7 \ud83c\uddf8\ud83c\uddea \ud83c\udde8\ud83c\udded \ud83c\uddf8\ud83c\uddfe \ud83c\uddf9\ud83c\uddfc \ud83c\uddf9\ud83c\uddef \ud83c\uddf9\ud83c\uddff \ud83c\uddf9\ud83c\udded \ud83c\uddf9\ud83c\uddf1 \ud83c\uddf9\ud83c\uddec \ud83c\uddf9\ud83c\uddf0 \ud83c\uddf9\ud83c\uddf4 \ud83c\uddf9\ud83c\uddf9 \ud83c\uddf9\ud83c\uddf3 \ud83c\uddf9\ud83c\uddf7 \ud83c\uddf9\ud83c\uddf2 \ud83c\uddf9\ud83c\udde8 \ud83c\uddf9\ud83c\uddfb \ud83c\uddfb\ud83c\uddee \ud83c\uddfa\ud83c\uddec \ud83c\uddfa\ud83c\udde6 \ud83c\udde6\ud83c\uddea \ud83c\uddec\ud83c\udde7 \ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f \ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc73\udb40\udc63\udb40\udc74\udb40\udc7f \ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc77\udb40\udc6c\udb40\udc73\udb40\udc7f \ud83c\uddfa\ud83c\uddf8 \ud83c\uddfa\ud83c\uddfe \ud83c\uddfa\ud83c\uddff \ud83c\uddfb\ud83c\uddfa \ud83c\uddfb\ud83c\udde6 \ud83c\uddfb\ud83c\uddea \ud83c\uddfb\ud83c\uddf3 \ud83c\uddfc\ud83c\uddeb \ud83c\uddea\ud83c\udded \ud83c\uddfe\ud83c\uddea \ud83c\uddff\ud83c\uddf2 \ud83c\uddff\ud83c\uddfc']];
+var EMO_KW='grinning face smile happy\ngrinning face with big eyes smiley\ngrinning face with smiling eyes smile\nbeaming face with smiling eyes grin\ngrinning squinting face laughing satisfied\nface holding back tears\ngrinning face with sweat smile\nface with tears of joy lol laugh cry funny\nrolling on the floor laughing rofl lol laugh funny\nsmiling face with tear\nsmiling face relaxed\nsmiling face with eyes blush\nsmiling face with halo innocent\nslightly smiling face slight smile\nupside down face\nwinking face wink\nrelieved face\nsmiling face with heart eyes love crush\nsmiling face with hearts three 3 love adore\nface blowing a kiss kissing heart love blow\nkissing face\nkissing face with smiling eyes\nkissing face with closed eyes\nface savoring food yum\nface with tongue stuck out\nsquinting face with tongue stuck out closed eyes\nwinking face with tongue stuck out eye\nzany face\nface with raised eyebrow\nface with monocle\nnerd face\nsmiling face with sunglasses cool\ndisguised face\nstar struck\npartying face party celebrate birthday\nhead shaking vertically nod yes\nsmirking face smirk\nunamused face\nhead shaking horizontally shake no\ndisappointed face\npensive face\nworried face\nconfused face\nslightly frowning face slight frown\nfrowning face frowning2 white\npersevering face persevere\nconfounded face\ntired face\nweary face\npleading face\ncrying face cry sad tear\nloudly crying face sob cry sad tears\nface with steam from nose triumph\nangry face\nenraged face rage pout pouting angry mad\nface with symbols on mouth cursing over\nexploding head mind blown shocked\nflushed face\nhot face\ncold face\nface in clouds\nface screaming in fear scream shock omg\nfearful face\nanxious face with sweat cold\nsad but relieved face disappointed\ndowncast face with sweat\nsmiling face with open hands hugs hugging\nthinking face think hmm wonder\nface with peeking eye\nface with hand over mouth\nface with open eyes and hand over mouth\nsaluting face\nshushing face\nmelting face\nlying face liar\nface without mouth no\ndotted line face\nneutral face\nface with diagonal mouth\nexpressionless face\nshaking face\ngrimacing face\nface with rolling eyes roll eyeroll annoyed\nhushed face\nfrowning face with open mouth\nanguished face\nface with open mouth\nastonished face\nyawning face\nface with bags under eyes tired exhausted sleepy\nsleeping face sleep tired zzz\ndrooling face drool\nsleepy face\nface exhaling\nface with crossed out eyes dizzy\nface with spiral eyes\nzipper mouth face\nwoozy face\nnauseated face sick\nface vomiting\nsneezing face sneeze\nface with medical mask\nface with thermometer\nface with head bandage\nmoney mouth face\ncowboy hat face with\nsmiling face with horns imp\nangry face with horns imp\nogre japanese\ngoblin japanese\nclown face\npile of poo hankey poop shit\nghost\nskull skeleton\nskull and crossbones\nalien\nalien monster space invader\nrobot face\njack o lantern\ngrinning cat smiley\ngrinning cat with smiling eyes smile\ncat with tears of joy\nsmiling cat with heart eyes\ncat with wry smile smirk\nkissing cat\nweary cat scream\ncrying cat face\npouting cat\nheart hands\nopen hands\npalms up together\nraising hands raised\nclapping hands clap applause bravo\nhandshake shaking hands\nthumbs up 1 thumbsup thumbup like yes ok good approve\nthumbs down 1 thumbsdown thumbdown dislike no bad\noncoming fist facepunch punch\nraised fist\nleft facing fist\nright facing fist\nleftwards pushing hand\nrightwards pushing hand\ncrossed fingers hand with index and middle finger\nvictory hand v\nhand with index finger and thumb crossed\nlove you gesture\nsign of the horns metal\nok hand\npinched fingers\npinching hand\npalm down hand\npalm up hand\nbackhand index pointing left point\nbackhand index pointing right point\nbackhand index pointing up point 2\nbackhand index pointing down point\nindex pointing up point\nraised hand\nraised back of hand\nhand with fingers splayed raised\nvulcan salute raised hand with part between middle and ring fingers\nwaving hand wave\ncall me hand\nrightwards hand\nleftwards hand\nflexed biceps muscle\nmechanical arm\nmiddle finger fu reversed hand with extended\nwriting hand\nfolded hands pray please thanks thank you hope\nindex pointing at the viewer\nfoot\nleg\nmechanical leg\nlipstick\nkiss mark\nmouth lips\nbiting lip\ntooth\ntongue\near\near with hearing aid\nnose\nfingerprint\nfootprints\neye\neyes\nanatomical heart\nlungs\nbrain\nspeaking head in silhouette\nbust in silhouette\nbusts in silhouette\npeople hugging\nbaby\ngirl\nchild\nboy\nwoman\nperson adult\nman\nwoman curly hair haired\nperson curly hair\nman curly hair haired\nwoman red hair haired\nperson red hair\nman red hair haired\nwoman blond hair haired blonde\nperson blond hair haired with\nman blond hair haired\nwoman white hair haired\nperson white hair\nman white hair haired\nwoman bald\nperson bald\nman bald\nwoman beard\nperson beard bearded\nman beard\nold woman older grandma\nolder person adult\nold man older\nperson with skullcap man gua pi mao chinese cap\nwoman wearing turban with\nperson wearing turban with man\nman wearing turban with\nwoman with headscarf\nwoman police officer policewoman\npolice officer cop\nman police officer policeman\nwoman construction worker\nconstruction worker\nman construction worker\nwoman guard guardswoman\nguard guardsman\nman guard guardsman\nwoman detective female\ndetective sleuth or spy\nman detective male\nwoman health worker\nhealth worker\nman health worker\nwoman farmer\nfarmer\nman farmer\nwoman cook\ncook\nman cook\nwoman student\nstudent\nman student\nwoman singer\nsinger\nman singer\nwoman teacher\nteacher\nman teacher\nwoman factory worker\nfactory worker\nman factory worker\nwoman technologist\ntechnologist\nman technologist\nwoman office worker\noffice worker\nman office worker\nwoman mechanic\nmechanic\nman mechanic\nwoman scientist\nscientist\nman scientist\nwoman artist\nartist\nman artist\nwoman firefighter\nfirefighter\nman firefighter\nwoman pilot\npilot\nman pilot\nwoman astronaut\nastronaut\nman astronaut\nwoman judge\njudge\nman judge\nwoman with veil bride\nperson with veil\nman with veil\nwoman in tuxedo\nperson in tuxedo\nman in tuxedo\nprincess\nperson with crown\nprince\nninja\nwoman superhero\nsuperhero\nman superhero\nwoman supervillain\nsupervillain\nman supervillain\nmrs claus mother christmas\nmx claus\nsanta claus\nwoman mage\nmage\nman mage\nwoman elf\nelf\nman elf\ntroll\nwoman vampire\nvampire\nman vampire\nwoman zombie\nzombie\nman zombie\nwoman genie\ngenie\nman genie\nmermaid\nmerperson\nmerman\nwoman fairy\nfairy\nman fairy\nbaby angel\npregnant woman expecting\npregnant person\npregnant man\nbreast feeding\nwoman feeding baby\nperson feeding baby\nman feeding baby\nwoman bowing\nperson bowing bow\nman bowing\nwoman tipping hand sassy\nperson tipping hand information desk\nman tipping hand sassy\nwoman gesturing no good ng\nperson gesturing no good\nman gesturing no good ng\nwoman gesturing ok\nperson gesturing ok woman\nman gesturing ok\nwoman raising hand\nperson raising hand\nman raising hand\ndeaf woman\ndeaf person\ndeaf man\nwoman facepalming\nperson facepalming facepalm face palm\nman facepalming\nwoman shrugging\nperson shrugging shrug\nman shrugging\nwoman pouting\nperson pouting face with\nman pouting\nwoman frowning\nperson frowning\nman frowning\nwoman getting haircut\nperson getting haircut\nman getting haircut\nwoman getting massage face\nperson getting massage\nman getting massage face\nwoman in steamy room sauna\nperson in steamy room sauna\nman in steamy room sauna\nnail polish care\nselfie\nwoman dancing dancer\nman dancing male dancer\nwomen with bunny ears dancing partying\npeople with bunny ears dancers partying\nmen with bunny ears dancing partying\nperson in suit levitating business man levitate\nwoman in manual wheelchair\nperson in manual wheelchair\nman in manual wheelchair\nwoman in manual wheelchair facing right\nperson in manual wheelchair facing right\nman in manual wheelchair facing right\nwoman in motorized wheelchair\nperson in motorized wheelchair\nman in motorized wheelchair\nwoman in motorized wheelchair facing right\nperson in motorized wheelchair facing right\nman in motorized wheelchair facing right\nwoman walking\nperson walking\nman walking\nwoman walking facing right\nperson walking facing right\nman walking facing right\nwoman with white cane probing\nperson with white cane probing\nman with white cane probing\nwoman with white cane facing right\nperson with white cane facing right\nman with white cane facing right\nwoman kneeling\nperson kneeling\nman kneeling\nwoman running\nperson running runner\nman running\nwoman running facing right\nperson running facing right\nman running facing right\nwoman kneeling facing right\nperson kneeling facing right\nman kneeling facing right\nwoman standing\nperson standing\nman standing\nwoman and man holding hands couple\nwomen holding hands two\nmen holding hands two\ncouple with heart woman man\ncouple with heart woman ww\ncouple with heart love people\ncouple with heart man mm\nkiss woman man couplekiss\nkiss woman couplekiss ww\nkiss love people\nkiss man couplekiss mm\nknot\nyarn\nthread\nsewing needle\ncoat\nlab coat\nsafety vest\nwoman s clothes womans\nt shirt tshirt\njeans\nbriefs swim brief\nshorts\nnecktie\ndress\nbikini\none piece swimsuit\nkimono\nsari\nthong sandal\nflat shoe womans\nhigh heeled shoe heel\nwoman s sandal womans\nwoman s boot womans\nman s shoe mans\nrunning shoe athletic\nhiking boot\nsocks\ngloves\nscarf\ntop hat tophat\nbilled cap\nwoman s hat womans\ngraduation cap mortar board\nrescue worker s helmet with cross white\nmilitary helmet\ncrown\nring\nclutch bag pouch\npurse\nhandbag\nbriefcase\nbackpack school satchel\nluggage\nglasses eyeglasses\nsunglasses dark\ngoggles\nclosed umbrella\ndog face puppy pet\ncat face kitten pet\nmouse face\nhamster\nrabbit face\nfox face\nbear\npanda face\npolar bear\nkoala\ntiger face\nlion face\ncow face\npig face\npig nose\nfrog\nmonkey face\nsee no evil monkey\nhear no evil monkey\nspeak no evil monkey\nmonkey\nchicken\npenguin\nbird\nbaby chick\nhatching chick\nfront facing baby chick hatched\ngoose\nduck\nblack bird\neagle\nowl\nbat\nwolf\nboar\nhorse face\nunicorn face\nmoose\nhoneybee bee\nworm\nbug\nbutterfly\nsnail\nlady beetle\nant\nfly\nbeetle\ncockroach\nmosquito\ncricket\nspider\nspider web\nscorpion\nturtle\nsnake\nlizard\nt rex\nsauropod\noctopus\nsquid\njellyfish\nshrimp\nlobster\ncrab\nblowfish\ntropical fish\nfish\ndolphin flipper\nspouting whale\nwhale whale2\nshark\nseal\ncrocodile\ntiger tiger2\nleopard\nzebra\ngorilla\norangutan\nmammoth\nelephant\nhippopotamus\nrhinoceros rhino\ncamel dromedary\ntwo hump camel\ngiraffe\nkangaroo\nbison\nwater buffalo\nox\ncow cow2\ndonkey\nhorse racehorse\npig pig2\nram\newe sheep\nllama\ngoat\ndeer\ndog dog2\npoodle\nguide dog\nservice dog\ncat cat2\nblack cat\nfeather\nwing\nrooster\nturkey\ndodo\npeacock\nparrot\nswan\nflamingo\ndove of peace\nrabbit rabbit2\nraccoon\nskunk\nbadger\nbeaver\notter\nsloth\nmouse mouse2\nrat\nchipmunk\nhedgehog\npaw prints feet\ndragon\ndragon face\nphoenix fire bird\ncactus\nchristmas tree\nevergreen tree\ndeciduous tree\npalm tree\nleafless tree bare\nwood\nseedling\nherb\nshamrock\nfour leaf clover\npine decoration bamboo\npotted plant\ntanabata tree\nleaf fluttering in wind leaves\nfallen leaf\nmaple leaf\nnest with eggs\nempty nest\nmushroom\nbrown mushroom\nspiral shell\ncoral\nrock\nsheaf of rice ear\nbouquet\ntulip\nrose flower love\nwilted flower rose\nhyacinth\nlotus\nhibiscus\ncherry blossom\nblossom\nsunflower\nsun with face\nfull moon face with\nfirst quarter moon face with\nlast quarter moon face with\nnew moon face with\nfull moon\nwaning gibbous moon\nlast quarter moon\nwaning crescent moon\nnew moon\nwaxing crescent moon\nfirst quarter moon\nwaxing gibbous moon\ncrescent moon night\nglobe showing americas earth\nglobe showing europe africa earth\nglobe showing asia australia earth\nringed planet\ndizzy\nstar\nglowing star star2\nsparkles shine magic new\nhigh voltage zap\ncomet\ncollision boom\nfire flame hot lit\ntornado cloud with\nrainbow\nsun sunny\nsun behind small cloud white with\nsun behind cloud partly sunny\nsun behind large cloud white\ncloud\nsun behind rain cloud white with\ncloud with rain\ncloud with lightning and rain thunder\ncloud with lightning\ncloud with snow\nsnowflake\nsnowman with snow snowman2\nsnowman without snow\nwind face blowing\ndashing away dash\ndroplet\nsweat droplets drops\nbubbles\numbrella with rain drops\numbrella open umbrella2\nwater wave ocean\nfog\ngreen apple\nred apple\npear\ntangerine mandarin orange\nlemon\nlime\nbanana\nwatermelon\ngrapes\nstrawberry\nblueberries\nmelon\ncherries\npeach\nmango\npineapple\ncoconut\nkiwi fruit kiwifruit\ntomato\neggplant\navocado\npea pod\nbroccoli\nleafy green\ncucumber\nhot pepper\nbell pepper\near of corn\ncarrot\nolive\ngarlic\nonion\npotato\nroot vegetable beet radish\nroasted sweet potato\nginger root\ncroissant\nbagel\nbread\nbaguette bread french\npretzel\ncheese wedge\negg\ncooking fried egg\nbutter\npancakes\nwaffle\nbacon\ncut of meat\npoultry leg\nmeat on bone\nbone\nhot dog hotdog\nhamburger burger food\nfrench fries\npizza food\nflatbread\nsandwich\nstuffed flatbread pita\nfalafel\ntaco\nburrito\ntamale\ngreen salad\nshallow pan of food paella\nfondue\ncanned food\njar\nspaghetti\nsteaming bowl ramen\npot of food stew\ncurry rice\nsushi\nbento box\ndumpling\noyster\nfried shrimp\nrice ball\ncooked rice\nrice cracker\nfish cake with swirl\nfortune cookie\nmoon cake\noden\ndango\nshaved ice\nice cream\nsoft ice cream icecream\npie\ncupcake\nshortcake cake\nbirthday cake\ncustard flan pudding\nlollipop\ncandy\nchocolate bar\npopcorn\ndoughnut\ncookie\nchestnut\npeanuts shelled peanut\nbeans\nhoney pot\nglass of milk\npouring liquid\nbaby bottle\nteapot\nhot beverage coffee tea drink\nteacup without handle tea\nbeverage box\ncup with straw\nbubble tea\nsake\nbeer mug drink\nclinking beer mugs beers\nclinking glasses champagne glass\nwine glass\ntumbler glass whisky\ncocktail glass\ntropical drink\nmate\nbottle with popping cork champagne\nice cube\nspoon\nfork and knife\nfork and knife with plate cutlery\nbowl with spoon\ntakeout box\nchopsticks\nsalt\nsoccer ball football\nbasketball ball\namerican football\nbaseball\nsoftball\ntennis\nvolleyball\nrugby football\nflying disc\npool 8 ball 8ball\nyo\nping pong table tennis\nbadminton\nice hockey\nfield hockey\nlacrosse\ncricket game bat ball\nboomerang\ngoal net\nflag in hole golf\nkite\nplayground slide\nbow and arrow archery\nfishing pole and fish\ndiving mask\nboxing glove gloves\nmartial arts uniform karate\nrunning shirt with sash\nskateboard\nroller skate\nsled\nice skate\ncurling stone\nskis ski\nskier\nsnowboarder\nparachute\nwoman lifting weights weight\nperson lifting weights weight lifter\nman lifting weights weight\nwomen wrestling\npeople wrestling wrestlers\nmen wrestling\nwoman cartwheeling\nperson cartwheeling doing cartwheel\nman cartwheeling\nwoman bouncing ball basketball\nperson bouncing ball basketball player with\nman bouncing ball basketball\nperson fencing fencer\nwoman playing handball\nperson playing handball\nman playing handball\nwoman golfing\nperson golfing golfer\nman golfing\nhorse racing\nwoman in lotus position\nperson in lotus position\nman in lotus position\nwoman surfing\nperson surfing surfer\nman surfing\nwoman swimming\nperson swimming swimmer\nman swimming\nwoman playing water polo\nperson playing water polo\nman playing water polo\nwoman rowing boat\nperson rowing boat rowboat\nman rowing boat\nwoman climbing\nperson climbing\nman climbing\nwoman mountain biking\nperson mountain biking bicyclist\nman mountain biking\nwoman biking\nperson biking bicyclist\nman biking\ntrophy\n1st place medal first\n2nd place medal second\n3rd place medal third\nsports medal\nmilitary medal\nrosette\nreminder ribbon\nadmission tickets\nticket\ncircus tent\nwoman juggling\nperson juggling juggler\nman juggling\nperforming arts\nballet shoes\nartist palette art\nsplatter paint\nclapper board\nmicrophone\nheadphone headphones\nmusical score\nmusical keyboard\nmaracas\ndrum with drumsticks\nlong drum\nsaxophone\ntrumpet\naccordion\nguitar\nbanjo\nharp music\nviolin\nflute\ngame die\nchess pawn\nbullseye dart direct hit\nbowling\nvideo game\nslot machine\npuzzle piece jigsaw\nautomobile car red auto vehicle\ntaxi\nsport utility vehicle blue car\nbus\ntrolleybus\nracing car race\npolice car\nambulance\nfire engine\nminibus\npickup truck\ndelivery truck\narticulated lorry\ntractor\nwhite cane probing\nmanual wheelchair\nmotorized wheelchair\ncrutch\nkick scooter\nbicycle bike\nmotor scooter motorbike\nmotorcycle racing\nauto rickshaw\nwheel\npolice car light rotating\noncoming police car\noncoming bus\noncoming automobile\noncoming taxi\naerial tramway\nmountain cableway\nsuspension railway\nrailway car\ntram car train\nmountain railway\nmonorail\nhigh speed train bullettrain side\nbullet train bullettrain front\nlight rail\nlocomotive steam\ntrain train2\nmetro\ntram\nstation\nairplane plane flight travel\nairplane departure flight\nairplane arrival flight arriving\nsmall airplane\nseat\nsatellite artificial orbital\nrocket\nflying saucer\nhelicopter\ncanoe kayak\nsailboat boat\nspeedboat\nmotor boat motorboat\npassenger ship cruise\nferry\nship\nring buoy\nanchor\nhook\nfuel pump fuelpump\nconstruction\nvertical traffic light\nhorizontal traffic light\nbus stop busstop\nworld map\nmoai moyai\nstatue of liberty\ntokyo tower\ncastle european\njapanese castle\nstadium\nferris wheel\nroller coaster\ncarousel horse\nfountain\numbrella on ground parasol beach\nbeach with umbrella\ndesert island\ndesert\nvolcano\nmountain\nsnow capped mountain\nmount fuji\ncamping\ntent\nhut\nhouse home\nhouse with garden\nhouses homes house buildings\nderelict house abandoned building\nbuilding construction site\nfactory\noffice building\ndepartment store\njapanese post office\npost office european\nhospital\nbank\nhotel\nconvenience store\nschool\nlove hotel\nwedding\nclassical building\nchurch\nmosque\nsynagogue\nhindu temple\nkaaba\nshinto shrine\nrailway track railroad\nmotorway\nmap of japan\nmoon viewing ceremony rice scene\nnational park\nsunrise\nsunrise over mountains\nshooting star stars\nsparkler\nfireworks\nsunset city sunrise\ncityscape at dusk city sunset\ncityscape\nnight with stars\nmilky way\nbridge at night\nfoggy\nwatch time\nmobile phone iphone cell smartphone\nmobile phone with arrow calling\nlaptop computer\nkeyboard\ndesktop computer\nprinter\ncomputer mouse three button\ntrackball\njoystick\nclamp compression\ncomputer disk minidisc\nfloppy disk\noptical disk cd\ndvd\nvideocassette vhs\ncamera\ncamera with flash\nvideo camera\nmovie camera\nfilm projector\nfilm frames strip\ntelephone receiver\ntelephone phone\npager\nfax machine\ntelevision tv\nradio\nstudio microphone microphone2\nlevel slider\ncontrol knobs\ncompass\nstopwatch\ntimer clock\nalarm clock\nmantelpiece clock mantlepiece\nhourglass done\nhourglass not done flowing sand\nsatellite antenna\nbattery\nlow battery\nelectric plug\nlight bulb idea\nflashlight\ncandle\ndiya lamp\nfire extinguisher\noil drum\nmoney with wings\ndollar banknote\nyen banknote\neuro banknote\npound banknote\ncoin\nmoney bag moneybag cash rich\ncredit card\nidentification card\ngem stone\nbalance scale scales\nladder\ntoolbox\nscrewdriver\nwrench\nhammer\nhammer and pick\nhammer and wrench tools\npick\nshovel dig\ncarpentry saw\nnut and bolt\ngear\nmouse trap\nbrick bricks\nchains\nbroken chain\nmagnet\nwater pistol gun\nbomb\nfirecracker\naxe\nkitchen knife hocho\ndagger knife\ncrossed swords\nshield\ncigarette smoking\ncoffin\nheadstone\nfuneral urn\namphora\ncrystal ball\nprayer beads\nnazar amulet\nhamsa\nbarber pole\nalembic\ntelescope\nmicroscope\nhole\nx ray\nadhesive bandage\nstethoscope\npill\nsyringe\ndrop of blood\ndna\nmicrobe\npetri dish\ntest tube\nthermometer\nbroom\nplunger\nbasket\nroll of paper\ntoilet\npotable water\nshower\nbathtub\nperson taking bath\nsoap\ntoothbrush\nrazor\nhair pick\nsponge\nbucket\nlotion bottle squeeze\nbellhop bell\nkey\nold key key2\ndoor\nchair\ncouch and lamp\nbed\nperson in bed sleeping accommodation\nteddy bear\nnesting dolls\nframed picture frame photo with\nmirror\nwindow\nshopping bags\nshopping cart trolley\nwrapped gift present\nballoon\ncarp streamer flags\nribbon\nmagic wand\npi ata pinata\nconfetti ball\nparty popper tada celebrate congratulations\njapanese dolls\nfolding hand fan\nred paper lantern izakaya\nwind chime\nmirror ball\nred envelope\nenvelope\nenvelope with arrow\nincoming envelope\ne mail email\nlove letter\ninbox tray\noutbox tray\npackage\nlabel\nplacard\nclosed mailbox with lowered flag\nclosed mailbox with raised flag\nopen mailbox with raised flag mail\nopen mailbox with lowered flag no mail\npostbox\npostal horn\nscroll\npage with curl\npage facing up\nbookmark tabs\nreceipt\nbar chart\nchart increasing with upwards trend\nchart decreasing with downwards trend\nspiral notepad note pad\ntear off calendar\nspiral calendar pad\ncalendar date\nwastebasket\ncard index\ncard file box\nballot box with\nfile cabinet\nclipboard\nfile folder\nopen file folder\ncard index dividers\nrolled up newspaper roll newspaper2\nnewspaper\nnotebook\nnotebook with decorative cover\nledger\nclosed book\ngreen book\nblue book\norange book\nbooks\nopen book\nbookmark\nsafety pin\nlink\npaperclip\nlinked paperclips\ntriangular ruler\nstraight ruler\nabacus\npushpin\nround pushpin\nscissors\npen ballpoint lower left\nfountain pen lower left\nblack nib\npaintbrush lower left\ncrayon lower left\nmemo pencil\npencil pencil2\nmagnifying glass tilted left mag\nmagnifying glass tilted right mag\nlocked with pen lock ink\nlocked with key closed lock\nlocked lock secure\nunlocked unlock\npink heart\nred heart love\norange heart\nyellow heart\ngreen heart\nlight blue heart\nblue heart\npurple heart\nblack heart\ngrey heart\nwhite heart\nbrown heart\nbroken heart heartbreak sad\nheart on fire\nmending heart\nheart exclamation heavy mark ornament\ntwo hearts\nrevolving hearts\nbeating heart heartbeat\ngrowing heart heartpulse\nsparkling heart\nheart with arrow cupid\nheart with ribbon gift\nheart decoration\npeace symbol\nlatin cross\nstar and crescent\nom symbol\nwheel of dharma\nkhanda\nstar of david\ndotted six pointed star\nmenorah\nyin yang\northodox cross\nplace of worship symbol\nophiuchus\naries\ntaurus\ngemini\ncancer\nleo\nvirgo\nlibra\nscorpio scorpius\nsagittarius\ncapricorn\naquarius\npisces\nid button\natom symbol\njapanese acceptable button accept\nradioactive sign\nbiohazard sign\nmobile phone off\nvibration mode\njapanese not free of charge button u6709\njapanese free of charge button u7121\njapanese application button u7533\njapanese open for business button u55b6\njapanese monthly amount button u6708\neight pointed star black\nvs button\nwhite flower\njapanese bargain button ideograph advantage\njapanese secret button\njapanese congratulations button\njapanese passing grade button u5408\njapanese no vacancy button u6e80\njapanese discount button u5272\njapanese prohibited button u7981\na button blood type\nb button blood type\nab button blood type\ncl button\no button blood type o2\nsos button\ncross mark x no wrong\nhollow red circle o\nstop sign octagonal\nno entry\nname badge\nprohibited no entry sign\nhundred points 100 perfect score\nanger symbol\nhot springs hotsprings\nno pedestrians\nno littering do not litter\nno bicycles\nnon potable water\nno one under eighteen underage\nno mobile phones\nno smoking\nred exclamation mark heavy\nwhite exclamation mark grey\nred question mark\nwhite question mark grey\ndouble exclamation mark bangbang\nexclamation question mark interrobang\ndim button low brightness\nbright button high brightness\npart alternation mark\nwarning caution alert\nchildren crossing\ntrident emblem\nfleur de lis\njapanese symbol for beginner\nrecycling symbol recycle\ncheck mark button white done yes tick\njapanese reserved button u6307\nchart increasing with yen\nsparkle\neight spoked asterisk\ncross mark button negative squared\nglobe with meridians\ndiamond with a dot shape inside\ncircled m\ncyclone\nzzz\natm sign\nwater closet wc\nwheelchair symbol\np button parking\nelevator\njapanese vacancy button u7a7a\njapanese service charge button sa\npassport control\ncustoms\nbaggage claim\nleft luggage\nwireless\nmen s room mens\nwomen s room womens\nbaby symbol\nfamily adult child\nfamily adult child\nfamily adult child\nfamily adult child\ntransgender symbol\nrestroom\nlitter in bin sign put its place\ncinema\nantenna bars signal strength\njapanese here button koko\ninput symbols\ninformation source\ninput latin letters abc\ninput latin lowercase abcd\ninput latin uppercase capital abcd\nng button\nok button\nup button\ncool button\nnew button\nfree button\nkeycap 0 zero\nkeycap 1 one\nkeycap 2 two\nkeycap 3 three\nkeycap 4 four\nkeycap 5 five\nkeycap 6 six\nkeycap 7 seven\nkeycap 8 eight\nkeycap 9 nine\nkeycap 10 ten\ninput numbers 1234\nkeycap hash pound\nkeycap asterisk\neject button symbol\nplay button arrow forward\npause button double vertical bar\nplay or pause button\nstop button\nrecord button\nnext track button\nlast track button previous\nfast forward button\nfast reverse button rewind\nfast up button arrow double\nfast down button arrow double\nreverse button arrow backward\nupwards button arrow up small\ndownwards button arrow down small\nright arrow\nleft arrow\nup arrow\ndown arrow\nup right arrow upper\ndown right arrow lower\ndown left arrow lower\nup left arrow upper\nup down arrow\nleft right arrow\nleft arrow curving right hook\nright arrow curving left leftwards with hook\nright arrow curving up heading\nright arrow curving down heading\nshuffle tracks button twisted rightwards arrows\nrepeat button\nrepeat single button one\ncounterclockwise arrows button\nclockwise vertical arrows\nmusical note\nmusical notes\nplus heavy sign\nminus heavy sign\ndivide heavy division sign\nmultiply heavy multiplication x sign\nheavy equals sign\ninfinity\nheavy dollar sign\ncurrency exchange\ntrade mark tm\ncopyright\nregistered\neye in speech bubble\nend arrow\nback arrow\non arrow\ntop arrow\nsoon arrow\nwavy dash\ncurly loop\ndouble curly loop\ncheck mark heavy\ncheck box with ballot\nradio button\nred circle\norange circle\nyellow circle\ngreen circle\nblue circle large\npurple circle\nblack circle\nwhite circle\nbrown circle\nred triangle pointed up small\nred triangle pointed down small\nsmall orange diamond\nsmall blue diamond\nlarge orange diamond\nlarge blue diamond\nblack square button\nwhite square button\nblack small square\nwhite small square\nblack medium small square\nwhite medium small square\nblack medium square\nwhite medium square\nred square\norange square\nyellow square\ngreen square\nblue square\npurple square\nblack large square\nwhite large square\nbrown square\nspeaker low volume\nmuted speaker mute\nspeaker medium volume sound\nspeaker high volume loud sound\nbell\nbell with slash no\nmegaphone mega\nloudspeaker\nspeech balloon\nthought balloon\nright anger bubble\nspade suit spades\nclub suit clubs\nheart suit hearts\ndiamond suit diamonds\njoker black\nflower playing cards\nmahjong red dragon\none o clock clock1 oclock\ntwo o clock clock2 oclock\nthree o clock clock3 oclock\nfour o clock clock4 oclock\nfive o clock clock5 oclock\nsix o clock clock6 oclock\nseven o clock clock7 oclock\neight o clock clock8 oclock\nnine o clock clock9 oclock\nten o clock clock10 oclock\neleven o clock clock11 oclock\ntwelve o clock clock12 oclock\none thirty clock130\ntwo thirty clock230\nthree thirty clock330\nfour thirty clock430\nfive thirty clock530\nsix thirty clock630\nseven thirty clock730\neight thirty clock830\nnine thirty clock930\nten thirty clock1030\neleven thirty clock1130\ntwelve thirty clock1230\nwhite flag waving\nblack flag waving\npirate flag\nchequered flag checkered\ntriangular flag on post\nrainbow flag gay pride\ntransgender flag\nflag united nations un\nflag afghanistan af\nflag land islands ax\nflag albania al\nflag algeria dz\nflag american samoa as\nflag andorra ad\nflag angola ao\nflag anguilla ai\nflag antarctica aq\nflag antigua barbuda ag\nflag argentina ar\nflag armenia am\nflag aruba aw\nflag australia au\nflag austria at\nflag azerbaijan az\nflag bahamas bs\nflag bahrain bh\nflag bangladesh bd\nflag barbados bb\nflag belarus by\nflag belgium be\nflag belize bz\nflag benin bj\nflag bermuda bm\nflag bhutan bt\nflag bolivia bo\nflag bosnia herzegovina ba\nflag botswana bw\nflag brazil br\nflag british virgin islands vg\nflag brunei bn\nflag bulgaria bg\nflag burkina faso bf\nflag burundi bi\nflag cambodia kh\nflag cameroon cm\nflag canada ca\nflag canary islands ic\nflag cape verde cv\nflag caribbean netherlands bq\nflag cayman islands ky\nflag central african republic cf\nflag chad td\nflag chagos archipelago io british indian ocean\nflag chile cl\nflag china cn\nflag christmas island cx\nflag cocos keeling islands cc\nflag colombia co\nflag comoros km\nflag congo brazzaville cg\nflag congo kinshasa cd\nflag cook islands ck\nflag costa rica cr\nflag c te d ivoire ci\nflag croatia hr\nflag cuba cu\nflag cura ao cw\nflag cyprus cy\nflag czechia cz\nflag denmark dk\nflag djibouti dj\nflag dominica dm\nflag dominican republic do\nflag ecuador ec\nflag egypt eg\nflag el salvador sv\nflag equatorial guinea gq\nflag eritrea er\nflag estonia ee\nflag eswatini sz\nflag ethiopia et\nflag european union eu\nflag falkland islands fk\nflag faroe islands fo\nflag fiji fj\nflag finland fi\nflag france fr\nflag french guiana gf\nflag french polynesia pf\nflag french southern territories tf\nflag gabon ga\nflag gambia gm\nflag georgia ge\nflag germany de\nflag ghana gh\nflag gibraltar gi\nflag greece gr\nflag greenland gl\nflag grenada gd\nflag guadeloupe gp\nflag guam gu\nflag guatemala gt\nflag guernsey gg\nflag guinea gn\nflag guinea bissau gw\nflag guyana gy\nflag haiti ht\nflag honduras hn\nflag hong kong sar china hk\nflag hungary hu\nflag iceland is\nflag india in\nflag indonesia id\nflag iran ir\nflag iraq iq\nflag ireland ie\nflag isle of man im\nflag israel il\nflag italy it\nflag jamaica jm\nflag japan jp\ncrossed flags\nflag jersey je\nflag jordan jo\nflag kazakhstan kz\nflag kenya ke\nflag kiribati ki\nflag kosovo xk\nflag kuwait kw\nflag kyrgyzstan kg\nflag laos la\nflag latvia lv\nflag lebanon lb\nflag lesotho ls\nflag liberia lr\nflag libya ly\nflag liechtenstein li\nflag lithuania lt\nflag luxembourg lu\nflag macao sar china mo\nflag madagascar mg\nflag malawi mw\nflag malaysia my\nflag maldives mv\nflag mali ml\nflag malta mt\nflag marshall islands mh\nflag martinique mq\nflag mauritania mr\nflag mauritius mu\nflag mayotte yt\nflag mexico mx\nflag micronesia fm\nflag moldova md\nflag monaco mc\nflag mongolia mn\nflag montenegro me\nflag montserrat ms\nflag morocco ma\nflag mozambique mz\nflag myanmar burma mm\nflag namibia na\nflag nauru nr\nflag nepal np\nflag netherlands nl\nflag new caledonia nc\nflag new zealand nz\nflag nicaragua ni\nflag niger ne\nflag nigeria ng\nflag niue nu\nflag norfolk island nf\nflag north korea kp\nflag north macedonia mk\nflag northern mariana islands mp\nflag norway no\nflag oman om\nflag pakistan pk\nflag palau pw\nflag palestinian territories ps\nflag panama pa\nflag papua new guinea pg\nflag paraguay py\nflag peru pe\nflag philippines ph\nflag pitcairn islands pn\nflag poland pl\nflag portugal pt\nflag puerto rico pr\nflag qatar qa\nflag r union re\nflag romania ro\nflag russia ru\nflag rwanda rw\nflag samoa ws\nflag san marino sm\nflag s o tom pr ncipe st\nflag sark cq\nflag saudi arabia sa\nflag senegal sn\nflag serbia rs\nflag seychelles sc\nflag sierra leone sl\nflag singapore sg\nflag sint maarten sx\nflag slovakia sk\nflag slovenia si\nflag south georgia sandwich islands gs\nflag solomon islands sb\nflag somalia so\nflag south africa za\nflag south korea kr\nflag south sudan ss\nflag spain es\nflag sri lanka lk\nflag st barth lemy bl\nflag st helena sh\nflag st kitts nevis kn\nflag st lucia lc\nflag st pierre miquelon pm\nflag st vincent grenadines vc\nflag sudan sd\nflag suriname sr\nflag sweden se\nflag switzerland ch\nflag syria sy\nflag taiwan tw\nflag tajikistan tj\nflag tanzania tz\nflag thailand th\nflag timor leste tl\nflag togo tg\nflag tokelau tk\nflag tonga to\nflag trinidad tobago tt\nflag tunisia tn\nflag t rkiye tr\nflag turkmenistan tm\nflag turks caicos islands tc\nflag tuvalu tv\nflag u s virgin islands vi\nflag uganda ug\nflag ukraine ua\nflag united arab emirates ae uae\nflag united kingdom gb uk britain england great\nflag england uk\nflag scotland uk\nflag wales uk\nflag united states us usa america\nflag uruguay uy\nflag uzbekistan uz\nflag vanuatu vu\nflag vatican city va\nflag venezuela ve\nflag vietnam vn\nflag wallis futuna wf\nflag western sahara eh\nflag yemen ye\nflag zambia zm\nflag zimbabwe zw';
+var KU_RAW={'دڵ':'heart','خۆشەویستی':'love heart','پێکەنین':'laugh smile','بزە':'smile','زەردەخەنە':'smile','گریان':'cry tear','ئاگر':'fire','گوڵ':'flower rose','خۆر':'sun','مانگ':'moon','ئەستێرە':'star','ئاو':'water','ماڵ':'house home','ئۆتۆمبێل':'car','کتێب':'book','دەست':'hand','چاو':'eye','سەگ':'dog','پشیلە':'cat','بالندە':'bird','ماسی':'fish','نان':'bread','سێو':'apple','مۆز':'banana','چا':'tea','قاوە':'coffee','باران':'rain','بەفر':'snow','هەور':'cloud','دار':'tree','ئاڵا':'flag','کات':'time clock','کاتژمێر':'clock watch','مۆبایل':'phone mobile','ماچ':'kiss','مۆسیقا':'music','تۆپ':'ball','فڕۆکە':'airplane','پاس':'bus','ڕۆکێت':'rocket','ئاسمان':'sky','دەریا':'sea ocean','کێو':'mountain','شار':'city','پارە':'money'};
+var COLW=50.77,HEADCOLS=8,emojiBuilt=false,emojiAllList=null,emojiKWList=null,emojiBodyStarts={},stickCols=0,activeCat=null,lockCat=null,animTok=0,searching=false,stripScrollSaved=0,emojiCtx=null,emojiRef=0,emojiBS=null,animating=false,KUW={};
+var emojiResults=emojiPanel.querySelector('#emojiResults');
+var headR=document.createElement('div'),headS=document.createElement('div'),bodyW=document.createElement('div');
+headR.className=headS.className=bodyW.className='emojiWrap';
+function mk(tag,cls){var e=document.createElement(tag);if(cls)e.className=cls;return e}
+function normQ(s){return String(s||'').toLowerCase().replace(/[\u064B-\u065F\u0670\u0640]/g,'').replace(/[\u064A\u0649]/g,'\u06CC').replace(/\u0643/g,'\u06A9').replace(/[\u0660-\u0669]/g,function(d){return d.charCodeAt(0)-1632}).replace(/[\u06F0-\u06F9]/g,function(d){return d.charCodeAt(0)-1776}).replace(/\s+/g,' ').trim()}
+Object.keys(KU_RAW).forEach(function(k){KUW[normQ(k)]=KU_RAW[k]});
+function emojiOk(e){
+ if(e.indexOf('\u200D')<0)return true;
+ try{
+  if(!emojiCtx){emojiCtx=document.createElement('canvas').getContext('2d');emojiCtx.font='24px sans-serif';emojiRef=emojiCtx.measureText('\uD83D\uDE00').width}
+  if(emojiRef>0&&emojiCtx.measureText(e).width>emojiRef*1.6)return false
+ }catch(x){}
+ return true
+}
+function emojiCell(e){var b=mk('button','emojiCell');b.textContent=e;return b}
+function fillCells(f,n){for(var i=0;i<n;i++)f.appendChild(mk('span','emojiFill'))}
+function buildEmojiStrip(){
+ if(emojiBuilt)return;emojiBuilt=true;
+ emojiGrid.appendChild(headR);emojiGrid.appendChild(headS);emojiGrid.appendChild(bodyW);
+ var f=document.createDocumentFragment(),col=0;
+ EMO_SECTIONS.forEach(function(s){
+  emojiBodyStarts[s[0]]=col;
+  var items=s[1].split(' ').filter(emojiOk);
+  items.forEach(function(e){f.appendChild(emojiCell(e))});
+  var cols=Math.ceil(items.length/4);fillCells(f,cols*4-items.length);col+=cols;
+  if(s[0]==='food'||s[0]==='objects'){f.appendChild(mk('span','emojiGap'));col+=1}
+ });
+ bodyW.appendChild(f)
+}
+function renderHead(){
+ var oldW=(HEADCOLS+stickCols)*COLW,rel=emojiGrid.scrollLeft-oldW,f=document.createDocumentFragment(),n=0;
+ if(!recentEmojis.length){var m=mk('div','emojiEmpty');m.textContent='No recent emojis';f.appendChild(m)}
+ else{recentEmojis.slice(0,32).forEach(function(e){if(emojiOk(e)){f.appendChild(emojiCell(e));n++}});fillCells(f,32-n)}
+ headR.innerHTML='';headR.appendChild(f);
+ f=document.createDocumentFragment();n=0;
+ customStickers.slice(0,32).forEach(function(uri){var b=mk('button','emojiCell emojiSticker');b.dataset.uri=uri;var im=mk('img');im.src=uri;im.alt='';b.appendChild(im);f.appendChild(b);n++});
+ stickCols=Math.ceil(n/4);fillCells(f,stickCols*4-n);headS.innerHTML='';headS.appendChild(f);
+ var newW=(HEADCOLS+stickCols)*COLW;
+ if(oldW!==newW&&!animating&&!searching)emojiGrid.scrollLeft=newW+rel
+}
+function secList(){
+ var r=[{id:'recent',x:0}];if(stickCols)r.push({id:'sticker',x:HEADCOLS*COLW});
+ var off=(HEADCOLS+stickCols)*COLW;
+ EMO_SECTIONS.forEach(function(s){r.push({id:s[0],x:off+emojiBodyStarts[s[0]]*COLW})});
+ return r
+}
+function setActive(id){
+ if(id===activeCat)return;activeCat=id;
+ var b=emojiCategories.querySelectorAll('.emojiCat');
+ for(var i=0;i<b.length;i++)b[i].classList.toggle('active',b[i].dataset.cat===id)
+}
+function syncActive(){
+ if(lockCat||searching)return;
+ var pos=emojiGrid.scrollLeft+4.6*COLW,l=secList(),cur=l[0].id;
+ for(var i=0;i<l.length;i++)if(l[i].x<=pos)cur=l[i].id;
+ setActive(cur)
+}
+function stopAnim(){animTok++;lockCat=null;animating=false}
+function gotoCat(id,animate){
+ var l=secList(),x=null;for(var i=0;i<l.length;i++)if(l[i].id===id)x=l[i].x;
+ if(x===null)return;
+ stopAnim();
+ if(!animate){emojiGrid.scrollLeft=x;setActive(id);return}
+ lockCat=id;animating=true;setActive(id);
+ var from=emojiGrid.scrollLeft,max=emojiGrid.scrollWidth-emojiGrid.clientWidth;x=Math.max(0,Math.min(x,max));
+ var d=x-from;if(!d){animating=false;return}
+ var tok=++animTok,t0=performance.now(),dur=Math.max(180,Math.min(420,120+Math.abs(d)*0.18));
+ (function step(now){
+  if(tok!==animTok)return;
+  var p=Math.min(1,(now-t0)/dur),e=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
+  emojiGrid.scrollLeft=from+d*e;
+  if(p<1)requestAnimationFrame(step);else animating=false
+ })(t0)
+}
+function ensureIndex(){
+ if(emojiAllList)return;emojiAllList=[];
+ EMO_SECTIONS.forEach(function(s){emojiAllList=emojiAllList.concat(s[1].split(' '))});
+ emojiKWList=EMO_KW.split('\n')
+}
+function searchEmoji(q,raw){
+ ensureIndex();
+ var toks=q.split(' ').filter(Boolean),alts=toks.map(function(t){var a=[t];if(KUW[t])a=a.concat(KUW[t].split(' '));return a}),hits=[],plain=raw.replace(/\uFE0F/g,'');
+ for(var i=0;i<emojiAllList.length;i++){
+  var e=emojiAllList[i],words=emojiKWList[i].split(' '),kw=' '+emojiKWList[i]+' ',ok=true,score=0;
+  for(var t=0;t<alts.length&&ok;t++){
+   var best=3;
+   for(var a=0;a<alts[t].length;a++){
+    var w=words.indexOf(alts[t][a]);
+    if(w>=0)best=Math.min(best,w<3?0:1);else if(kw.indexOf(' '+alts[t][a])>=0)best=Math.min(best,1);else if(kw.indexOf(alts[t][a])>=0)best=Math.min(best,2)
+   }
+   if(best===3)ok=false;else score+=best
+  }
+  if(!ok&&e.replace(/\uFE0F/g,'')===plain){ok=true;score=0}
+  if(ok)hits.push([score,i])
+ }
+ hits.sort(function(a,b){return a[0]-b[0]||a[1]-b[1]});
+ var out=[];
+ for(var h=0;h<hits.length&&out.length<600;h++){var em=emojiAllList[hits[h][1]];if(emojiOk(em))out.push(em)}
+ return out
+}
+function runSearch(){
+ var raw=emojiSearch.value.trim(),q=normQ(raw);
+ if(!q){
+  if(searching){searching=false;emojiResults.style.display='none';emojiResults.innerHTML='';emojiGrid.style.display='grid';emojiGrid.scrollLeft=stripScrollSaved;syncActive()}
+  return
+ }
+ if(!searching){searching=true;stripScrollSaved=emojiGrid.scrollLeft;stopAnim();emojiGrid.style.display='none';emojiResults.style.display='grid'}
+ setActive(null);
+ var f=document.createDocumentFragment();searchEmoji(q,raw).forEach(function(e){f.appendChild(emojiCell(e))});
+ emojiResults.innerHTML='';emojiResults.appendChild(f);emojiResults.scrollLeft=0
+}
+function showEmojiPanel(){
+ buildEmojiStrip();
+ if(searching){searching=false;emojiResults.style.display='none';emojiResults.innerHTML='';emojiGrid.style.display='grid'}
+ renderHead();
+ if(normQ(emojiSearch.value)){runSearch();return}
+ gotoCat(emojiCategory==='people'||!emojiCategory?'smile':emojiCategory,false)
+}
+var ICON={
+ sticker:'<svg viewBox="0 0 24 24"><path d="M16.4 3.8A9.3 9.3 0 1 0 20.4 15.9"/><path d="M16.4 3.8L20.4 15.9C16.4 16.4 13.2 14.3 13.1 10.6C13 7.6 14.2 5.2 16.4 3.8z"/></svg>',
+ clock:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.2"/><path d="M12 6.6V12H7.6"/></svg>',
+ smile:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.3" stroke-width="1.9"/><ellipse cx="8.9" cy="9.6" rx="1.1" ry="1.6" fill="currentColor" stroke="none"/><ellipse cx="15.1" cy="9.6" rx="1.1" ry="1.6" fill="currentColor" stroke="none"/><path d="M6.6 13.2h10.8c0 3.6-2.4 5.7-5.4 5.7s-5.4-2.1-5.4-5.7z" fill="currentColor"/></svg>',
+ animals:'<svg viewBox="0 0 24 24"><path d="M7.4 6.3C4.6 5.5 3 8.4 3.4 12.2c.3 2.3 1.6 3.3 3.3 2.9z" fill="currentColor"/><path d="M16.6 6.3c2.8-.8 4.4 2.1 4 5.9-.3 2.3-1.6 3.3-3.3 2.9z" fill="currentColor"/><path d="M12 4.9c-2.3 0-4.2.5-5.1 1.5v5.3c0 3.7 1.7 6.4 5.1 6.4s5.1-2.7 5.1-6.4V6.4c-.9-1-2.8-1.5-5.1-1.5z"/><circle cx="14.7" cy="10" r="2.2" fill="currentColor" stroke="none"/><circle cx="9.3" cy="10" r="1" fill="currentColor" stroke="none"/><ellipse cx="12" cy="13.6" rx="1.4" ry="1" fill="currentColor" stroke="none"/><path d="M12 14.6v2.4" stroke-width="1.4"/></svg>',
+ food:'<svg viewBox="0 0 24 24"><path d="M12 7.7C10.3 6.5 5.2 6.4 5.2 12.3c0 3.9 2.4 8 4.4 8 .9 0 1.6-.5 2.4-.5s1.5.5 2.4.5c2 0 4.4-4.1 4.4-8 0-5.9-5.1-5.8-6.8-4.6z"/><path d="M12 7.7c0-1.9.6-3.2 2.2-4M12.8 5.4c.8-.9 2-1.1 3-.7"/></svg>',
+ sport:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.2"/><path d="M12 8.1l3.4 2.5-1.3 4H9.9l-1.3-4z" fill="currentColor"/><path d="M12 8.1V3M15.4 10.6l4.6-1.5M14.1 14.6l2.8 3.9M9.9 14.6l-2.8 3.9M8.6 10.6L4 9.1"/></svg>',
+ travel:'<svg viewBox="0 0 24 24"><path d="M3.2 16.2v-2.7c0-.8.5-1.4 1.2-1.6l1.9-.5 1.6-3c.3-.6.9-.9 1.5-.9h5.5c.6 0 1.2.3 1.5.8l1.8 3 2.1.6c.7.2 1.1.8 1.1 1.5v2.8c0 .5-.4.9-.9.9H4.1c-.5 0-.9-.4-.9-.9z"/><path d="M8.4 11.2l1.1-2.3h5l1.3 2.3z" fill="currentColor"/><circle cx="7.6" cy="17" r="2" fill="#EBECF2"/><circle cx="16.6" cy="17" r="2" fill="#EBECF2"/></svg>',
+ objects:'<svg viewBox="0 0 24 24"><path d="M12 3.2a5.7 5.7 0 0 0-3.5 10.2c.7.6 1.1 1.4 1.1 2.3v.7h4.8v-.7c0-.9.4-1.7 1.1-2.3A5.7 5.7 0 0 0 12 3.2z"/><path d="M9.6 18.4h4.8M10.4 20.6h3.2"/></svg>',
+ symbols:'<svg viewBox="0 0 24 24"><path d="M12 20.2S3.2 15 3.2 8.9a4.7 4.7 0 0 1 8.8-2 4.7 4.7 0 0 1 8.8 2C20.8 15 12 20.2 12 20.2z"/></svg>',
+ flags:'<svg viewBox="0 0 24 24"><path d="M6.2 21V3.4"/><path d="M6.2 4.6c3.5-1.6 5.2 1.6 8.8.2 1.3-.5 2.4-.7 3.3-.5v8c-.9-.2-2-.1-3.3.4-3.6 1.4-5.3-1.8-8.8-.2"/></svg>'
+};
+function buildEmojiBar(){
+ var a=mk('button');a.id='emojiABC';a.textContent='ABC';a.onclick=function(){layout='letters';updateCase()};emojiCategories.appendChild(a);
+ [['sticker','Add image'],['recent','Recent'],['smile','Smileys'],['animals','Animals'],['food','Food'],['sport','Activities'],['travel','Travel'],['objects','Objects'],['symbols','Symbols'],['flags','Flags']].forEach(function(c,k){
+  var b=mk('button','emojiCat');b.dataset.cat=c[0];b.setAttribute('aria-label',c[1]);b.innerHTML=ICON[c[0]==='recent'?'clock':c[0]];b.style.left=(94+25.3*k-13.5)+'px';
+  if(c[0]==='sticker')b.onclick=function(){if(window.AndroidKeyboard&&AndroidKeyboard.pickImage)AndroidKeyboard.pickImage()};
+  else b.onclick=function(){
+   if(searching){emojiSearch.value='';runSearch()}
+   if(c[0]==='recent')renderHead();
+   gotoCat(c[0],true)
+  };
+  emojiCategories.appendChild(b)
+ });
+ emojiBS=mk('button');emojiBS.id='emojiBS';emojiBS.setAttribute('aria-label','Delete');
+ emojiBS.innerHTML=svgOpen('0 0 28 22',22,17.3)+'<path d="M9 2.5h14.5a3 3 0 0 1 3 3v11a3 3 0 0 1-3 3H9L1.8 11z" stroke="#000" stroke-width="1.8" stroke-linejoin="round"/><path d="M12.8 7.3l7.4 7.4M20.2 7.3l-7.4 7.4" stroke="#000" stroke-width="1.8" stroke-linecap="round"/></svg>';
+ emojiCategories.appendChild(emojiBS)
+}
+buildEmojiBar();
+emojiSearch.addEventListener('input',runSearch);
+emojiPanel.addEventListener('click',function(ev){
+ var b=ev.target.closest?ev.target.closest('.emojiCell'):null;if(!b)return;
+ if(b.dataset.uri){if(ed.active)return;if(window.AndroidKeyboard&&AndroidKeyboard.insertImage)AndroidKeyboard.insertImage(b.dataset.uri);return}
+ var e=b.textContent;commit(e);
+ recentEmojis=[e].concat(recentEmojis.filter(function(x){return x!==e})).slice(0,32);
+ try{localStorage.setItem('bellamie_recent_emoji',JSON.stringify(recentEmojis))}catch(x){}
+});
+emojiGrid.addEventListener('touchstart',stopAnim,{passive:true});emojiGrid.addEventListener('pointerdown',stopAnim,{passive:true});emojiGrid.addEventListener('wheel',stopAnim,{passive:true});
+(function(){var raf=0;emojiGrid.addEventListener('scroll',function(){if(raf)return;raf=requestAnimationFrame(function(){raf=0;syncActive()})},{passive:true})})();
+window.addCustomSticker=function(uri){
+ customStickers=[uri].concat(customStickers.filter(function(x){return x!==uri})).slice(0,32);
+ try{localStorage.setItem('bellamie_custom_stickers',JSON.stringify(customStickers))}catch(e){}
+ if(layout==='emoji'&&emojiBuilt){
+  if(searching){emojiSearch.value='';runSearch()}
+  renderHead();gotoCat('sticker',true)
+ }
+};
 function updateCase(){
- var isEmoji=layout==='emoji';emojiPanel.style.display=isEmoji?'block':'none';if(isEmoji){letters.forEach(function(b){b.style.display='none'});shift.style.display='none';num.style.display='none';em.style.display='none';sp.style.display='none';rt.style.display='none';emojiCategories.querySelector('#emojiABC').textContent=kurdish?'اب‌ج':'ABC';showEmojiPanel();return}else{letters.forEach(function(b){b.style.display='flex'});shift.style.display='flex';num.style.display='flex';em.style.display='flex';sp.style.display='flex';rt.style.display='flex'}
+ var isEmoji=layout==='emoji';emojiPanel.style.display=isEmoji?'block':'none';if(isEmoji){letters.forEach(function(b){b.style.display='none'});shift.style.display='none';num.style.display='none';em.style.display='none';sp.style.display='none';rt.style.display='none';emojiCategories.querySelector('#emojiABC').textContent=kurdish?'اب‌ج':'ABC';emojiBS.firstElementChild.style.transform=kurdish?'scaleX(-1)':'';showEmojiPanel();return}else{letters.forEach(function(b){b.style.display='flex'});shift.style.display='flex';num.style.display='flex';em.style.display='flex';sp.style.display='flex';rt.style.display='flex'}
  var on=kurdish?kuShift:(upper||shiftLocked);
  var kurdishNumeric=kurdish&&(layout==='numbers'||layout==='symbols');
  var kuNumberValues=['١','٢','٣','٤','٥','٦','٧','٨','٩','٠','−','/',' :','،','(',')','$','@','«','»','.','،','؟','!','ـ'];
@@ -107,7 +358,7 @@ function updateCase(){
  else{rt.textContent=actionLabel;rt.style.fontSize='12pt';}
  rt.setAttribute('aria-label',actionLabel==='return'?'Return':actionLabel);
 }
-function commit(v){if(window.AndroidKeyboard)AndroidKeyboard.commit(v)}
+function commit(v){if(ed.active){edInsert(v);return}if(window.AndroidKeyboard)AndroidKeyboard.commit(v)}
 function refreshCaps(){if(manualShiftOverride||shiftLocked)return;if(!kurdish&&layout==='letters'&&window.AndroidKeyboard&&AndroidKeyboard.capsMode){var mode=AndroidKeyboard.capsMode();if(mode>=0){upper=mode>0;shiftLocked=false;updateCase()}}}
 letters.forEach(function(b){b.addEventListener('click',function(){lastSpaceAt=0;var v=b.getAttribute('data-v');if(v==null)return;doubleSpaceBlocked=false;var returnToEnglish=!kurdish&&(layout==='numbers'||layout==='symbols')&&(v==="'"||v==='’');commit(v);if(returnToEnglish){layout='letters';updateCase();return}if(layout==='letters'){if(kurdish){if(kuShift){kuShift=false;updateCase()}}else if(!shiftLocked){manualShiftOverride=true;upper=false;updateCase()}}})});
 shift.addEventListener('click',function(){manualShiftOverride=true;lastSpaceAt=0;
@@ -125,17 +376,20 @@ shift.addEventListener('click',function(){manualShiftOverride=true;lastSpaceAt=0
 });
 num.addEventListener('click',function(){lastSpaceAt=0;if(kurdish&&(layout==='numbers'||layout==='symbols')){layout='letters'}else if(layout==='numbers'||layout==='symbols'||layout==='emoji'){layout='letters'}else{layout='numbers'}updateCase()});
 em.addEventListener('click',function(){lastSpaceAt=0;layout=layout==='emoji'?'letters':'emoji';emojiCategory='smile';emojiSearch.value='';updateCase()});
-sp.addEventListener('click',function(){var now=Date.now(),fromSymbols=layout==='numbers'||layout==='symbols',eligible=layout==='letters'&&inputMode==='text',doubleSpace=eligible&&!doubleSpaceBlocked&&lastSpaceAt>0&&now-lastSpaceAt<350;lastSpaceAt=doubleSpace?0:(eligible?now:0);if(window.AndroidKeyboard&&AndroidKeyboard.space)AndroidKeyboard.space(doubleSpace);else commit(doubleSpace?'. ':' ');if(fromSymbols){layout='letters';updateCase();return}if(doubleSpace&&!kurdish&&!shiftLocked){manualShiftOverride=false;upper=true;updateCase()}});
-rt.addEventListener('click',function(){if(window.AndroidKeyboard)AndroidKeyboard.enter()});
-function del(){lastSpaceAt=0;doubleSpaceBlocked=true;if(window.AndroidKeyboard)AndroidKeyboard.delete()}
+sp.addEventListener('click',function(){if(ed.active){var fs=layout==='numbers'||layout==='symbols';lastSpaceAt=0;edInsert(' ');if(fs){layout='letters';updateCase()}return}var now=Date.now(),fromSymbols=layout==='numbers'||layout==='symbols',eligible=layout==='letters'&&inputMode==='text',doubleSpace=eligible&&!doubleSpaceBlocked&&lastSpaceAt>0&&now-lastSpaceAt<350;lastSpaceAt=doubleSpace?0:(eligible?now:0);if(window.AndroidKeyboard&&AndroidKeyboard.space)AndroidKeyboard.space(doubleSpace);else commit(doubleSpace?'. ':' ');if(fromSymbols){layout='letters';updateCase();return}if(doubleSpace&&!kurdish&&!shiftLocked){manualShiftOverride=false;upper=true;updateCase()}});
+rt.addEventListener('click',function(){if(ed.active){edEnter();return}if(window.AndroidKeyboard)AndroidKeyboard.enter()});
+function del(){lastSpaceAt=0;doubleSpaceBlocked=true;if(ed.active){edBackspace();return}if(window.AndroidKeyboard)AndroidKeyboard.delete()}
 var t1=null,t2=null;function stopDelete(){clearTimeout(t1);clearInterval(t2);t1=t2=null}
 bs.addEventListener('pointerdown',function(e){e.preventDefault();stopDelete();del();t1=setTimeout(function(){t2=setInterval(del,70)},400)});
 ['pointerup','pointerleave','pointercancel','blur'].forEach(function(ev){bs.addEventListener(ev,stopDelete)});
 bs.addEventListener('contextmenu',function(e){e.preventDefault()});
+emojiBS.addEventListener('pointerdown',function(e){e.preventDefault();stopDelete();del();if(window.AndroidKeyboard&&AndroidKeyboard.feedback)AndroidKeyboard.feedback();t1=setTimeout(function(){t2=setInterval(del,70)},400)});
+['pointerup','pointerleave','pointercancel','blur'].forEach(function(ev){emojiBS.addEventListener(ev,stopDelete)});
+emojiBS.addEventListener('contextmenu',function(e){e.preventDefault()});
 function toggleLang(){kurdish=!kurdish;kuShift=false;shiftLocked=false;upper=true;if(layout==='emoji'||layout==='numbers'||layout==='symbols')layout='letters';updateCase()}
-globe.addEventListener('click',toggleLang);globe.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleLang()}});
-voice.addEventListener('click',function(){if(window.AndroidKeyboard&&AndroidKeyboard.voice)AndroidKeyboard.voice(kurdish)});voice.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();if(window.AndroidKeyboard&&AndroidKeyboard.voice)AndroidKeyboard.voice(kurdish)}});
-function setInputConfig(type,imeOptions,caps){
+globe.addEventListener('click',function(){if(Date.now()<gSuppress)return;toggleLang()});globe.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleLang()}});
+voice.addEventListener('click',function(){if(ed.active)return;if(window.AndroidKeyboard&&AndroidKeyboard.voice)AndroidKeyboard.voice(kurdish)});voice.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();if(window.AndroidKeyboard&&AndroidKeyboard.voice)AndroidKeyboard.voice(kurdish)}});
+function setInputConfigBase(type,imeOptions,caps){
  type=Number(type)||0;imeOptions=Number(imeOptions)||0;caps=Number(caps)||0;
  var cls=type&15,variation=type&4080;
  inputMode='text';
@@ -151,7 +405,429 @@ window.configureInput=setInputConfig;
 window.refreshCaps=refreshCaps;
 window.onInputBecameEmpty=function(){if(!shiftLocked){manualShiftOverride=false;upper=true}kuShift=false;updateCase();if(!shiftLocked)setTimeout(refreshCaps,40)};
 window.onNewLine=function(){if(shiftLocked)return;manualShiftOverride=true;if(kurdish){kuShift=true}else{upper=true}updateCase()};
-window.resetForInput=function(){if(layout==='emoji')layout='letters';manualShiftOverride=false;shiftLocked=false;upper=true;kuShift=false;updateCase();setTimeout(refreshCaps,40)};
+window.resetForInput=function(){pmReset();if(layout==='emoji')layout='letters';manualShiftOverride=false;shiftLocked=false;upper=true;kuShift=false;updateCase();setTimeout(refreshCaps,40)};
+/* ===== Key popup / character preview (touch) ===== */
+var KEY_SEL='.letter,.emojiCell',popPool=[],touchState={},suppressClickUntil=0;
+function supportedKey(n){return n&&n.closest?n.closest(KEY_SEL):null}
+function makePopup(){var p=popPool.pop();if(p)return p;p=document.createElement('div');p.className='keyPop';var s=document.createElement('div');s.className='keyPopStem';var b=document.createElement('div');b.className='keyPopBubble';p.appendChild(s);p.appendChild(b);p._stem=s;p._bub=b;return p}
+function placePopup(p,key){
+ var bub=p._bub,stem=p._stem,img=key.querySelector('img'),v='';
+ bub.textContent='';
+ if(img){var im=document.createElement('img');im.src=img.src;bub.appendChild(im);v='img'}
+ else{v=key.classList.contains('letter')?key.getAttribute('data-v'):key.textContent;v=(v||'').trim();bub.textContent=v}
+ if(!v){p.style.display='none';return}
+ var sr=screen.getBoundingClientRect(),sc=(sr.width/390)||1,r=key.getBoundingClientRect();
+ var kx=(r.left-sr.left)/sc,kt=(r.top-sr.top)/sc,kw=r.width/sc,kh=r.height/sc;
+ var effW=Math.min(kw,38.8),cx=kx+kw/2,bw=effW+16,bh=50;
+ var bl=Math.max(2,Math.min(390-bw-2,cx-bw/2)),bt=Math.max(0,kt-bh+3);
+ var stemH=Math.max(0,(kt+kh)-(bt+bh-6));
+ p.style.left=bl+'px';p.style.top=bt+'px';p.style.width=bw+'px';p.style.height=bh+'px';p.style.display='block';
+ if(stemH>0){stem.style.display='block';stem.style.left=(cx-effW/2-bl)+'px';stem.style.top=(bh-6)+'px';stem.style.width=effW+'px';stem.style.height=stemH+'px'}else stem.style.display='none';
+}
+function hidePopup(st){st.p.style.display='none'}
+function removePopup(st){var p=st.p;setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);p.style.display='none';popPool.push(p)},80)}
+kb.addEventListener('touchstart',function(e){
+ for(var i=0;i<e.changedTouches.length;i++){var t=e.changedTouches[i],key=supportedKey(t.target);if(!key)continue;
+  var p=makePopup();screen.appendChild(p);touchState[t.identifier]={start:key,cur:key,x:t.clientX,y:t.clientY,p:p,scroll:false};placePopup(p,key)}
+},{passive:true});
+kb.addEventListener('touchmove',function(e){
+ var prevent=false;
+ for(var i=0;i<e.changedTouches.length;i++){var t=e.changedTouches[i],st=touchState[t.identifier];if(!st||st.scroll)continue;
+  var strip=st.start.classList.contains('emojiCell')?st.start.closest('.emojiStrip'):null;
+  if(strip&&strip.scrollWidth>strip.clientWidth+1){
+   var dx=t.clientX-st.x,dy=t.clientY-st.y;
+   if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){st.scroll=true;st.cur=null;hidePopup(st);continue}
+  }
+  prevent=true;
+  var key=supportedKey(document.elementFromPoint(t.clientX,t.clientY));
+  if(key!==st.cur){st.cur=key;if(key)placePopup(st.p,key);else hidePopup(st)}
+ }
+ if(prevent&&e.cancelable)e.preventDefault();
+},{passive:false});
+kb.addEventListener('touchend',function(e){
+ for(var i=0;i<e.changedTouches.length;i++){var id=e.changedTouches[i].identifier,st=touchState[id];if(!st)continue;
+  delete touchState[id];removePopup(st);
+  if(st.scroll)continue;
+  if(e.cancelable)e.preventDefault();
+  suppressClickUntil=Date.now()+700;
+  if(st.cur&&st.cur.getClientRects().length)st.cur.click();
+ }
+},{passive:false});
+kb.addEventListener('touchcancel',function(e){
+ for(var i=0;i<e.changedTouches.length;i++){var id=e.changedTouches[i].identifier,st=touchState[id];if(!st)continue;delete touchState[id];removePopup(st)}
+},{passive:true});
+kb.addEventListener('click',function(e){if(e.isTrusted&&Date.now()<suppressClickUntil&&supportedKey(e.target)){e.stopPropagation();e.preventDefault()}},true);
+kb.addEventListener('contextmenu',function(e){if(supportedKey(e.target))e.preventDefault()});
+/* ===== end key popup ===== */
+/* ===== Password & Text Manager ===== */
+var NB=window.AndroidKeyboard||null,EXTRA=134,GAP=6,TX_MAX=20000;
+var PM={kind:null,mode:'list',data:[],query:'',rev:null,err:null,edit:null,openedAt:0};
+var hostMode='text',hostAction='return',savedLayout='letters';
+var ed={active:false,cur:null,fields:[],onEnter:null};
+var gT=0,gLong=false,gSuppress=0,gX=0,gY=0,menuAt=0,toastT=0,dlgCb=null;
+var PI={
+back:'<path d="M19 12H5M11 5.5 4.5 12l6.5 6.5"/>',
+plus:'<path d="M12 5v14M5 12h14"/>',
+pencil:'<path d="M4 20l1.2-4.2L16.6 4.4a2 2 0 0 1 2.8 0l1.2 1.2a2 2 0 0 1 0 2.8L9.2 19.8z"/><path d="M14.6 6.4l3 3"/>',
+trash:'<path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l.8 12.5h9.4L17.5 7M10 11v5M14 11v5"/>',
+check:'<path d="M5 12.5l4.5 4.5L19 7"/>',
+close:'<path d="M6 6l12 12M18 6L6 18"/>',
+eye:'<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+eyeoff:'<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M4 4l16 16"/>',
+grip:'<g fill="currentColor" stroke="none"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></g>',
+mail:'<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3.5 7.5l8.5 6 8.5-6"/>',
+lock:'<rect x="5" y="10.5" width="14" height="9.5" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/>',
+tag:'<path d="M3.5 12.2V4.5h7.7l9.3 9.3a1.8 1.8 0 0 1 0 2.5l-4.2 4.2a1.8 1.8 0 0 1-2.5 0z"/><circle cx="8" cy="9" r="1.3"/>',
+doc:'<path d="M6 3.5h8.5L19 8v12.5H6z"/><path d="M14.5 3.5V8H19M9 12.5h7M9 16h7"/>',
+search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/>'};
+function ic(n){return '<svg viewBox="0 0 24 24" aria-hidden="true">'+PI[n]+'</svg>'}
+function pe(tag,cls){var e=document.createElement(tag);if(cls)e.className=cls;return e}
+function fb(){if(NB&&NB.feedback)NB.feedback()}
+function setExtra(h){if(h===extraH)return;extraH=h;resizeKeyboard();kb.style.top=h+'px';if(NB&&NB.setExtraHeight){try{NB.setExtraHeight(h)}catch(x){}}}
+var EM={no_input:'No text field is focused',empty:'Nothing to insert',id_required:'Enter an ID first',locked:'Unlock the device first',unavailable:'Update the keyboard app first',missing:'Record not found'};
+function errMsg(c){return EM[c]||'Something went wrong'}
+function toast(m){pmToast.textContent=m;pmToast.style.display='block';clearTimeout(toastT);toastT=setTimeout(function(){pmToast.style.display='none'},2200)}
+
+/* ---- native bridge (JSON strings) with an in-memory preview fallback for desktop browsers ---- */
+var API={pw:{list:'pwList',get:'pwGet',save:'pwSave',del:'pwDelete',move:'pwMove',ins:'pwInsert',reset:'pwReset'},tx:{list:'txtList',save:'txtSave',del:'txtDelete',move:'txtMove',ins:'txtInsert'}};
+function nat(kind,op,a1,a2){
+ var fn=API[kind][op];
+ if(NB){
+  if(typeof NB[fn]!=='function')return{ok:false,error:'unavailable'};
+  try{return JSON.parse(a2!==undefined?NB[fn](a1,a2):(a1!==undefined?NB[fn](a1):NB[fn]()))}catch(x){return{ok:false,error:'bridge'}}
+ }
+ return MOCK(kind,op,a1,a2)
+}
+var mockDb={pw:[],tx:[]},mockSeq=0;window.__mockInserted=[];
+function MOCK(kind,op,a1,a2){
+ var L=mockDb[kind];
+ function sum(){return L.map(function(r){return kind==='pw'?{uid:r.uid,id:r.id,email:r.email,hasPass:!!r.pass}:{uid:r.uid,id:r.id,text:r.text}})}
+ function find(u){for(var i=0;i<L.length;i++)if(L[i].uid===u)return i;return -1}
+ if(op==='list')return{ok:true,records:sum()};
+ if(op==='get'){var g=find(a1);return g<0?{ok:false,error:'missing'}:{ok:true,record:L[g]}}
+ if(op==='save'){var o=JSON.parse(a1);o.id=String(o.id||'').trim();if(!o.id)return{ok:false,error:'id_required'};var j=o.uid?find(o.uid):-1;if(j>=0)L[j]=o;else{o.uid='m'+(++mockSeq);L.push(o)}return{ok:true,uid:o.uid,records:sum()}}
+ if(op==='del'){var k=find(a1);if(k>=0)L.splice(k,1);return{ok:true,records:sum()}}
+ if(op==='move'){var n=[];JSON.parse(a1).forEach(function(u){var q=find(u);if(q>=0&&n.indexOf(L[q])<0)n.push(L[q])});L.forEach(function(r){if(n.indexOf(r)<0)n.push(r)});L.splice(0,L.length);n.forEach(function(r){L.push(r)});return{ok:true,records:sum()}}
+ if(op==='ins'){window.__mockInserted.push({kind:kind,uid:a1,field:a2||'text'});return{ok:true}}
+ if(op==='reset'){L.splice(0,L.length);return{ok:true}}
+ return{ok:false,error:'unavailable'}
+}
+
+/* ---- in-WebView text fields (the keyboard types into these while a form/search is open) ---- */
+function keepVisible(f){
+ var c=f.txt.querySelector('.caret');if(!c)return;
+ var t=f.txt,r=t.getBoundingClientRect(),k=c.getBoundingClientRect(),s=(r.width/(t.clientWidth||1))||1;
+ if(k.right>r.right-4)t.scrollLeft+=(k.right-r.right+10)/s;else if(k.left<r.left+4)t.scrollLeft-=(r.left-k.left+10)/s;
+ if(k.bottom>r.bottom-2)t.scrollTop+=(k.bottom-r.bottom+4)/s;else if(k.top<r.top+2)t.scrollTop-=(r.top-k.top+4)/s
+}
+function mkField(root,o){
+ var f={root:root,txt:root.querySelector('.tft'),val:o.val||'',pos:0,multi:!!o.multi,secret:!!o.secret,reveal:false,ph:o.ph||'',max:o.max||500,autocap:!!o.autocap,onChange:o.onChange||null,onTap:o.onTap||null,focused:false};
+ f.pos=f.val.length;
+ f.render=function(){
+  var d=f.val;if(f.secret&&!f.reveal)d=d.replace(/[\s\S]/g,'\u2022');
+  var t=f.txt;while(t.firstChild)t.removeChild(t.firstChild);
+  var b=pe('span','b');b.textContent=d.slice(0,f.pos);t.appendChild(b);
+  if(f.focused)t.appendChild(pe('i','caret'));
+  var a=pe('span','a');a.textContent=d.slice(f.pos);t.appendChild(a);
+  if(!f.val){var p=pe('span','ph');p.textContent=f.ph;t.appendChild(p)}
+  root.classList.toggle('empty',!f.val);root.classList.toggle('focus',f.focused);
+  if(f.focused)keepVisible(f)
+ };
+ f.changed=function(){f.render();if(f.onChange)f.onChange(f)};
+ f.setValue=function(v){f.val=String(v);f.pos=f.val.length;f.changed()};
+ f.insert=function(s){
+  s=String(s);if(f.val.length+s.length>f.max)s=s.slice(0,Math.max(0,f.max-f.val.length));if(!s)return;
+  f.val=f.val.slice(0,f.pos)+s+f.val.slice(f.pos);f.pos+=s.length;f.changed()
+ };
+ f.back=function(){
+  if(f.pos<=0)return;var n=1,c=f.val.charCodeAt(f.pos-1);
+  if(c===0xFE0F&&f.pos>1){n=2;c=f.val.charCodeAt(f.pos-2)}
+  if(c>=0xDC00&&c<=0xDFFF&&f.pos>n){var h=f.val.charCodeAt(f.pos-n-1);if(h>=0xD800&&h<=0xDBFF)n++}
+  f.val=f.val.slice(0,f.pos-n)+f.val.slice(f.pos);f.pos-=n;f.changed()
+ };
+ f.posAt=function(x,y){
+  var r=null;
+  try{if(document.caretRangeFromPoint)r=document.caretRangeFromPoint(x,y);else if(document.caretPositionFromPoint){var cp=document.caretPositionFromPoint(x,y);if(cp){r=document.createRange();r.setStart(cp.offsetNode,cp.offset)}}}catch(e){}
+  if(!r||!f.txt.contains(r.startContainer))return f.val.length;
+  var n=r.startContainer,o2=r.startOffset,b=f.txt.querySelector('.b'),a=f.txt.querySelector('.a');
+  if(b&&(n===b||b.contains(n)))return n===b?(o2>0?f.pos:0):Math.min(o2,f.pos);
+  if(a&&(n===a||a.contains(n)))return n===a?(o2>0?f.val.length:f.pos):Math.min(f.pos+o2,f.val.length);
+  return f.val.length
+ };
+ root.addEventListener('click',function(e){
+  if(e.target.closest&&e.target.closest('.tfe,.tfx'))return;
+  var p=f.posAt(e.clientX,e.clientY);
+  if(f.onTap&&f.onTap()===false)return;
+  edFocus(f);f.pos=p;f.render()
+ });
+ f.render();return f
+}
+
+/* ---- editor engine: routes keyboard input into the focused field instead of the host app ---- */
+function edActionLabel(){var f=ed.cur;if(!f||f.multi)return 'return';if(ed.fields.length===1)return 'search';return ed.fields.indexOf(f)>=ed.fields.length-1?'done':'next'}
+function edStart(fields,onEnter){
+ if(!ed.active){hostMode=inputMode;hostAction=actionLabel;savedLayout=layout;ed.active=true}
+ ed.fields=fields;ed.onEnter=onEnter||null;ed.cur=null;inputMode='text';layout='letters';kuShift=false
+}
+function edStop(fromReset){
+ if(!ed.active)return;
+ if(ed.cur){ed.cur.focused=false;ed.cur.render()}
+ ed.cur=null;ed.fields=[];ed.onEnter=null;ed.active=false;
+ inputMode=hostMode;actionLabel=hostAction;layout=fromReset?'letters':savedLayout;
+ if(inputMode==='number'||inputMode==='phone')layout='numbers';
+ manualShiftOverride=false;updateCase();if(!shiftLocked)setTimeout(refreshCaps,40)
+}
+function edFocus(f){
+ if(ed.cur&&ed.cur!==f){ed.cur.focused=false;ed.cur.render()}
+ ed.cur=f;f.focused=true;f.render();
+ if(!kurdish&&!shiftLocked&&layout==='letters'){upper=!!f.autocap&&!f.val;manualShiftOverride=true}
+ actionLabel=edActionLabel();updateCase()
+}
+function edInsert(s){if(ed.cur)ed.cur.insert(s)}
+function edBackspace(){if(ed.cur)ed.cur.back()}
+function edEnter(){
+ var f=ed.cur;if(!f)return;
+ if(f.multi){f.insert('\n');return}
+ if(ed.onEnter)ed.onEnter(f)
+}
+function setInputConfig(type,imeOptions,caps){
+ setInputConfigBase(type,imeOptions,caps);
+ hostMode=inputMode;hostAction=actionLabel;
+ if(ed.active){inputMode='text';layout='letters';actionLabel=edActionLabel();updateCase()}
+}
+
+/* ---- DOM ---- */
+var pmPanel=pe('div','pmPanel');
+pmPanel.innerHTML='<div class="pmHead"><button type="button" class="pmBtn" id="pmBack" aria-label="Back">'+ic('back')+'</button><div class="tf pmSearchTf empty" id="pmSearch"><span class="tfi">'+ic('search')+'</span><div class="tft" dir="auto"></div><button type="button" class="tfx" id="pmClear" aria-label="Clear search">'+ic('close')+'</button></div><button type="button" class="pmBtn pmAdd" id="pmAdd" aria-label="Add">'+ic('plus')+'</button></div><div class="pmList" id="pmList"></div>';
+var pmEd=pe('div','pmEd');
+pmEd.innerHTML='<div class="edHead"><button type="button" class="pmBtn" id="edClose" aria-label="Close">'+ic('close')+'</button><div class="edTitle" id="edTitle"></div><button type="button" class="pmBtn edSave" id="edSave" aria-label="Save">'+ic('check')+'</button></div><div class="edBody" id="edBody"></div>';
+var pmMenu=pe('div','pmMenu');
+pmMenu.innerHTML='<div class="mnCard" role="menu"><button type="button" class="mnItem" data-k="pw" role="menuitem">'+ic('lock')+'<span>Password</span></button><button type="button" class="mnItem" data-k="tx" role="menuitem">'+ic('doc')+'<span>Text</span></button><i class="mnTip"></i></div>';
+var pmDlg=pe('div','pmDlg');
+pmDlg.innerHTML='<div class="dlgCard"><div class="dlgTitle" id="dlgTitle"></div><div class="dlgMsg" id="dlgMsg"></div><div class="dlgBtns"><button type="button" class="dlgBtn" data-r="0">Cancel</button><button type="button" class="dlgBtn" id="dlgOk" data-r="1">OK</button></div></div>';
+var pmToast=pe('div','pmToast');
+[pmPanel,pmEd,pmMenu,pmDlg,pmToast].forEach(function(n){screen.appendChild(n)});
+var pmList=pmPanel.querySelector('#pmList'),edBody=pmEd.querySelector('#edBody'),edTitle=pmEd.querySelector('#edTitle'),dlgTitle=pmDlg.querySelector('#dlgTitle'),dlgMsg=pmDlg.querySelector('#dlgMsg'),dlgOk=pmDlg.querySelector('#dlgOk');
+var searchF=mkField(pmPanel.querySelector('#pmSearch'),{ph:'Search by ID',max:100,onChange:function(f){PM.query=f.val;pmList.scrollTop=0;render()},onTap:function(){if(PM.mode==='list')enterSearch();return PM.mode==='search'}});
+
+/* ---- dialog / reveal ---- */
+function confirmDlg(title,msg,okLabel,danger,cb){
+ dlgTitle.textContent=title;dlgMsg.textContent=msg||'';dlgOk.textContent=okLabel;dlgOk.className='dlgBtn'+(danger?' danger':'');
+ dlgCb=cb;pmDlg.style.height=(PM.mode==='list'?283.2:EXTRA)+'px';pmDlg.style.display='block'
+}
+function hideDlg(){pmDlg.style.display='none';dlgCb=null}
+pmDlg.addEventListener('click',function(e){
+ var b=e.target.closest?e.target.closest('.dlgBtn'):null,cb=dlgCb;
+ if(b&&!(e.target.closest('.dlgBtn').getAttribute('data-r')==='1')){hideDlg();return}
+ if(!b){if(e.target===pmDlg)hideDlg();return}
+ hideDlg();if(cb)cb()
+});
+function clearReveal(){if(PM.rev){clearTimeout(PM.rev.t);PM.rev=null}}
+function toggleReveal(uid){
+ if(PM.rev&&PM.rev.uid===uid){clearReveal();render();return}
+ var g=nat('pw','get',uid);if(!g.ok){toast(errMsg(g.error));return}
+ clearReveal();PM.rev={uid:uid,pass:g.record.pass,t:setTimeout(function(){clearReveal();render()},10000)};render()
+}
+
+/* ---- list ---- */
+function loadData(){var r=nat(PM.kind,'list');if(r.ok){PM.data=r.records;PM.err=null}else{PM.data=[];PM.err=r.error||'failed'}}
+function findRec(u){for(var i=0;i<PM.data.length;i++)if(PM.data[i].uid===u)return PM.data[i];return null}
+function visibleRecs(){var q=normQ(PM.query);return q?PM.data.filter(function(r){return normQ(r.id).indexOf(q)>=0}):PM.data}
+function rowFor(r){
+ var pw=PM.kind==='pw',row=pe('div','pmRow'+(pw?'':' tx')),g=pe('button','pmGrip'),main,x;
+ row.setAttribute('data-uid',r.uid);
+ g.type='button';g.setAttribute('aria-label','Drag to reorder');g.innerHTML=ic('grip');row.appendChild(g);
+ if(pw){
+  main=pe('div','pmMain');
+  x=pe('div','pmId');x.setAttribute('dir','auto');x.textContent=r.id;main.appendChild(x);
+  var chips=pe('div','pmChips'),eb=pe('button','pmChip'+(r.email?'':' off'));
+  eb.type='button';eb.setAttribute('data-act','email');eb.setAttribute('aria-label','Insert email or username');eb.innerHTML=ic('mail')+'<span dir="auto"></span>';eb.lastChild.textContent=r.email||'\u2014';chips.appendChild(eb);
+  var shown=!!(PM.rev&&PM.rev.uid===r.uid),pg=pe('div','pmChip pmPassWrap'+(r.hasPass?'':' off')),pb=pe('button','pmPassBtn');
+  pb.type='button';pb.setAttribute('data-act','pass');pb.setAttribute('aria-label','Insert password');pb.innerHTML=ic('lock')+'<span dir="auto"></span>';
+  pb.lastChild.textContent=!r.hasPass?'\u2014':(shown?PM.rev.pass:'\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022');pg.appendChild(pb);
+  if(r.hasPass){var ey=pe('button','pmEye');ey.type='button';ey.setAttribute('data-act','eye');ey.setAttribute('aria-label',shown?'Hide password':'Show password');ey.innerHTML=ic(shown?'eyeoff':'eye');pg.appendChild(ey)}
+  chips.appendChild(pg);main.appendChild(chips)
+ }else{
+  main=pe('button','pmMain pmTxMain');main.type='button';main.setAttribute('data-act','ins');main.setAttribute('aria-label','Insert text');
+  x=pe('div','pmId');x.setAttribute('dir','auto');x.textContent=r.id;
+  var tx=pe('div','pmTxt');tx.setAttribute('dir','auto');tx.textContent=r.text.length>200?r.text.slice(0,200):r.text;
+  main.appendChild(x);main.appendChild(tx)
+ }
+ row.appendChild(main);
+ var be=pe('button','pmIcoBtn');be.type='button';be.setAttribute('data-act','edit');be.setAttribute('aria-label','Edit');be.innerHTML=ic('pencil');row.appendChild(be);
+ var bd=pe('button','pmIcoBtn del');bd.type='button';bd.setAttribute('data-act','del');bd.setAttribute('aria-label','Delete');bd.innerHTML=ic('trash');row.appendChild(bd);
+ return row
+}
+function render(){
+ if(!PM.kind)return;
+ var keep=pmList.scrollTop,v;pmList.textContent='';
+ if(PM.err){
+  var m=pe('div','pmEmpty'),bt=pe('button','pmWide'),reset=PM.err==='decrypt_failed'&&PM.kind==='pw';
+  m.textContent=reset?'Saved passwords can\u2019t be read on this device.':'Storage isn\u2019t available right now.';
+  bt.type='button';bt.textContent=reset?'Start fresh':'Retry';
+  bt.addEventListener('click',function(){
+   if(reset)confirmDlg('Erase saved passwords?','The old data can\u2019t be recovered.','Erase',true,function(){nat('pw','reset');loadData();render()});
+   else{loadData();render()}
+  });
+  pmList.appendChild(m);pmList.appendChild(bt);return
+ }
+ v=visibleRecs();
+ if(!v.length){var e=pe('div','pmEmpty');e.textContent=PM.query?'No matches':(PM.kind==='pw'?'No passwords yet. Tap + to add one.':'No texts yet. Tap + to add one.');pmList.appendChild(e);return}
+ v.forEach(function(r){pmList.appendChild(rowFor(r))});
+ pmList.scrollTop=keep
+}
+function doInsert(rec,act,b){
+ var r=PM.kind==='pw'?nat('pw','ins',rec.uid,act):nat('tx','ins',rec.uid);
+ if(!r.ok){toast(errMsg(r.error));return}
+ fb();var t=b.closest('.pmChip')||b;t.classList.add('flash');setTimeout(function(){t.classList.remove('flash')},260);
+ if(!NB)toast('Preview: inserted')
+}
+function askDelete(rec){
+ var n=rec.id.length>24?rec.id.slice(0,24)+'\u2026':rec.id;
+ confirmDlg('Delete \u201C'+n+'\u201D?','This can\u2019t be undone.','Delete',true,function(){
+  var r=nat(PM.kind,'del',rec.uid);if(!r.ok){toast(errMsg(r.error));return}
+  if(PM.rev&&PM.rev.uid===rec.uid)clearReveal();PM.data=r.records;render();fb()
+ })
+}
+pmList.addEventListener('click',function(e){
+ if(Date.now()-PM.openedAt<350)return;
+ var b=e.target.closest?e.target.closest('[data-act]'):null;if(!b)return;
+ var row=b.closest('.pmRow');if(!row)return;
+ var rec=findRec(row.getAttribute('data-uid')),act=b.getAttribute('data-act');if(!rec)return;
+ if(act==='edit'){fb();openEditor(rec);return}
+ if(act==='del'){askDelete(rec);return}
+ if(act==='eye'){toggleReveal(rec.uid);return}
+ if(b.closest('.off'))return;
+ doInsert(rec,act,b)
+});
+
+/* ---- drag & drop reorder (grip handle, pointer events, auto-scroll) ---- */
+function commitOrder(vis){
+ var inV={},idx=[],by={};
+ vis.forEach(function(u){inV[u]=1});
+ PM.data.forEach(function(r,i){by[r.uid]=r;if(inV[r.uid])idx.push(i)});
+ var next=PM.data.slice(),prev=PM.data;
+ idx.forEach(function(slot,k){next[slot]=by[vis[k]]});
+ PM.data=next;render();
+ var r=nat(PM.kind,'move',JSON.stringify(next.map(function(x){return x.uid})));
+ if(r.ok&&r.records)PM.data=r.records;else{PM.data=prev;toast(errMsg(r.error));render()}
+}
+function startDrag(e,row,grip){
+ var rows=[].slice.call(pmList.querySelectorAll('.pmRow'));if(rows.length<2)return;
+ var i0=rows.indexOf(row),cur=i0,n=rows.length,step=row.offsetHeight+GAP,k=(screen.getBoundingClientRect().width/390)||1,y0=e.clientY,s0=pmList.scrollTop,ly=e.clientY,raf=0,done=false;
+ e.preventDefault();try{grip.setPointerCapture(e.pointerId)}catch(x){}
+ row.classList.add('drag');
+ function apply(){
+  var dy=(ly-y0)/k+(pmList.scrollTop-s0);dy=Math.max(-i0*step,Math.min((n-1-i0)*step,dy));
+  row.style.transform='translateY('+dy+'px)';
+  var to=Math.max(0,Math.min(n-1,Math.round(i0+dy/step)));
+  if(to!==cur){cur=to;rows.forEach(function(r,j){if(r===row)return;var s=0;if(cur>i0&&j>i0&&j<=cur)s=-step;else if(cur<i0&&j<i0&&j>=cur)s=step;r.style.transform=s?'translateY('+s+'px)':''})}
+ }
+ function tick(){if(done)return;var r=pmList.getBoundingClientRect();if(ly<r.top+26)pmList.scrollTop-=7;else if(ly>r.bottom-26)pmList.scrollTop+=7;apply();raf=requestAnimationFrame(tick)}
+ function mv(ev){ly=ev.clientY}
+ function end(){
+  if(done)return;done=true;cancelAnimationFrame(raf);
+  grip.removeEventListener('pointermove',mv);grip.removeEventListener('pointerup',end);grip.removeEventListener('pointercancel',end);
+  var order=rows.slice();order.splice(i0,1);order.splice(cur,0,row);
+  rows.forEach(function(r){r.style.transition='none';r.style.transform=''});row.classList.remove('drag');
+  if(cur!==i0)commitOrder(order.map(function(r){return r.getAttribute('data-uid')}))
+ }
+ grip.addEventListener('pointermove',mv);grip.addEventListener('pointerup',end);grip.addEventListener('pointercancel',end);
+ raf=requestAnimationFrame(tick)
+}
+pmList.addEventListener('pointerdown',function(e){var g=e.target.closest?e.target.closest('.pmGrip'):null;if(g)startDrag(e,g.closest('.pmRow'),g)});
+pmList.addEventListener('contextmenu',function(e){e.preventDefault()});
+
+/* ---- open / close / search / editor ---- */
+function openManager(kind){
+ PM.kind=kind;PM.mode='list';PM.query='';PM.rev=null;PM.edit=null;PM.openedAt=Date.now();
+ searchF.focused=false;searchF.val='';searchF.pos=0;searchF.render();
+ pmPanel.style.height='283.2px';pmPanel.style.display='block';pmEd.style.display='none';
+ pmPanel.querySelector('#pmAdd').setAttribute('aria-label',kind==='pw'?'Add password':'Add text');
+ loadData();render()
+}
+function closeManager(fromReset){
+ clearReveal();hideDlg();edStop(!!fromReset);
+ pmPanel.style.display='none';pmEd.style.display='none';pmToast.style.display='none';edBody.innerHTML='';
+ PM.kind=null;PM.mode='list';PM.edit=null;PM.data=[];PM.query='';setExtra(0)
+}
+function pmReset(){if(PM.kind||ed.active||pmMenu.style.display==='block'){hideMenu();closeManager(true)}}
+function enterSearch(){
+ if(PM.mode!=='list'||PM.err)return;
+ PM.mode='search';pmPanel.style.height=EXTRA+'px';setExtra(EXTRA);
+ edStart([searchF],function(){exitSearch()})
+}
+function exitSearch(){
+ if(PM.mode!=='search')return;
+ edStop(false);PM.mode='list';pmPanel.style.height='283.2px';setExtra(0);render()
+}
+function snapshot(F){return F.map(function(f){return f.val}).join('\u0001')}
+function openEditor(rec){
+ var pw=PM.kind==='pw',v={id:'',email:'',pass:'',text:''};
+ if(rec){
+  if(pw){var g=nat('pw','get',rec.uid);if(!g.ok){toast(errMsg(g.error));return}v.id=g.record.id;v.email=g.record.email;v.pass=g.record.pass}
+  else{v.id=rec.id;v.text=rec.text}
+ }
+ clearReveal();hideDlg();if(ed.active)edStop(false);
+ PM.mode='edit';PM.edit={uid:rec?rec.uid:'',fields:null,init:''};
+ pmPanel.style.display='none';pmEd.style.display='block';
+ edTitle.textContent=(rec?'Edit ':'New ')+(pw?'password':'text');
+ function fh(icon,eye,big){return '<div class="tf'+(big?' big':'')+'"><span class="tfi">'+ic(icon)+'</span><div class="tft'+(big?' multi':'')+'" dir="auto"></div>'+(eye?'<button type="button" class="tfe" aria-label="Show password">'+ic('eye')+'</button>':'')+'</div>'}
+ var F;
+ if(pw){
+  edBody.innerHTML=fh('tag')+fh('mail')+fh('lock',true);
+  var tf=edBody.querySelectorAll('.tf');
+  F=[mkField(tf[0],{ph:'ID (e.g. Google)',max:200,autocap:true,val:v.id}),mkField(tf[1],{ph:'Email or username',max:500,val:v.email}),mkField(tf[2],{ph:'Password',max:1000,secret:true,val:v.pass})];
+  var eye=tf[2].querySelector('.tfe');
+  eye.addEventListener('click',function(e){e.stopPropagation();F[2].reveal=!F[2].reveal;eye.innerHTML=ic(F[2].reveal?'eyeoff':'eye');eye.setAttribute('aria-label',F[2].reveal?'Hide password':'Show password');F[2].render()})
+ }else{
+  edBody.innerHTML=fh('tag')+fh('doc',false,true);
+  var t2=edBody.querySelectorAll('.tf');
+  F=[mkField(t2[0],{ph:'ID (e.g. Email Signature)',max:200,autocap:true,val:v.id}),mkField(t2[1],{ph:'Text',max:TX_MAX,multi:true,autocap:true,val:v.text})]
+ }
+ PM.edit.fields=F;PM.edit.init=snapshot(F);
+ setExtra(EXTRA);
+ edStart(F,function(f){var i=F.indexOf(f);if(i<F.length-1)edFocus(F[i+1]);else saveEdit()});
+ edFocus(F[0])
+}
+function closeEditor(){
+ edStop(false);pmEd.style.display='none';edBody.innerHTML='';pmPanel.style.display='block';pmPanel.style.height='283.2px';
+ PM.mode='list';PM.edit=null;setExtra(0);render()
+}
+function saveEdit(){
+ if(!PM.edit)return;
+ var F=PM.edit.fields,idv=F[0].val.trim();
+ if(!idv){toast('Enter an ID first');edFocus(F[0]);F[0].root.classList.add('bad');setTimeout(function(){F[0].root.classList.remove('bad')},600);return}
+ var rec=PM.kind==='pw'?{uid:PM.edit.uid,id:idv,email:F[1].val,pass:F[2].val}:{uid:PM.edit.uid,id:idv,text:F[1].val};
+ var r=nat(PM.kind,'save',JSON.stringify(rec));
+ if(!r.ok){toast(errMsg(r.error));return}
+ PM.data=r.records;fb();closeEditor()
+}
+pmPanel.querySelector('#pmBack').addEventListener('click',function(){closeManager(false)});
+pmPanel.querySelector('#pmAdd').addEventListener('click',function(){if(PM.err)return;fb();openEditor(null)});
+pmPanel.querySelector('#pmClear').addEventListener('click',function(e){e.stopPropagation();searchF.setValue('')});
+pmEd.querySelector('#edSave').addEventListener('click',saveEdit);
+pmEd.querySelector('#edClose').addEventListener('click',function(){
+ if(PM.edit&&snapshot(PM.edit.fields)!==PM.edit.init)confirmDlg('Discard changes?','Your edits won\u2019t be saved.','Discard',true,closeEditor);
+ else closeEditor()
+});
+
+/* ---- Globe long-press menu ---- */
+function showMenu(){if(ed.active||PM.kind)return;pmMenu.style.display='block';menuAt=Date.now();fb()}
+function hideMenu(){pmMenu.style.display='none'}
+pmMenu.addEventListener('click',function(e){
+ var b=e.target.closest?e.target.closest('.mnItem'):null;
+ if(!b){hideMenu();return}
+ if(Date.now()-menuAt<250)return;
+ hideMenu();openManager(b.getAttribute('data-k'))
+});
+function gCancel(){clearTimeout(gT);gT=0}
+function gTrigger(){gT=0;gLong=true;showMenu()}
+globe.style.webkitUserSelect='none';globe.style.userSelect='none';
+globe.addEventListener('pointerdown',function(e){gLong=false;gCancel();gX=e.clientX;gY=e.clientY;if(ed.active||PM.kind)return;gT=setTimeout(gTrigger,480)});
+globe.addEventListener('pointermove',function(e){if(gT&&(Math.abs(e.clientX-gX)>12||Math.abs(e.clientY-gY)>12))gCancel()});
+['pointerup','pointercancel'].forEach(function(n){globe.addEventListener(n,function(){gCancel();if(gLong){gSuppress=Date.now()+400;gLong=false}})});
+globe.addEventListener('contextmenu',function(e){e.preventDefault();if(gT){gCancel();gTrigger()}});
 updateCase();
 })();
 </script></body></html>,'@','«','»','.','،','؟','!','ـ'];
