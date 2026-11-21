@@ -11,9 +11,8 @@ import android.os.SystemClock;
  *
  * - Samples are decoded once, in memory; nothing touches the disk while typing.
  * - play() is thread-safe and is called straight from the WebView bridge thread (no main-thread hop).
- * - The existing "sound_enabled" preference (SharedPreferences "keyboard_settings") gates every sound.
- *   It is cached and kept current by a change listener, so no preference read happens per key press.
- * - There is no volume setting (by decision); sounds play at their recorded level.
+ * - The existing sound ON/OFF preference and the 0-100 volume preference are cached and
+ *   kept current by a change listener, so no preference read happens per key press.
  */
 final class KeySoundEngine {
     // Sound slots. Slot -> recording: see SOUND_ASSETS_NOTICE.md.
@@ -32,6 +31,7 @@ final class KeySoundEngine {
 
     private static final String PREFS = "keyboard_settings";
     private static final String KEY_ENABLED = "sound_enabled";
+    private static final String KEY_VOLUME = "sound_volume";
     private static final long DUPLICATE_GUARD_MS = 8;   // same slot twice within 8 ms = duplicate event, ignore
 
     private static final int[] RES = {
@@ -46,16 +46,27 @@ final class KeySoundEngine {
     private final boolean[] loaded = new boolean[COUNT];
     private final long[] lastPlayed = new long[COUNT];
     private volatile boolean enabled = true;
+    private volatile float volume = 1f;
     private volatile SoundPool pool;
 
     // Kept in a field: SharedPreferences holds listeners weakly.
     private final SharedPreferences.OnSharedPreferenceChangeListener prefListener =
-            (p, key) -> { if (key == null || KEY_ENABLED.equals(key)) enabled = p.getBoolean(KEY_ENABLED, true); };
+            (p, key) -> {
+                if (key == null || KEY_ENABLED.equals(key)) {
+                    enabled = p.getBoolean(KEY_ENABLED, true);
+                }
+                if (key == null || KEY_VOLUME.equals(key)) {
+                    int percent = Math.max(0, Math.min(100, p.getInt(KEY_VOLUME, 100)));
+                    volume = percent / 100f;
+                }
+            };
 
     KeySoundEngine(Context ctx) {
         context = ctx.getApplicationContext() != null ? ctx.getApplicationContext() : ctx;
         prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         enabled = prefs.getBoolean(KEY_ENABLED, true);
+        int savedVolume = Math.max(0, Math.min(100, prefs.getInt(KEY_VOLUME, 100)));
+        volume = savedVolume / 100f;
         prefs.registerOnSharedPreferenceChangeListener(prefListener);
         Thread loader = new Thread(this::loadAll, "KeySoundLoader");
         loader.setPriority(Thread.NORM_PRIORITY);
@@ -104,7 +115,7 @@ final class KeySoundEngine {
             case "return": play(RETURN); return;
             case "bsTap": holdPacer.reset(); play(BS_TAP); return;
             case "bsHold":
-                if (enabled && holdPacer.onRepeatTick(SystemClock.uptimeMillis())) play(BS_HOLD);
+                if (enabled && volume > 0f && holdPacer.onRepeatTick(SystemClock.uptimeMillis())) play(BS_HOLD);
                 return;
             default: play(FALLBACK);
         }
@@ -112,6 +123,8 @@ final class KeySoundEngine {
 
     void play(int slot) {
         if (!enabled) return;                       // the existing switch controls every sound
+        float currentVolume = volume;
+        if (currentVolume <= 0f) return;             // 0% is completely silent
         SoundPool sp = pool;
         if (sp == null || slot < 0 || slot >= COUNT) return;
         int id;
@@ -122,7 +135,7 @@ final class KeySoundEngine {
             lastPlayed[slot] = now;
             id = soundIds[slot];
         }
-        sp.play(id, 1f, 1f, 1, 0, 1f);
+        sp.play(id, currentVolume, currentVolume, 1, 0, 1f);
     }
 
     void release() {
