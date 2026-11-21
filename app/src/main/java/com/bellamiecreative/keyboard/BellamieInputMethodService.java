@@ -11,6 +11,7 @@ import android.view.inputmethod.InputContentInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.UserManager;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
@@ -27,6 +28,17 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class BellamieInputMethodService extends InputMethodService {
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private WebView webView;
@@ -35,6 +47,10 @@ public class BellamieInputMethodService extends InputMethodService {
     private boolean pageReady;
     private boolean voiceReceiverRegistered;
     private boolean imageReceiverRegistered;
+    // Password & Text Manager storage (created lazily on first use)
+    private SecureCodec secureCodec;
+    private RecordStore passwordStore;
+    private RecordStore textStore;
     private final BroadcastReceiver imageReceiver = new BroadcastReceiver() {
         @Override public void onReceive(Context context, Intent intent) {
             String uri = intent.getStringExtra("image_uri");
@@ -105,7 +121,7 @@ public class BellamieInputMethodService extends InputMethodService {
             }
         });
         webView.addJavascriptInterface(new KeyboardBridge(), "AndroidKeyboard");
-        int keyboardHeight = (int) (283.2f * getResources().getDisplayMetrics().widthPixels / 390f + 0.5f);
+        int keyboardHeight = keyboardHeightPx(0);
         webView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, keyboardHeight));
         webView.loadUrl("file:///android_asset/keyboard.html");
         return webView;
@@ -248,6 +264,198 @@ public class BellamieInputMethodService extends InputMethodService {
         connection.commitText(" ", 1);
     }
 
+    /** Keyboard height in pixels. extraCssPx is extra height (in 390-wide CSS px) used while a manager form is open. */
+    private int keyboardHeightPx(int extraCssPx) {
+        return (int) ((283.2f + extraCssPx) * getResources().getDisplayMetrics().widthPixels / 390f + 0.5f);
+    }
+
+    // ------------------------------------------------------------------
+    // Password & Text Manager (storage + insertion helpers)
+    // ------------------------------------------------------------------
+
+    private synchronized RecordStore passwordStore() {
+        if (passwordStore == null) {
+            secureCodec = new SecureCodec();
+            passwordStore = new RecordStore(new File(getFilesDir(), "passwords.enc"), secureCodec,
+                    new String[]{"id", "email", "pass"}, new int[]{200, 500, 1000});
+        }
+        return passwordStore;
+    }
+
+    private synchronized RecordStore textStore() {
+        if (textStore == null) {
+            textStore = new RecordStore(new File(getFilesDir(), "texts.json"), RecordStore.PLAIN,
+                    new String[]{"id", "text"}, new int[]{200, 20000});
+        }
+        return textStore;
+    }
+
+    private boolean storageUnlocked() {
+        if (Build.VERSION.SDK_INT >= 24) {
+            UserManager um = (UserManager) getSystemService(Context.USER_SERVICE);
+            return um == null || um.isUserUnlocked();
+        }
+        return true;
+    }
+
+    private static String okJson() { return "{\"ok\":true}"; }
+
+    private static String errorJson(String code) {
+        return "{\"ok\":false,\"error\":" + JSONObject.quote(code) + "}";
+    }
+
+    /** Password records are listed WITHOUT the password itself; only whether one is stored. */
+    private static JSONArray summaries(boolean secret, List<JSONObject> records) throws JSONException {
+        JSONArray array = new JSONArray();
+        for (JSONObject r : records) {
+            if (secret) {
+                JSONObject s = new JSONObject();
+                s.put("uid", r.optString("uid"));
+                s.put("id", r.optString("id"));
+                s.put("email", r.optString("email"));
+                s.put("hasPass", !r.optString("pass").isEmpty());
+                array.put(s);
+            } else {
+                array.put(r);
+            }
+        }
+        return array;
+    }
+
+    private String managerList(boolean secret) {
+        if (!storageUnlocked()) return errorJson("locked");
+        try {
+            RecordStore store = secret ? passwordStore() : textStore();
+            JSONObject out = new JSONObject();
+            out.put("ok", true);
+            out.put("records", summaries(secret, store.all()));
+            return out.toString();
+        } catch (RecordStore.StoreException e) {
+            return errorJson(e.code);
+        } catch (JSONException | RuntimeException e) {
+            return errorJson("failed");
+        }
+    }
+
+    private String managerGet(String uid) {
+        if (uid == null) return errorJson("invalid");
+        if (!storageUnlocked()) return errorJson("locked");
+        try {
+            JSONObject record = passwordStore().get(uid);
+            if (record == null) return errorJson("missing");
+            JSONObject out = new JSONObject();
+            out.put("ok", true);
+            out.put("record", record);
+            return out.toString();
+        } catch (RecordStore.StoreException e) {
+            return errorJson(e.code);
+        } catch (JSONException | RuntimeException e) {
+            return errorJson("failed");
+        }
+    }
+
+    private String managerSave(boolean secret, String json) {
+        if (json == null) return errorJson("invalid");
+        if (!storageUnlocked()) return errorJson("locked");
+        try {
+            RecordStore store = secret ? passwordStore() : textStore();
+            JSONObject saved = store.upsert(new JSONObject(json));
+            JSONObject out = new JSONObject();
+            out.put("ok", true);
+            out.put("uid", saved.optString("uid"));
+            out.put("records", summaries(secret, store.all()));
+            return out.toString();
+        } catch (RecordStore.StoreException e) {
+            return errorJson(e.code);
+        } catch (JSONException | RuntimeException e) {
+            return errorJson("invalid");
+        }
+    }
+
+    private String managerDelete(boolean secret, String uid) {
+        if (uid == null) return errorJson("invalid");
+        if (!storageUnlocked()) return errorJson("locked");
+        try {
+            RecordStore store = secret ? passwordStore() : textStore();
+            store.delete(uid);
+            JSONObject out = new JSONObject();
+            out.put("ok", true);
+            out.put("records", summaries(secret, store.all()));
+            return out.toString();
+        } catch (RecordStore.StoreException e) {
+            return errorJson(e.code);
+        } catch (JSONException | RuntimeException e) {
+            return errorJson("failed");
+        }
+    }
+
+    private String managerMove(boolean secret, String uidsJson) {
+        if (uidsJson == null) return errorJson("invalid");
+        if (!storageUnlocked()) return errorJson("locked");
+        try {
+            JSONArray array = new JSONArray(uidsJson);
+            List<String> order = new ArrayList<>();
+            for (int i = 0; i < array.length(); i++) order.add(array.getString(i));
+            RecordStore store = secret ? passwordStore() : textStore();
+            store.reorder(order);
+            JSONObject out = new JSONObject();
+            out.put("ok", true);
+            out.put("records", summaries(secret, store.all()));
+            return out.toString();
+        } catch (RecordStore.StoreException e) {
+            return errorJson(e.code);
+        } catch (JSONException | RuntimeException e) {
+            return errorJson("invalid");
+        }
+    }
+
+    /** Looks up the value on the calling thread, then commits it through the current InputConnection. */
+    private String managerInsert(boolean secret, String uid, String field) {
+        if (uid == null) return errorJson("invalid");
+        if (!storageUnlocked()) return errorJson("locked");
+        String value;
+        try {
+            JSONObject record = (secret ? passwordStore() : textStore()).get(uid);
+            if (record == null) return errorJson("missing");
+            if (secret) {
+                if ("email".equals(field)) value = record.optString("email");
+                else if ("pass".equals(field)) value = record.optString("pass");
+                else return errorJson("invalid");
+            } else {
+                value = record.optString("text");
+            }
+        } catch (RecordStore.StoreException e) {
+            return errorJson(e.code);
+        } catch (RuntimeException e) {
+            return errorJson("failed");
+        }
+        if (value.isEmpty()) return errorJson("empty");
+        return commitToHost(value);
+    }
+
+    private String commitToHost(final String value) {
+        final CountDownLatch latch = new CountDownLatch(1);
+        final AtomicBoolean committed = new AtomicBoolean(false);
+        mainHandler.post(() -> {
+            try {
+                InputConnection connection = getCurrentInputConnection();
+                if (connection != null) {
+                    connection.commitText(value, 1);
+                    committed.set(true);
+                }
+            } catch (RuntimeException ignored) {
+            } finally {
+                latch.countDown();
+            }
+        });
+        try {
+            latch.await(1500, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        return committed.get() ? okJson() : errorJson("no_input");
+    }
+
     private final class KeyboardBridge {
         @JavascriptInterface public void commit(String value) {
             if (value == null) return;
@@ -311,6 +519,44 @@ public class BellamieInputMethodService extends InputMethodService {
                     if (webView != null && pageReady) {
                         webView.evaluateJavascript("if(window.onNewLine)window.onNewLine();", null);
                     }
+                }
+            });
+        }
+        // ---- Password & Text Manager bridge ---------------------------------------
+        // Passwords: the list never contains the password itself. pwGet() returns one full
+        // record (for editing / the eye icon); pwInsert() commits Email or Password directly
+        // into the focused field without the password passing through JavaScript at all.
+        @JavascriptInterface public String pwList() { return managerList(true); }
+        @JavascriptInterface public String pwGet(String uid) { return managerGet(uid); }
+        @JavascriptInterface public String pwSave(String json) { return managerSave(true, json); }
+        @JavascriptInterface public String pwDelete(String uid) { return managerDelete(true, uid); }
+        @JavascriptInterface public String pwMove(String uidsJson) { return managerMove(true, uidsJson); }
+        @JavascriptInterface public String pwInsert(String uid, String field) { return managerInsert(true, uid, field); }
+        @JavascriptInterface public String pwReset() {
+            try {
+                passwordStore().reset();
+                if (secureCodec != null) secureCodec.deleteKey();
+                return okJson();
+            } catch (RuntimeException e) {
+                return errorJson("failed");
+            }
+        }
+        @JavascriptInterface public String txtList() { return managerList(false); }
+        @JavascriptInterface public String txtSave(String json) { return managerSave(false, json); }
+        @JavascriptInterface public String txtDelete(String uid) { return managerDelete(false, uid); }
+        @JavascriptInterface public String txtMove(String uidsJson) { return managerMove(false, uidsJson); }
+        @JavascriptInterface public String txtInsert(String uid) { return managerInsert(false, uid, null); }
+        // Grows / restores the keyboard window while the add/edit form or search is open, so the
+        // normal keys can sit below the form. 0 restores the standard keyboard height.
+        @JavascriptInterface public void setExtraHeight(int extraCssPx) {
+            final int extra = Math.max(0, Math.min(extraCssPx, 300));
+            mainHandler.post(() -> {
+                if (webView == null) return;
+                ViewGroup.LayoutParams params = webView.getLayoutParams();
+                int height = keyboardHeightPx(extra);
+                if (params != null && params.height != height) {
+                    params.height = height;
+                    webView.setLayoutParams(params);
                 }
             });
         }
