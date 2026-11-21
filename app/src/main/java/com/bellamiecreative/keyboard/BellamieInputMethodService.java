@@ -15,13 +15,6 @@ import android.os.UserManager;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.Gravity;
-import android.widget.FrameLayout;
-import android.widget.PopupWindow;
-import android.widget.TextView;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
-import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.view.HapticFeedbackConstants;
 import android.view.SoundEffectConstants;
@@ -49,7 +42,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class BellamieInputMethodService extends InputMethodService {
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private WebView webView;
-    private PopupWindow keyPopup;
     private EditorInfo editorInfo;
     private volatile int cachedCapsMode;
     private boolean pageReady;
@@ -98,7 +90,6 @@ public class BellamieInputMethodService extends InputMethodService {
             unregisterReceiver(voiceReceiver);
             voiceReceiverRegistered = false;
         }
-        hideKeyPopup();
         if (webView != null) {
             webView.stopLoading();
             webView.destroy();
@@ -274,13 +265,6 @@ public class BellamieInputMethodService extends InputMethodService {
     }
 
     /** Keyboard height in pixels. extraCssPx is extra height (in 390-wide CSS px) used while a manager form is open. */
-    private void hideKeyPopup() {
-        if (keyPopup != null) {
-            try { if (keyPopup.isShowing()) keyPopup.dismiss(); } catch (RuntimeException ignored) { }
-            keyPopup = null;
-        }
-    }
-
     private int keyboardHeightPx(int extraCssPx) {
         return (int) ((283.2f + extraCssPx) * getResources().getDisplayMetrics().widthPixels / 390f + 0.5f);
     }
@@ -575,58 +559,6 @@ public class BellamieInputMethodService extends InputMethodService {
                     webView.setLayoutParams(params);
                 }
             });
-        }
-        @JavascriptInterface public void showKeyPopup(float leftCss, float topCss, float widthCss,
-                float heightCss, float stemLeftCss, float stemWidthCss, float stemHeightCss, String value) {
-            if (value == null) return;
-            mainHandler.post(() -> {
-                if (webView == null) return;
-                hideKeyPopup();
-                float scale = getResources().getDisplayMetrics().widthPixels / 390f;
-                int left = Math.round(leftCss * scale);
-                int top = Math.round(topCss * scale);
-                int width = Math.max(1, Math.round(widthCss * scale));
-                int bubbleHeight = Math.max(1, Math.round(heightCss * scale));
-                int stemLeft = Math.round(stemLeftCss * scale);
-                int stemWidth = Math.max(1, Math.round(stemWidthCss * scale));
-                int stemHeight = Math.max(0, Math.round(stemHeightCss * scale));
-                FrameLayout root = new FrameLayout(BellamieInputMethodService.this);
-                root.setClipChildren(false);
-                root.setClipToPadding(false);
-                root.setBackgroundColor(Color.TRANSPARENT);
-                View stem = new View(BellamieInputMethodService.this);
-                GradientDrawable stemBg = new GradientDrawable();
-                float radius = 5.5f * scale;
-                stemBg.setColor(Color.rgb(250, 250, 252));
-                stemBg.setCornerRadii(new float[]{0,0,0,0,radius,radius,radius,radius});
-                stem.setBackground(stemBg);
-                FrameLayout.LayoutParams stemLp = new FrameLayout.LayoutParams(stemWidth, Math.max(1, stemHeight));
-                stemLp.leftMargin = stemLeft;
-                stemLp.topMargin = bubbleHeight - Math.round(6f * scale);
-                root.addView(stem, stemLp);
-                TextView bubble = new TextView(BellamieInputMethodService.this);
-                GradientDrawable bubbleBg = new GradientDrawable();
-                bubbleBg.setColor(Color.rgb(250, 250, 252));
-                bubbleBg.setCornerRadius(10f * scale);
-                bubble.setBackground(bubbleBg);
-                bubble.setText(value);
-                bubble.setTextColor(Color.rgb(17, 17, 17));
-                bubble.setGravity(Gravity.CENTER);
-                bubble.setIncludeFontPadding(false);
-                bubble.setTextSize(TypedValue.COMPLEX_UNIT_PX, 34f * scale);
-                bubble.setElevation(2f * scale);
-                FrameLayout.LayoutParams bubbleLp = new FrameLayout.LayoutParams(width, bubbleHeight);
-                root.addView(bubble, bubbleLp);
-                root.setElevation(2f * scale);
-                keyPopup = new PopupWindow(root, width, bubbleHeight + stemHeight, false);
-                keyPopup.setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(Color.TRANSPARENT));
-                keyPopup.setClippingEnabled(false);
-                keyPopup.setOutsideTouchable(false);
-                keyPopup.showAtLocation(webView, Gravity.TOP | Gravity.LEFT, left, top);
-            });
-        }
-        @JavascriptInterface public void hideKeyPopup() {
-            mainHandler.post(BellamieInputMethodService.this::hideKeyPopup);
         }
         @JavascriptInterface public int capsMode() { return cachedCapsMode; }
     }
