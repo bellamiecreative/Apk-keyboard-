@@ -23,7 +23,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.HapticFeedbackConstants;
-import android.view.SoundEffectConstants;
 import android.view.inputmethod.CursorAnchorInfo;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.ExtractedText;
@@ -53,6 +52,7 @@ public class BellamieInputMethodService extends InputMethodService {
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private WebView webView;
     private KeyPopupOverlay popupOverlay; // first-row key popup drawn outside the WebView bounds
+    private KeySoundEngine soundEngine;   // recorded iPhone key sounds (SoundPool); gated by the "sound_enabled" preference
     private EditorInfo editorInfo;
     private volatile int cachedCapsMode;
     private boolean pageReady;
@@ -118,11 +118,13 @@ public class BellamieInputMethodService extends InputMethodService {
         if (Build.VERSION.SDK_INT >= 33) registerReceiver(imageReceiver, imageFilter, Context.RECEIVER_NOT_EXPORTED);
         else registerReceiver(imageReceiver, imageFilter);
         imageReceiverRegistered = true;
+        soundEngine = new KeySoundEngine(this);
     }
 
     @Override public void onDestroy() {
         stopCursorTrack(false);
         releasePopupOverlay();
+        if (soundEngine != null) { soundEngine.release(); soundEngine = null; }
         if (imageReceiverRegistered) { unregisterReceiver(imageReceiver); imageReceiverRegistered = false; }
         if (voiceReceiverRegistered) {
             unregisterReceiver(voiceReceiver);
@@ -280,7 +282,8 @@ public class BellamieInputMethodService extends InputMethodService {
                 + type + "," + options + "," + cachedCapsMode + ");", null);
     }
 
-    private void playKeyFeedback() {
+    // Haptics only. Key sounds are played by KeySoundEngine (the generic Android click is no longer used).
+    private void playHaptic() {
         if (webView == null) return;
         android.content.SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
         if (prefs.getBoolean("vibration_enabled", true)) {
@@ -288,9 +291,11 @@ public class BellamieInputMethodService extends InputMethodService {
                     ? HapticFeedbackConstants.KEYBOARD_TAP : HapticFeedbackConstants.VIRTUAL_KEY;
             webView.performHapticFeedback(feedback);
         }
-        if (prefs.getBoolean("sound_enabled", true)) {
-            webView.playSoundEffect(SoundEffectConstants.CLICK);
-        }
+    }
+
+    private void playKeySound(String kind) {
+        KeySoundEngine engine = soundEngine;
+        if (engine != null) engine.playKind(kind);
     }
 
     private void deleteBeforeCursor() {
@@ -1034,8 +1039,20 @@ public class BellamieInputMethodService extends InputMethodService {
         @JavascriptInterface public void delete() {
             mainHandler.post(BellamieInputMethodService.this::deleteBeforeCursor);
         }
+        // Legacy call (Password & Text Manager controls): haptic + the Shift-ON fallback sound, exactly one sound.
         @JavascriptInterface public void feedback() {
-            mainHandler.post(BellamieInputMethodService.this::playKeyFeedback);
+            playKeySound("fallback");
+            mainHandler.post(BellamieInputMethodService.this::playHaptic);
+        }
+        // Key touch-down: haptic (unchanged) + the recorded sound for `kind` ("silent" = haptic only).
+        // Sound is played on this bridge thread directly to avoid an extra main-thread hop.
+        @JavascriptInterface public void keyDown(String kind) {
+            playKeySound(kind);
+            mainHandler.post(BellamieInputMethodService.this::playHaptic);
+        }
+        // Sound only, no haptic (confirmed Space tap, emoji taps, Backspace hold ticks).
+        @JavascriptInterface public void keySound(String kind) {
+            playKeySound(kind);
         }
         @JavascriptInterface public void pickImage() {
             mainHandler.post(() -> {
