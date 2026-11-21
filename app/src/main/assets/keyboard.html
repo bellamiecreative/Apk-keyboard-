@@ -28,9 +28,9 @@ body{font-family:"SF Pro","SF Pro Text","SF Pro Display",-apple-system,BlinkMacS
 .emojiCell{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 
 /* ===== Password & Text Manager ===== */
-.pmPanel,.pmEd,.pmMenu,.pmDlg{position:absolute;top:50px;left:0;width:390px;display:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.pmPanel,.pmEd,.pmMenu,.pmDlg{position:absolute;top:0px;left:0;width:390px;display:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .pmPanel svg,.pmEd svg,.pmMenu svg,.pmDlg svg{display:block;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-.pmPanel{top:50px;height:283.2px;z-index:20;background:#EBECF2;overflow:hidden}
+.pmPanel{top:0px;height:283.2px;z-index:20;background:#EBECF2;overflow:hidden}
 .pmHead{display:flex;align-items:center;gap:6px;height:44px;padding:0 6px}
 .pmBtn{flex:none;width:36px;height:34px;border:0;border-radius:9px;background:transparent;color:#007AFF;display:flex;align-items:center;justify-content:center;padding:0;touch-action:manipulation;cursor:pointer}
 .pmBtn svg{width:24px;height:24px}
@@ -80,13 +80,13 @@ body{font-family:"SF Pro","SF Pro Text","SF Pro Display",-apple-system,BlinkMacS
 .pmTxt{font-size:13px;line-height:16px;color:#5C5F67;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;text-align:start}
 .pmEmpty{margin:auto;padding:0 24px;color:#8A8C94;font-size:14px;line-height:20px;text-align:center}
 .pmWide{margin:0 auto 18px;height:36px;padding:0 22px;border:0;border-radius:10px;background:#007AFF;color:#fff;font-size:15px;font-family:inherit}
-.pmEd{top:50px;height:134px;z-index:20;background:#EBECF2}
+.pmEd{top:0px;height:134px;z-index:20;background:#EBECF2}
 .edHead{display:flex;align-items:center;height:32px;padding:0 6px}
 .edTitle{flex:1;text-align:center;font-size:15px;font-weight:600;color:#111}
 .edBody{display:flex;flex-direction:column;gap:4px;padding:2px 8px 0}
 .edBody .tf{flex:none;height:30px}
 .edBody .tf.big{height:64px}
-.pmMenu{top:50px;height:283.2px;z-index:25}
+.pmMenu{top:0px;height:283.2px;z-index:25}
 .mnCard{position:absolute;left:8px;top:118px;width:152px;padding:4px;border-radius:14px;background:#FAFAFC;box-shadow:0 6px 22px rgba(0,0,0,.3),0 0 0 .5px rgba(0,0,0,.08);transform-origin:32px 100%;animation:pmPop .14s ease-out}
 .mnItem{display:flex;align-items:center;gap:10px;width:100%;height:44px;padding:0 12px;border:0;border-radius:10px;background:transparent;color:#111;font-family:inherit;font-size:16px;text-align:start}
 .mnItem:active{background:#E3E5EC}
@@ -100,7 +100,7 @@ body{font-family:"SF Pro","SF Pro Text","SF Pro Display",-apple-system,BlinkMacS
 .dlgBtn{flex:1;height:36px;border:0;border-radius:9px;background:#E8EAF0;color:#007AFF;font-family:inherit;font-size:15px;font-weight:500}
 .dlgBtn.danger{background:#FF3B30;color:#fff}
 .dlgBtn:active{opacity:.7}
-.pmToast{position:absolute;left:50%;top:58px;transform:translateX(-50%);z-index:50;max-width:340px;padding:6px 12px;border-radius:15px;background:rgba(40,42,48,.93);color:#fff;font-size:13px;line-height:18px;white-space:nowrap;display:none;pointer-events:none}
+.pmToast{position:absolute;left:50%;top:8px;transform:translateX(-50%);z-index:50;max-width:340px;padding:6px 12px;border-radius:15px;background:rgba(40,42,48,.93);color:#fff;font-size:13px;line-height:18px;white-space:nowrap;display:none;pointer-events:none}
 @keyframes pmBlink{50%{opacity:0}}
 @keyframes pmPop{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
 @keyframes pmShake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
@@ -110,9 +110,9 @@ body{font-family:"SF Pro","SF Pro Text","SF Pro Display",-apple-system,BlinkMacS
 <script>
 (function(){
 'use strict';
-var kb=document.getElementById('kb'),screen=document.getElementById('screen'),extraH=50,extraMode=0;
+var kb=document.getElementById('kb'),screen=document.getElementById('screen'),extraH=0,extraMode=0;
 function resizeKeyboard(){var scale=window.innerWidth/390,H=283.2+extraH;screen.style.transform='scale('+scale+')';screen.style.height=H+'px';document.documentElement.style.height=(H*scale)+'px';document.body.style.height=(H*scale)+'px'}
-window.addEventListener('resize',resizeKeyboard);kb.style.top='50px';resizeKeyboard();
+window.addEventListener('resize',resizeKeyboard);kb.style.top='0px';resizeKeyboard();
 var rows=[
 {y:6.8,keys:{Q:2.25,W:41.05,E:79.85,R:118.65,T:157.45,Y:196.25,U:235.05,I:273.85,O:312.65,P:351.45}},
 {y:59.2,keys:{A:22.65,S:61.45,D:100.25,F:139.05,G:177.85,H:216.65,J:255.45,K:294.25,L:333.05}},
@@ -421,12 +421,19 @@ function placePopup(p,key){
  var effW=Math.min(kw,38.8),cx=kx+kw/2,bw=effW+16,bh=50;
  var bl=Math.max(2,Math.min(390-bw-2,cx-bw/2)),bt=kt-bh+3;
  p.classList.remove('below');
- var stemH=Math.max(0,(kt+kh)-(bt+bh-6));
+ var stemH=Math.max(0,(kt+kh)-(bt+bh-6)),stemX=cx-effW/2-bl;
+ if(kt<50&&NB&&typeof NB.showKeyPopup==='function'&&!img){
+  p.style.display='none';p._native=true;
+  try{NB.showKeyPopup(bl,bt,bw,bh,stemX,effW,stemH,v)}catch(x){}
+  return;
+ }
+ if(p._native&&NB&&NB.hideKeyPopup){try{NB.hideKeyPopup()}catch(x){}}
+ p._native=false;
  p.style.left=bl+'px';p.style.top=bt+'px';p.style.width=bw+'px';p.style.height=bh+'px';p.style.display='block';
- if(stemH>0){stem.style.display='block';stem.style.left=(cx-effW/2-bl)+'px';stem.style.top=(bh-6)+'px';stem.style.width=effW+'px';stem.style.height=stemH+'px'}else stem.style.display='none'
+ if(stemH>0){stem.style.display='block';stem.style.left=stemX+'px';stem.style.top=(bh-6)+'px';stem.style.width=effW+'px';stem.style.height=stemH+'px'}else stem.style.display='none'
 }
-function hidePopup(st){st.p.style.display='none'}
-function removePopup(st){var p=st.p;setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);p.style.display='none';popPool.push(p)},80)}
+function hidePopup(st){st.p.style.display='none';if(st.p._native&&NB&&NB.hideKeyPopup){try{NB.hideKeyPopup()}catch(x){}}st.p._native=false}
+function removePopup(st){var p=st.p;if(p._native&&NB&&NB.hideKeyPopup){try{NB.hideKeyPopup()}catch(x){}}p._native=false;setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);p.style.display='none';popPool.push(p)},80)}
 kb.addEventListener('touchstart',function(e){
  for(var i=0;i<e.changedTouches.length;i++){var t=e.changedTouches[i],key=supportedKey(t.target);if(!key)continue;
   var p=makePopup();screen.appendChild(p);touchState[t.identifier]={start:key,cur:key,x:t.clientX,y:t.clientY,p:p,scroll:false};placePopup(p,key)}
@@ -462,7 +469,6 @@ kb.addEventListener('contextmenu',function(e){if(supportedKey(e.target))e.preven
 /* ===== end key popup ===== */
 /* ===== Password & Text Manager ===== */
 var NB=window.AndroidKeyboard||null,EXTRA=134,GAP=6,TX_MAX=20000;
-if(NB&&NB.setExtraHeight){try{NB.setExtraHeight(50)}catch(x){}}
 var PM={kind:null,mode:'list',data:[],query:'',rev:null,err:null,edit:null,openedAt:0};
 var hostMode='text',hostAction='return',savedLayout='letters';
 var ed={active:false,cur:null,fields:[],onEnter:null};
@@ -485,7 +491,7 @@ search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/>'};
 function ic(n){return '<svg viewBox="0 0 24 24" aria-hidden="true">'+PI[n]+'</svg>'}
 function pe(tag,cls){var e=document.createElement(tag);if(cls)e.className=cls;return e}
 function fb(){if(NB&&NB.feedback)NB.feedback()}
-function setExtra(h){if(h===extraMode)return;extraMode=h;extraH=50+h;resizeKeyboard();kb.style.top=extraH+'px';if(NB&&NB.setExtraHeight){try{NB.setExtraHeight(extraH)}catch(x){}}}
+function setExtra(h){if(h===extraMode)return;extraMode=h;extraH=h;resizeKeyboard();kb.style.top=extraH+'px';if(NB&&NB.setExtraHeight){try{NB.setExtraHeight(extraH)}catch(x){}}}
 var EM={no_input:'No text field is focused',empty:'Nothing to insert',id_required:'Enter an ID first',locked:'Unlock the device first',unavailable:'Update the keyboard app first',missing:'Record not found'};
 function errMsg(c){return EM[c]||'Something went wrong'}
 function toast(m){pmToast.textContent=m;pmToast.style.display='block';clearTimeout(toastT);toastT=setTimeout(function(){pmToast.style.display='none'},2200)}
