@@ -7,9 +7,9 @@
 <style>
 :root{color-scheme:light;--keyboard-bg:#D1D5DB;--key-gray:#AEB5BF;--key-shadow:rgba(67,74,84,.42)}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;height:283.2px;overflow:hidden;background:var(--keyboard-bg)}
+html,body{width:100%;height:283.2px;overflow:visible;background:var(--keyboard-bg)}
 body{font-family:"SF Pro","SF Pro Text","SF Pro Display",-apple-system,BlinkMacSystemFont,"Inter",Roboto,Arial,sans-serif;display:block;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-#screen{position:relative;width:390px;height:283.2px;transform-origin:top left;background:var(--keyboard-bg);overflow:hidden}
+#screen{position:relative;width:390px;height:283.2px;transform-origin:top left;background:var(--keyboard-bg);overflow:visible}
 #kb{position:absolute;left:0;top:0;width:390px;height:283.2px;background:var(--keyboard-bg)}
 .key{position:absolute;display:flex;align-items:center;justify-content:center;border:0;border-radius:5.5px;height:43.2px;color:#111;font-family:inherit;font-size:15.6pt;font-weight:400;line-height:1;user-select:none;-webkit-user-select:none;cursor:pointer;touch-action:manipulation;box-shadow:0 1.15px 0 var(--key-shadow);transition:background-color 65ms ease}
 .key:active{transform:none;box-shadow:0 1.15px 0 var(--key-shadow)}.key.press-white:active{background:#FAFAFC}.key.space-pressed:active{background:#AAB1BB}.key.press-white,.key.space-pressed{transition:background-color 0s,transform 0s,box-shadow 0s}
@@ -422,18 +422,11 @@ function placePopup(p,key){
  var bl=Math.max(2,Math.min(390-bw-2,cx-bw/2)),bt=kt-bh+3;
  p.classList.remove('below');
  var stemH=Math.max(0,(kt+kh)-(bt+bh-6)),stemX=cx-effW/2-bl;
- if(kt<50&&NB&&typeof NB.showKeyPopup==='function'&&!img){
-  p.style.display='none';p._native=true;
-  try{NB.showKeyPopup(bl,bt,bw,bh,stemX,effW,stemH,v)}catch(x){}
-  return;
- }
- if(p._native&&NB&&NB.hideKeyPopup){try{NB.hideKeyPopup()}catch(x){}}
- p._native=false;
  p.style.left=bl+'px';p.style.top=bt+'px';p.style.width=bw+'px';p.style.height=bh+'px';p.style.display='block';
  if(stemH>0){stem.style.display='block';stem.style.left=stemX+'px';stem.style.top=(bh-6)+'px';stem.style.width=effW+'px';stem.style.height=stemH+'px'}else stem.style.display='none'
 }
-function hidePopup(st){st.p.style.display='none';if(st.p._native&&NB&&NB.hideKeyPopup){try{NB.hideKeyPopup()}catch(x){}}st.p._native=false}
-function removePopup(st){var p=st.p;if(p._native&&NB&&NB.hideKeyPopup){try{NB.hideKeyPopup()}catch(x){}}p._native=false;setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);p.style.display='none';popPool.push(p)},80)}
+function hidePopup(st){st.p.style.display='none'}
+function removePopup(st){var p=st.p;setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);p.style.display='none';popPool.push(p)},80)}
 kb.addEventListener('touchstart',function(e){
  for(var i=0;i<e.changedTouches.length;i++){var t=e.changedTouches[i],key=supportedKey(t.target);if(!key)continue;
   var p=makePopup();screen.appendChild(p);touchState[t.identifier]={start:key,cur:key,x:t.clientX,y:t.clientY,p:p,scroll:false};placePopup(p,key)}
