@@ -107,6 +107,7 @@ public class MainActivity extends Activity {
 
         // Preference switches
         LinearLayout switches = card();
+        switches.setOrientation(LinearLayout.VERTICAL);
         switches.setPadding(dp(18), dp(8), dp(18), dp(8));
         Switch vibration = settingSwitch("Key vibration", "Vibrate when typing", "♫",
                 preferences.getBoolean("vibration_enabled", true));
@@ -130,6 +131,7 @@ public class MainActivity extends Activity {
 
         // Sound volume
         LinearLayout volumeCard = card();
+        volumeCard.setOrientation(LinearLayout.VERTICAL);
         volumeCard.setPadding(dp(18), dp(18), dp(18), dp(18));
         LinearLayout volumeTop = new LinearLayout(this);
         volumeTop.setGravity(Gravity.CENTER_VERTICAL);
