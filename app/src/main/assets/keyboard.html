@@ -428,7 +428,7 @@ function setInputConfigBase(type,imeOptions,caps){
 window.configureInput=setInputConfig;
 window.refreshCaps=refreshCaps;
 window.onInputBecameEmpty=function(){if(!shiftLocked){manualShiftOverride=false;upper=true}kuShift=false;updateCase();if(!shiftLocked)setTimeout(refreshCaps,40)};
-window.onNewLine=function(){if(shiftLocked)return;manualShiftOverride=true;if(kurdish){kuShift=true}else{upper=true}updateCase()};
+window.onNewLine=function(){if(shiftLocked)return;manualShiftOverride=true;if(kurdish){kuShift=false}else{upper=true}updateCase()};
 window.resetForInput=function(){pmReset();if(layout==='emoji')layout='letters';manualShiftOverride=false;shiftLocked=false;upper=true;kuShift=false;updateCase();setTimeout(refreshCaps,40)};
 /* ===== Key popup / character preview (touch) ===== */
 var KEY_SEL='.letter,.emojiCell',popPool=[],touchState={},suppressClickUntil=0;
