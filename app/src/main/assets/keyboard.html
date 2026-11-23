@@ -64,7 +64,9 @@ body{font-family:"SF Pro","SF Pro Text","SF Pro Display",-apple-system,BlinkMacS
 .pmGrip svg{width:18px;height:18px}
 .pmMain{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;font-family:inherit}
 .pmId{font-size:15px;font-weight:600;line-height:19px;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:start}
-.pmChips{display:flex;gap:5px;min-width:0}
+.pmChips{display:flex;flex-direction:column;gap:4px;min-width:0}
+.pmChips>.pmChip{flex:none;height:30px}
+.pmRow:not(.tx){height:auto;min-height:66px;padding-top:6px;padding-bottom:6px}
 .pmChip{flex:1;min-width:0;height:30px;border:0;border-radius:8px;background:#EEF0F6;color:#2B2D33;display:flex;align-items:center;gap:5px;padding:0 7px;font-family:inherit;font-size:13px;touch-action:manipulation}
 .pmChip>svg,.pmPassBtn>svg{width:15px;height:15px;flex:none;color:#6B6E76}
 .pmChip>span,.pmPassBtn>span{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;text-align:start}
